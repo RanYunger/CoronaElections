@@ -6,17 +6,15 @@ public class Candidate extends Citizen {
 	// Constants
 	
 	// Fields
-	private static int RANK_GENERATOR = 1; //breaks it all, but OK for now 
-	
-	private Party associatedParty;
+	private String associatedPartyName;
 	private int rank;
 	
 	// Properties (Getters and Setters)
-	public Party getAssociatedParty() {
-		return associatedParty;
+	public String getAssociatedPartyName() {
+		return associatedPartyName;
 	}
-	public void setAssociatedParty(Party associatedParty) {
-		this.associatedParty = associatedParty;
+	public void setAssociatedPartyName(String associatedPartyName) {
+		this.associatedPartyName = associatedPartyName;
 	}
 	public int getRank() {
 		return rank;
@@ -28,40 +26,34 @@ public class Candidate extends Citizen {
 	// Constructors
 	public Candidate(int ID) {
 		super(ID);
-		setRank(RANK_GENERATOR++);
+		setRank(-1);
 	}
-	public Candidate(int ID, String fullName, LocalDate dateOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit) {
-		super(ID, fullName, dateOfBirth, associatedBallot, isIsolated, isWearingSuit);
-		setRank(RANK_GENERATOR++);
+	public Candidate(int ID, String fullName, LocalDate dateOfBirth, int associatedBallotID, boolean isIsolated, boolean isWearingSuit, int rank) {
+		super(ID, fullName, dateOfBirth, associatedBallotID, isIsolated, isWearingSuit);
+		setRank(rank);
 	}
 	
-	// Methods
+	// Methods	
 	@Override
 	public boolean equals(Object obj) {
-		Candidate other = null;
-		
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		
-		other = (Candidate) obj;
-//		if (RANK_GENERATOR != other.RANK_GENERATOR)
-//			return false;
-		if (associatedParty == null) {
-			if (other.associatedParty != null)
+		Candidate other = (Candidate) obj;
+		if (associatedPartyName == null) {
+			if (other.associatedPartyName != null)
 				return false;
-		} else if (!associatedParty.equals(other.associatedParty))
+		} else if (!associatedPartyName.equals(other.associatedPartyName))
 			return false;
 		if (rank != other.rank)
 			return false;
-		
 		return true;
-	}
+	}	
 	@Override
 	public String toString() {
-		return String.format("Candidate [Full Name: %s | Party: %s (ranked #%d)]", fullName, associatedParty.getName(), rank);
-	}	
+		return String.format("Candidate [Full Name: %s | Party: %s (ranked #%d)]", fullName, associatedPartyName, rank);
+	}
 }

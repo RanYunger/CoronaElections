@@ -2,14 +2,17 @@ package ID318783479_ID316334473;
 
 import java.time.LocalDate;
 //import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Party {
 	// Constants
 	enum PartyAssociation {Left, Center, Right}
 	
 	// Fields
+	private int RANK_GENERATOR;
+	
 	private String name;
-	private PartyAssociation association;
+	private PartyAssociation wing;
 	private LocalDate foundationDate;
 	private Candidate[] candidates;			//private ArrayList<Candidate> candidates; // Sorted by Candidate rank
 	
@@ -20,11 +23,11 @@ public class Party {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public PartyAssociation getAssociation() {
-		return association;
+	public PartyAssociation getWing() {
+		return wing;
 	}
-	public void setAssociation(PartyAssociation association) {
-		this.association = association;
+	public void setWing(PartyAssociation wing) {
+		this.wing = wing;
 	}
 	public LocalDate getFoundationDate() {
 		return foundationDate;
@@ -37,7 +40,7 @@ public class Party {
 	}
 	public void setCandidates(Candidate[] candidates) {
 		this.candidates = candidates;
-		SortCandidates();
+		sortCandidates();
 	}
 //	public ArrayList<Candidate> getCandidates() {
 //		return candidates;
@@ -51,19 +54,57 @@ public class Party {
 	public Party() {
 		this("<UNKNOWN>", PartyAssociation.Center, LocalDate.now());
 	}
-	public Party(String name, PartyAssociation association, LocalDate foundationDate) {
+	public Party(String name, PartyAssociation wing, LocalDate foundationDate) {
 		setName(name);
-		setAssociation(association);
+		setWing(wing);
 		setFoundationDate(foundationDate);
 		setCandidates(new Candidate[Program.MAX_ARRAY_SIZE]);	//setCandidates(new ArrayList<Candidate>());
+		
+		RANK_GENERATOR = 1;		
 	}
-
+	
 	// Methods
-	// TODO: "addCandidate" method
-	
-	
-	public void SortCandidates() {
-		// TODO: COMPLETE (Sorting candidates by rank (after sorting, substract (first - 1) from all ranks (RANK_GENERATOR doesn't reset))
+	public Candidate getCandidateByID(int candidateID) {
+		for (int i = 0; i < candidates.length; i++)
+			if(candidates[i].getID() == candidateID)
+				return candidates[i];
+		
+		return null;
+	}
+	public int getCandidateOffsetByID(int candidateID) {
+		for (int i = 0; i < candidates.length; i++)
+			if(candidates[i].getID() == candidateID)
+				return i;
+		
+		return -1;
+	}
+	public boolean addCandidate(Candidate addedCandidate) {
+		Candidate[] newCandidatesArray = new Candidate[candidates.length + 1];
+		
+		if(newCandidatesArray.length >= Program.MAX_ARRAY_SIZE)
+			return false;
+		
+		addedCandidate.setRank(RANK_GENERATOR++);
+		candidates = Arrays.copyOf(candidates, candidates.length + 1);
+		newCandidatesArray[newCandidatesArray.length - 1] = addedCandidate;
+		sortCandidates();
+		
+		return true;
+	}
+	public boolean removeCandidate(int candidateID) {
+		int candidateOffset = getCandidateOffsetByID(candidateID);
+		
+		if(candidateOffset == -1)
+			return false;
+		
+		candidates[candidateOffset] = null;
+		candidates = Arrays.copyOf(candidates, candidates.length - 1);
+		sortCandidates();
+		
+		return true;
+	}	
+	public void sortCandidates() {
+		// TODO: COMPLETE
 	}
 	
 	@Override
@@ -78,12 +119,7 @@ public class Party {
 			return false;
 		
 		other = (Party) obj;
-		if (association != other.association)
-			return false;
-		if (candidates == null) {
-			if (other.candidates != null)
-				return false;
-		} else if (!candidates.equals(other.candidates))
+		if (!Arrays.equals(candidates, other.candidates))
 			return false;
 		if (foundationDate == null) {
 			if (other.foundationDate != null)
@@ -94,6 +130,8 @@ public class Party {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (wing != other.wing)
 			return false;
 		
 		return true;
@@ -108,6 +146,6 @@ public class Party {
 //			candidatesStr += "\n" + candidates.get(i).toString();
 		
 		return String.format("Party [Name: %s | Association: %s | Founded: %d]\nCandidates:%s",
-				name, association, foundationDate.getYear(), candidatesStr);
+				name, wing.name(), foundationDate.getYear(), candidatesStr);
 	}
 }
