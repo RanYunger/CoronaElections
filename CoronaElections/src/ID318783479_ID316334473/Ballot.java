@@ -55,7 +55,7 @@ public class Ballot {
 	
 	// Constructors
 	public Ballot() {
-		this("<UNKNOWN>", new ArrayList<Citizen>(), new int[Elections.PARTIES]);
+		this("<UNKNOWN>", new ArrayList<Citizen>(), new int[Elections.getParties().size()]);
 	}
 	public Ballot(String address, ArrayList<Citizen> voterRegister, int[] results) {
 		setID(IDGenerator++);
@@ -100,8 +100,16 @@ public class Ballot {
 	}
 	@Override
 	public String toString() {
-		// TODO: ADD VotersRegister, Results descriptions
-		return String.format("Ballot [ID: %d | Address: %s | Voters: %d]", ID, address, voters);
+		ArrayList<Party> parties = Elections.getParties();
+		String voterRegisterStr = "", resultsStr = "";
+
+		for (int i = 0; i < voterRegister.size(); i++)
+			voterRegisterStr += "\n" + voterRegister.get(i).toString();
+		for (int i = 0; i < results.length; i++)
+			resultsStr += String.format("\n[%s | %s]", parties.get(i).getName(), results[i]);
+		
+		return String.format("Ballot [ID: %d | Address: %s | Voters: %d]\\nVoter Register:%s\nResults:%s",
+				ID, address, voters, voterRegisterStr, resultsStr);
 	}
 	
 }

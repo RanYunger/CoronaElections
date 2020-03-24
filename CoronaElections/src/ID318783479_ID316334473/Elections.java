@@ -5,12 +5,11 @@ import java.util.ArrayList;
 
 public class Elections {
 	// Constants
-	public static int PARTIES = -1;
 	
 	// Fields
 	private LocalDateTime date;
 	private ArrayList<Citizen> voterRegister;
-	private ArrayList<Party> parties;	
+	private static ArrayList<Party> parties;	
 	private ArrayList<Ballot> ballots;
 	
 	// Properties (Getters and Setters)
@@ -26,12 +25,11 @@ public class Elections {
 	public void setVoterRegister(ArrayList<Citizen> voterRegister) {
 		this.voterRegister = voterRegister;
 	}
-	public ArrayList<Party> getParties() {
+	public static ArrayList<Party> getParties() {
 		return parties;
 	}
 	public void setParties(ArrayList<Party> parties) {
 		this.parties = parties;
-		PARTIES = parties.size();
 	}
 	public ArrayList<Ballot> getBallots() {
 		return ballots;
@@ -92,8 +90,13 @@ public class Elections {
 	}
 	@Override
 	public String toString() {
-		// TODO: Add VoterRegister, Parties, Ballout descriptions
-		return "Elections [date=" + date + ", voterRegister=" + voterRegister + ", parties=" + parties + ", ballots="
-				+ ballots + "]";
+		String partiesStr = "", ballotsStr = "";
+		
+		for (int i = 0; i < parties.size(); i++)
+			partiesStr += "\n" + parties.get(i).toString();
+		for (int i = 0; i < ballots.size(); i++)
+			ballotsStr += "\n" + ballots.get(i).toString();
+		
+		return String.format("Elections [Date: %s]\nParties:%s\nBallots:%s", date, partiesStr, ballotsStr);
 	}	
 }

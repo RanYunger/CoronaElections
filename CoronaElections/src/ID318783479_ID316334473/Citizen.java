@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class Citizen {
 	// Constants
 	public static final int VOTING_AGE = 18;
+	public static final int SOLDIER_AGE = 21;
 	
 	// Fields
 	protected int ID;
@@ -36,7 +37,7 @@ public class Citizen {
 		
 		this.dateOfBirth = dateOfBirth;
 		
-		setIsSoldier((age >= VOTING_AGE) && (age <= 21));
+		setIsSoldier((age >= VOTING_AGE) && (age <= SOLDIER_AGE));
 	}
 	public Ballot getAssociatedBallot() {
 		return associatedBallot;
@@ -113,8 +114,13 @@ public class Citizen {
 	}
 	@Override
 	public String toString() {
-		// TODO: Add IsIsolated, IsWearingSuits, IsSoldier descriptions
-		return String.format("Citizen [ID:%d | Full name: %s | DOB: %s | Associated Ballot: %d]",
-				ID, fullName, dateOfBirth, associatedBallot.getID());
+		String desctiptionStr = "";
+
+		desctiptionStr += isSoldier ? "Soldier," : "";
+		desctiptionStr += isIsolated ? "Isolated, " : "Not isolated, ";
+		desctiptionStr += iswearingSuit ? "Wearing suit" : "Not wearing suit";
+		
+		return String.format("Citizen [ID:%d | Full name: %s | DOB: %s | Status: %s | Associated Ballot: %s (%d)]",
+				ID, fullName, dateOfBirth.toLocalDate().toString(), desctiptionStr, associatedBallot.getAddress(), associatedBallot.getID());
 	}
 }

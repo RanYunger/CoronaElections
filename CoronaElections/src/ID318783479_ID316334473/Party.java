@@ -86,7 +86,12 @@ public class Party {
 	}
 	@Override
 	public String toString() {
-		// TODO: Add Candidates descriptions
-		return String.format("Party [Name: %s | Association: %s | Founded: %d]", name, association, foundationDate.getYear());
+		String candidatesStr = "";
+		
+		for (int i = 0; i < candidates.size(); i++)
+			candidatesStr += "\n" + candidates.get(i).toString();
+		
+		return String.format("Party [Name: %s | Association: %s | Founded: %d]\nCandidates:%s",
+				name, association, foundationDate.getYear(), candidatesStr);
 	}
 }
