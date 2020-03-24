@@ -1,6 +1,6 @@
 package ID318783479_ID316334473;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Candidate extends Citizen {
 	// Constants
@@ -30,7 +30,7 @@ public class Candidate extends Citizen {
 		super(ID);
 		setRank(RANK_GENERATOR++);
 	}
-	public Candidate(int ID, String fullName, LocalDateTime dateOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit) {
+	public Candidate(int ID, String fullName, LocalDate dateOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit) {
 		super(ID, fullName, dateOfBirth, associatedBallot, isIsolated, isWearingSuit);
 		setRank(RANK_GENERATOR++);
 	}

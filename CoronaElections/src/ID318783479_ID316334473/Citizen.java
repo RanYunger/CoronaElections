@@ -1,6 +1,6 @@
 package ID318783479_ID316334473;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Citizen {
 	// Constants
@@ -10,7 +10,7 @@ public class Citizen {
 	// Fields
 	protected int ID;
 	protected String fullName;
-	protected LocalDateTime dateOfBirth;
+	protected LocalDate dateOfBirth;
 	protected Ballot associatedBallot;
 	protected boolean isIsolated;
 	protected boolean isSoldier;
@@ -29,11 +29,11 @@ public class Citizen {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	public LocalDateTime getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(LocalDateTime dateOfBirth) {
-		int age = LocalDateTime.now().getYear() - dateOfBirth.getYear();
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		int age = LocalDate.now().getYear() - dateOfBirth.getYear();
 		
 		this.dateOfBirth = dateOfBirth;
 		
@@ -66,9 +66,9 @@ public class Citizen {
 	
 	// Constructors
 	public Citizen(int ID) {
-		this(ID, "<UNKNOWN>", LocalDateTime.now(), null, false, false);
+		this(ID, "<UNKNOWN>", LocalDate.now(), null, false, false);
 	}
-	public Citizen(int ID, String fullName, LocalDateTime dateOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit) {
+	public Citizen(int ID, String fullName, LocalDate dateOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit) {
 		setID(ID);
 		setFullName(fullName);
 		setDateOfBirth(dateOfBirth);
@@ -121,6 +121,6 @@ public class Citizen {
 		desctiptionStr += iswearingSuit ? "Wearing suit" : "Not wearing suit";
 		
 		return String.format("Citizen [ID:%d | Full name: %s | DOB: %s | Status: %s | Associated Ballot: %s (%d)]",
-				ID, fullName, dateOfBirth.toLocalDate().toString(), desctiptionStr, associatedBallot.getAddress(), associatedBallot.getID());
+				ID, fullName, dateOfBirth.toString(), desctiptionStr, associatedBallot.getAddress(), associatedBallot.getID());
 	}
 }
