@@ -6,7 +6,7 @@ public class Candidate extends Citizen {
 	// Constants
 	
 	// Fields
-	private int RANK_GENERATOR = 1;
+	private static int RANK_GENERATOR = 1; //breaks it all, but OK for now 
 	
 	private Party associatedParty;
 	private int rank;
@@ -48,8 +48,8 @@ public class Candidate extends Citizen {
 			return false;
 		
 		other = (Candidate) obj;
-		if (RANK_GENERATOR != other.RANK_GENERATOR)
-			return false;
+//		if (RANK_GENERATOR != other.RANK_GENERATOR)
+//			return false;
 		if (associatedParty == null) {
 			if (other.associatedParty != null)
 				return false;

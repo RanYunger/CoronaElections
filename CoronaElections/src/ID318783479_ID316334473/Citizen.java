@@ -68,7 +68,9 @@ public class Citizen {
 	public Citizen(int ID) {
 		this(ID, "<UNKNOWN>", LocalDate.now(), null, false, false);
 	}
-	public Citizen(int ID, String fullName, LocalDate dateOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit) {
+
+	public Citizen(int ID, String fullName, LocalDate dateOfBirth, Ballot associatedBallot, boolean isIsolated,
+			boolean isWearingSuit) {
 		setID(ID);
 		setFullName(fullName);
 		setDateOfBirth(dateOfBirth);

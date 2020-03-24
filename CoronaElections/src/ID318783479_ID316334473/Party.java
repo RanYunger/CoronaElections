@@ -1,7 +1,7 @@
 package ID318783479_ID316334473;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class Party {
 	// Constants
@@ -59,6 +59,9 @@ public class Party {
 	}
 
 	// Methods
+	// TODO: "addCandidate" method
+	
+	
 	public void SortCandidates() {
 		// TODO: COMPLETE (Sorting candidates by rank (after sorting, substract (first - 1) from all ranks (RANK_GENERATOR doesn't reset))
 	}
