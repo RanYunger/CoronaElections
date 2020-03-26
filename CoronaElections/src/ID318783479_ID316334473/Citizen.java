@@ -46,7 +46,7 @@ public class Citizen {
 	public void setAssociatedBallotID(int associatedBallotID) {
 		this.associatedBallotID = associatedBallotID;
 	}
-	public boolean isCanVote() {
+	public boolean canVote() {
 		return canVote;
 	}
 	public void setCanVote(boolean canVote) {
@@ -75,7 +75,6 @@ public class Citizen {
 	public Citizen(int ID) {
 		this(ID, "<UNKNOWN>", LocalDate.now(), -1, false, false);
 	}
-
 	public Citizen(int ID, String fullName, LocalDate dateOfBirth, int associatedBallotID, boolean isIsolated,
 			boolean isWearingSuit) {
 		setID(ID);

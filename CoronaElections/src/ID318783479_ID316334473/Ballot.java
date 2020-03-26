@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 //import java.util.ArrayList;
 
-public class Ballot {
+public class Ballot /*implements iAssociateVoters*/ {
 	// Constants
 
 	// Fields
@@ -20,40 +20,33 @@ public class Ballot {
 	public int getID() {
 		return ID;
 	}
-
-	public void setID(int iD) {
-		ID = iD;
+	public void setID(int ID) {
+		this.ID = ID;
 	}
-
 	public String getAddress() {
 		return address;
 	}
-
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
 	public Citizen[] getVoterRegister() {
 		return voterRegister;
 	}
-
 	public void setVoterRegister(Citizen[] voterRegister) {
 		this.voterRegister = voterRegister;
 
 		setVoters();
 	}
-
-	/*
-	 * public ArrayList<Citizen> getVoterRegister() { return voterRegister; } public
-	 * void setVoterRegister(ArrayList<Citizen> voterRegister) { this.voterRegister
-	 * = voterRegister;
-	 * 
-	 * setVoters(); }
-	 */
+//	public ArrayList<Citizen> getVoterRegister() {
+//		return voterRegister;
+//	}
+//	public void setVoterRegister(ArrayList<Citizen> voterRegister) {
+//		this.voterRegister = voterRegister;  
+//		setVoters(); 
+//	}	 
 	public int getVoters() {
 		return voters;
 	}
-
 	public void setVoters() {
 		int currentYear = LocalDate.now().getYear();
 
@@ -62,11 +55,9 @@ public class Ballot {
 //		for (int i = 0; i < voterRegister.size(); i++)
 //			this.voters += (currentYear - voterRegister.get(i).getDateOfBirth().getYear()) >= Citizen.VOTING_AGE ? 1 : 0;
 	}
-
 	public int[] getResults() {
 		return results;
 	}
-
 	public void setResults(int[] results) {
 		this.results = results;
 	}
@@ -75,21 +66,20 @@ public class Ballot {
 	public Ballot() {
 		this("<UNKNOWN>", new Citizen[Program.MAX_ARRAY_SIZE], new int[Elections.getParties().length]);
 	}
-
 	public Ballot(String address) {
 		this(address, new Citizen[Program.MAX_ARRAY_SIZE], new int[Elections.getParties().length]);
-
 	}
-
 	public Ballot(String address, Citizen[] voterRegister, int[] results) {
 		setID(IDGenerator++);
 		setAddress(address);
 		setVoterRegister(voterRegister);
 		setResults(results);
 	}
-
 //	public Ballot() {
 //		//this("<UNKNOWN>", new ArrayList<Citizen>(), new int[Elections.getParties().size()]);
+//	}
+//	public Ballot(String address) {
+//		this(address, new new ArrayList<Citizen>(), new int[Elections.getParties().length]);
 //	}
 //	public Ballot(String address, ArrayList<Citizen> voterRegister, int[] results) {
 //		setID(IDGenerator++);
@@ -99,8 +89,57 @@ public class Ballot {
 //	}
 
 	// Methods
+	private void associateVoters() {
+		Citizen[] voterRegister = Elections.getVoterRegister();
+		
+		for (int i = 0; i < voterRegister.length; i++)
+//			if(voterRegister.get(i).getAssociatedBallotID() == this.ID)
+			if(voterRegister[i].getAssociatedBallotID() == this.ID)
+				addVoter(voterRegister[i]);
+	}	
+	public Citizen getVoterByID(int voterID) {
+		for (int i = 0; i < voterRegister.length; i++)
+//			if(voterRegister.get(i).getAssociatedBallotID() == this.ID)
+			if(voterRegister[i].getID() == voterID)
+				return voterRegister[i];
+		
+		return null;
+	}
+	public int getVoterOffsetByID(int voterID) {
+		for (int i = 0; i < voterRegister.length; i++)
+//			if(voterRegister.get(i).getAssociatedBallotID() == this.ID)
+			if(voterRegister[i].getID() == voterID)
+				return i;
+		
+		return -1;
+	}
+	public boolean addVoter(Citizen addedVoter) {
+		if((voterRegister.length + 1) > Program.MAX_ARRAY_SIZE)
+//		if((voterRegister.size() + 1) > Program.MAX_ARRAY_SIZE)
+			return false;
 
-	// TODO: "addVoterFromRegistry" method
+//		voterRegister.add(addedVoter);
+		voterRegister = Arrays.copyOf(voterRegister, voterRegister.length + 1);
+		voterRegister[voterRegister.length - 1] = addedVoter;
+		
+		return true;
+	}
+	public boolean removeVoter(int voterID) {
+		int voterOffset = getVoterOffsetByID(voterID);
+		
+		if(voterOffset == -1)
+			return false;
+		
+//		voterRegister.removeAt(voterOffset);
+		voterRegister[voterOffset] = null;
+		voterRegister = Arrays.copyOf(voterRegister, voterRegister.length - 1);
+		
+		return true;
+	}	
+	public void vote(int voterID, int partyOffset) {
+		results[partyOffset]++;
+		getVoterByID(voterID).setCanVote(false);
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -146,8 +185,7 @@ public class Ballot {
 			voterRegisterStr += "\n" + voterRegister[i].toString();
 		for (int i = 0; i < results.length; i++)
 			resultsStr += String.format("\n[%s | %s]", parties[i].getName(), results[i]);
-		// resultsStr += String.format("\n[%s | %s]", parties.get(i).getName(),
-		// results[i]);
+		// resultsStr += String.format("\n[%s | %s]", parties.get(i).getName(), results[i]);
 
 		return String.format("Ballot [ID: %d | Address: %s | Voters: %d]\\nVoter Register:%s\nResults:%s", ID, address,
 				voters, voterRegisterStr, resultsStr);

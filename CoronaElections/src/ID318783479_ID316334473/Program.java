@@ -11,33 +11,25 @@ public class Program {
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-
 		Elections elections = new Elections();
-
-		Citizen[] Registry = new Citizen[MAX_ARRAY_SIZE];
-
-		Ballot[] ballots = new Ballot[MAX_ARRAY_SIZE];
+		Citizen[] voterRegister = new Citizen[MAX_ARRAY_SIZE];	//ArrayList<Citizen> citizens = new ArrayList<Citizen>();
+		Ballot[] ballots = new Ballot[MAX_ARRAY_SIZE];			//ArrayList<Ballot> ballots = new ArrayList<Ballot>();
+		Party[] parties = new Party[MAX_ARRAY_SIZE];			//ArrayList<Party> parties = new ArrayList<Party>();	
+		
+		// Inits ballots (minimum 2)
 		ballots[0] = new Ballot();
 		ballots[1] = new Ballot();
 		ballots[2] = new Ballot();
 		ballots[3] = new CoronaBallot();
 		ballots[4] = new MilitaryBallot();
-//		Elections elections = new Elections();
-//		ArrayList<Citizen> citizens = new ArrayList<Citizen>();
-//		ArrayList<Party> parties = new ArrayList<Party>();
-//		ArrayList<Ballot> ballots = new ArrayList<Ballot>();
-
-		// TODO: Hard-coded Citizens, Parties, Candidates, Ballots
-		// Citizens (5)
-		Citizen kane = new Citizen(123456789, "Charles Foster Kane", LocalDate.of(1941, 5, 1), ballots[0], false,
-				false);
-
-		Citizen Israel = new Citizen(101010101, "Israel Israeli", LocalDate.of(1948, 5, 14), ballots[3], true, false);
-		// Parties (3)
-
-		// Candidates (2 Candidates per party)
-
-		// Ballots (2)
+		
+		// TODO: Inits voter register (minimum 5)
+		Citizen kane = new Citizen(123456789, "Charles Foster Kane", LocalDate.of(1941, 5, 1), ballots[0].getID(), false, false);
+		Citizen Israel = new Citizen(101010101, "Israel Israeli", LocalDate.of(1948, 5, 14), ballots[3].getID(), true, false);
+		
+		// TODO: Inits parties (minimum 3)
+		
+		// TODO: Inits candidates (minimum 2 for each party)
 
 		int selection;
 		boolean loop = true;
