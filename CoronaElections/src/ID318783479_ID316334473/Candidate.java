@@ -1,6 +1,6 @@
 package ID318783479_ID316334473;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 
 public class Candidate extends Citizen {
 	// Constants
@@ -28,7 +28,7 @@ public class Candidate extends Citizen {
 		super(ID);
 		setRank(-1);
 	}
-	public Candidate(int ID, String fullName, LocalDate dateOfBirth, int associatedBallotID, boolean isIsolated, boolean isWearingSuit, int rank) {
+	public Candidate(int ID, String fullName, YearMonth dateOfBirth, int associatedBallotID, boolean isIsolated, boolean isWearingSuit, int rank) {
 		super(ID, fullName, dateOfBirth, associatedBallotID, isIsolated, isWearingSuit);
 		setRank(rank);
 	}
@@ -36,20 +36,24 @@ public class Candidate extends Citizen {
 	// Methods	
 	@Override
 	public boolean equals(Object obj) {
+		Candidate other;
+		
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Candidate other = (Candidate) obj;
+		
+		other = (Candidate) obj;
 		if (associatedPartyName == null) {
 			if (other.associatedPartyName != null)
 				return false;
 		} else if (!associatedPartyName.equals(other.associatedPartyName))
-			return false;
+				return false;		
 		if (rank != other.rank)
 			return false;
+		
 		return true;
 	}	
 	@Override

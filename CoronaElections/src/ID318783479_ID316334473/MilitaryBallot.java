@@ -1,26 +1,28 @@
 package ID318783479_ID316334473;
 
-public class MilitaryBallot extends Ballot /*implements iAssociateVoters*/ {
+import java.time.YearMonth;
+
+public class MilitaryBallot extends Ballot {
 	// Constants
-	
+
 	// Fields
-	
+
 	// Properties (Getters and Setters)
-	
+
 	// Constructors
-	public MilitaryBallot() {
-		super("<UNKNOWN>", new Citizen[Program.MAX_ARRAY_SIZE], new int[Elections.getParties().length]);
+	public MilitaryBallot(YearMonth votingDate) {
+		this("<UNKNOWN>", votingDate);
 	}
-	public MilitaryBallot(String address) {
-		super(address, new Citizen[Program.MAX_ARRAY_SIZE], new int[Elections.getParties().length]);
+	public MilitaryBallot(String address, YearMonth votingDate) {
+		super(address, votingDate);
 	}
-	public MilitaryBallot(String address, Citizen[] voterRegister, int[] results) {
-		super(address, voterRegister, results);
-	}
-	
 	// Methods
-//	@Override
-//	public void associateVoters() {
-//		TODO: COMPLETE
-//	}
+
+	@Override
+	public boolean addVoter(Citizen citizen) {
+		if (citizen.calculateAge(votingDate) <= Citizen.SOLDIER_AGE)
+			return super.addVoter(citizen);
+		
+		return false;
+	}
 }

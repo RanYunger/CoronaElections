@@ -1,22 +1,21 @@
 package ID318783479_ID316334473;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 
 public class Citizen {
 	// Constants
 	public static final int VOTING_AGE = 18;
 	public static final int SOLDIER_AGE = 21;
-	
+
 	// Fields
 	protected int ID;
 	protected String fullName;
-	protected LocalDate dateOfBirth;
-	protected int associatedBallotID;
-	protected boolean canVote;
+	protected YearMonth dateOfBirth;
+	protected int associatedBallotID; // can't have ballotID and not Ballot itself... fucks shit up a bit
 	protected boolean isIsolated;
-	protected boolean isSoldier;
 	protected boolean iswearingSuit;
-	
+
 	// Properties (Getters and Setters)
 	public int getID() {
 		return ID;
@@ -30,15 +29,11 @@ public class Citizen {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	public LocalDate getDateOfBirth() {
+	public YearMonth getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		int age = LocalDate.now().getYear() - dateOfBirth.getYear();
-		
+	public void setDateOfBirth(YearMonth dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
-		
-		setIsSoldier((age >= VOTING_AGE) && (age <= SOLDIER_AGE));
 	}
 	public int getAssociatedBallotID() {
 		return associatedBallotID;
@@ -46,11 +41,19 @@ public class Citizen {
 	public void setAssociatedBallotID(int associatedBallotID) {
 		this.associatedBallotID = associatedBallotID;
 	}
-	public boolean canVote() {
-		return canVote;
-	}
-	public void setCanVote(boolean canVote) {
-		this.canVote = canVote;
+	public boolean setAssociatedBallotID(Ballot ballot) {
+		if (associatedBallotID == ballot.getID())
+			return true;
+
+		if (associatedBallotID == -1) {
+			if (ballot.addVoter(this)) {
+				associatedBallotID = ballot.getID();
+				
+				return true;
+			}
+		}
+
+		return false;
 	}
 	public boolean isIsolated() {
 		return isIsolated;
@@ -58,38 +61,35 @@ public class Citizen {
 	public void setIsIsolated(boolean isIsolated) {
 		this.isIsolated = isIsolated;
 	}
-	public boolean isSoldier() {
-		return isSoldier;
-	}
-	public void setIsSoldier(boolean isSoldier) {
-		this.isSoldier = isSoldier;
-	}
 	public boolean isIswearingSuit() {
 		return iswearingSuit;
 	}
 	public void setIswearingSuit(boolean iswearingSuit) {
 		this.iswearingSuit = iswearingSuit;
 	}
-	
+
 	// Constructors
 	public Citizen(int ID) {
-		this(ID, "<UNKNOWN>", LocalDate.now(), -1, false, false);
+		this(ID, "<UNKNOWN>", YearMonth.now(), -1, false, false);
 	}
-	public Citizen(int ID, String fullName, LocalDate dateOfBirth, int associatedBallotID, boolean isIsolated,
-			boolean isWearingSuit) {
+	public Citizen(int ID, String fullName, YearMonth dateOfBirth, int associatedBallotID, boolean isIsolated, boolean isWearingSuit) {
 		setID(ID);
 		setFullName(fullName);
 		setDateOfBirth(dateOfBirth);
 		setAssociatedBallotID(associatedBallotID);
-		setCanVote(true);
 		setIsIsolated(isIsolated);
 		setIswearingSuit(isWearingSuit);
 	}
 	
 	// Methods
+	public int calculateAge(YearMonth votingDate) {
+		YearMonth birthMonth = YearMonth.from(dateOfBirth);
+		
+		return (int) birthMonth.until(votingDate, ChronoUnit.YEARS);
+	}
 	@Override
 	public boolean equals(Object obj) {
-		Citizen other = null;
+		Citizen other;
 		
 		if (this == obj)
 			return true;
@@ -103,8 +103,6 @@ public class Citizen {
 			return false;
 		if (associatedBallotID != other.associatedBallotID)
 			return false;
-		if (canVote != other.canVote)
-			return false;
 		if (dateOfBirth == null) {
 			if (other.dateOfBirth != null)
 				return false;
@@ -117,8 +115,6 @@ public class Citizen {
 			return false;
 		if (isIsolated != other.isIsolated)
 			return false;
-		if (isSoldier != other.isSoldier)
-			return false;
 		if (iswearingSuit != other.iswearingSuit)
 			return false;
 		
@@ -128,11 +124,11 @@ public class Citizen {
 	public String toString() {
 		String desctiptionStr = "";
 
-		desctiptionStr += isSoldier ? "Soldier," : "";
+//		desctiptionStr += calculateAge(votingDate) ? "Soldier," : "";
 		desctiptionStr += isIsolated ? "Isolated, " : "Not isolated, ";
 		desctiptionStr += iswearingSuit ? "Wearing suit" : "Not wearing suit";
-		
-		return String.format("Citizen [ID:%d | Full name: %s | DOB: %s | Status: %s | Associated Ballot ID: %d]",
-				ID, fullName, dateOfBirth.toString(), desctiptionStr, associatedBallotID);
+
+		return String.format("Citizen [ID:%d | Full name: %s | DOB: %s | Status: %s | Associated Ballot ID: %d]", ID,
+				fullName, dateOfBirth.toString(), desctiptionStr, associatedBallotID);
 	}
 }

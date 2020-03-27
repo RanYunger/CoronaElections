@@ -1,26 +1,28 @@
 package ID318783479_ID316334473;
 
-public class CoronaBallot extends Ballot /*implements iAssociateVoters*/ {
+import java.time.YearMonth;
+
+public class CoronaBallot extends Ballot {
 	// Constants
-	
+
 	// Fields
-	
+
 	// Properties (Getters and Setters)
-	
+
 	// Constructors
-	public CoronaBallot() {
-		super("<UNKNOWN>", new Citizen[Program.MAX_ARRAY_SIZE], new int[Elections.getParties().length]);
+	public CoronaBallot(YearMonth votingDate) {
+		this("<UNKNOWN>", votingDate);
 	}
-	public CoronaBallot(String address) {
-		super(address, new Citizen[Program.MAX_ARRAY_SIZE], new int[Elections.getParties().length]);
+	public CoronaBallot(String address, YearMonth votingDate) {
+		super(address, votingDate);
 	}
-	public CoronaBallot(String address, Citizen[] voterRegister, int[] results) {
-		super(address, voterRegister, results);
-	}
-		
+
 	// Methods
-//	@Override
-//	public void associateVoters() {
-//		TODO: COMPLETE
-//	}
+	@Override
+	public boolean addVoter(Citizen citizen) {
+		if (citizen.isIsolated)
+			return super.addVoter(citizen);
+		
+		return false;
+	}
 }
