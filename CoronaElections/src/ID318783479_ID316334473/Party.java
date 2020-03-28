@@ -1,7 +1,6 @@
 package ID318783479_ID316334473;
 
-import java.time.YearMonth;
-//import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 public class Party {
@@ -13,8 +12,9 @@ public class Party {
 	
 	private String name;
 	private PartyAssociation wing;
-	private YearMonth foundationDate;
+	private LocalDate foundationDate;
 	private Candidate[] candidates;
+	private int candidateCount;
 	
 	// Properties (Getters and Setters)
 	public String getName() {
@@ -29,10 +29,10 @@ public class Party {
 	private void setWing(PartyAssociation wing) {
 		this.wing = wing;
 	}
-	public YearMonth getFoundationDate() {
+	public LocalDate getFoundationDate() {
 		return foundationDate;
 	}
-	private void setFoundationDate(YearMonth foundationDate) {
+	private void setFoundationDate(LocalDate foundationDate) {
 		this.foundationDate = foundationDate;
 	}
 	public Candidate[] getCandidates() {
@@ -40,18 +40,23 @@ public class Party {
 	}
 	private void setCandidates(Candidate[] candidates) {
 		this.candidates = candidates;
-		sortCandidates();
 	}
-	
+	public int getCandidateCount() {
+		return candidateCount;
+	}
+	private void setCandidateCount(int candidateCount) {
+		this.candidateCount = candidateCount;
+	}
 	// Constructors
 	public Party() {
-		this("<UNKNOWN>", PartyAssociation.Center, YearMonth.now());
+		this("<UNKNOWN>", PartyAssociation.Center, LocalDate.now());
 	}
-	public Party(String name, PartyAssociation wing, YearMonth foundationDate) {
+	public Party(String name, PartyAssociation wing, LocalDate foundationDate) {
 		setName(name);
 		setWing(wing);
 		setFoundationDate(foundationDate);
-		setCandidates(new Candidate[Elections.MAX_ARRAY_SIZE]);	//setCandidates(new ArrayList<Candidate>());
+		setCandidates(new Candidate[Elections.MAX_ARRAY_SIZE]);
+		setCandidateCount(0);
 		
 		RANK_GENERATOR = 1;		
 	}
@@ -71,34 +76,57 @@ public class Party {
 		
 		return -1;
 	}
-	public boolean addCandidate(Candidate addedCandidate) {
-		Candidate[] newCandidatesArray = new Candidate[candidates.length + 1];
+	public boolean addCandidate(Candidate candidate) {
+		int i;
 		
-		if(newCandidatesArray.length >= Elections.MAX_ARRAY_SIZE)
+		// Validations
+		if (candidateCount == Elections.MAX_ARRAY_SIZE)
 			return false;
-		
-		addedCandidate.setRank(RANK_GENERATOR++);
-		candidates = Arrays.copyOf(candidates, candidates.length + 1);
-		newCandidatesArray[newCandidatesArray.length - 1] = addedCandidate;
-		sortCandidates();
-		
+		if (candidateCount == 0) {
+			candidates[candidateCount++] = candidate;
+			candidate.setAssociatedParty(this);
+			candidate.setRank(RANK_GENERATOR++);
+			
+			return true;
+		}
+		if (getCandidateByID(candidate.getID()) != null)
+			return false;
+
+		i = candidateCount - 1;
+		while (i >= 0 && candidates[i].getRank() > candidate.getRank()) {
+			candidates[i + 1] = candidates[i];
+			i--;
+		}
+		candidates[i] = candidate;
+		candidate.setAssociatedParty(this);
+		candidate.setRank(RANK_GENERATOR++);
+		candidateCount++;
+
 		return true;
 	}
 	public boolean removeCandidate(int candidateID) {
-		int candidateOffset = getCandidateOffsetByID(candidateID);
+		int candidateOffset = getCandidateOffsetByID(candidateID), i;
 		
-		if(candidateOffset == -1)
+		// Validations
+		if (candidateCount == 0)
 			return false;
-		
+		if (candidateOffset == -1)
+			return false;
+
 		candidates[candidateOffset] = null;
-		candidates = Arrays.copyOf(candidates, candidates.length - 1);
-		sortCandidates();
+		i = candidateOffset;
+		while (i < candidateCount && candidates[i].getRank() < candidates[i + 1].getRank()) {
+			candidates[i] = candidates[i + 1];
+			i++;
+		}
+		candidateCount--;
+		
+		// prevents inconsistencies, such as 2, 3, 4... or 1, 2, 4, 5...
+		for (i = 0; i < candidateCount; i++)
+			candidates[i].setRank(i + 1); 
 		
 		return true;
 	}	
-	public void sortCandidates() {
-		// TODO: implement this method (implement quicksort method in TUI for Candidate's ranks ~Ran)
-	}
 	@Override
 	public boolean equals(Object obj) {
 		Party other = null;
@@ -130,12 +158,6 @@ public class Party {
 	}
 	@Override
 	public String toString() {
-		String candidatesStr = "";
-		
-		for (int i = 0; i < candidates.length; i++)
-			candidatesStr += "\n" + candidates[i].toString();
-		
-		return String.format("Party [Name: %s | Association: %s | Founded: %d]\nCandidates:%s",
-				name, wing.name(), foundationDate.getYear(), candidatesStr);
+		return String.format("Party [Name: %s | Association: %s | Foundation: %d]", name, wing.name(), foundationDate.toString());
 	}
 }

@@ -20,7 +20,9 @@ public class MilitaryBallot extends Ballot {
 
 	@Override
 	public boolean addVoter(Citizen citizen) {
-		if (citizen.calculateAge(votingDate) <= Citizen.SOLDIER_AGE)
+		int citizenAge = voterRegistry.getVotingDate().getYear() - citizen.getYearOfBirth();
+		
+		if (citizenAge <= Citizen.SOLDIER_AGE)
 			return super.addVoter(citizen);
 		
 		return false;

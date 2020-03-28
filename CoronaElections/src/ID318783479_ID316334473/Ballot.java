@@ -1,6 +1,7 @@
 package ID318783479_ID316334473;
 
 import java.time.YearMonth;
+import java.util.Scanner;
 
 public class Ballot {
 	// Constants
@@ -11,21 +12,39 @@ public class Ballot {
 	protected int ID;
 	protected String address;
 	protected VoterRegistry voterRegistry;
+	protected double votersPercentage;
 	protected int[] results;
-	protected YearMonth votingDate;
 
 	// Properties (Getters and Setters)
 	public int getID() {
 		return ID;
 	}
+	private void setID(int ID) {
+		this.ID = ID;
+	}
 	public String getAddress() {
 		return address;
 	}
-	public void setAddress(String address) {
+	private void setAddress(String address) {
 		this.address = address;
+	}
+	public VoterRegistry getVoterRegistry() {
+		return voterRegistry;
+	}
+	private void setVoterRegistry(VoterRegistry voterRegistry) {
+		this.voterRegistry = voterRegistry;
+	}
+	public double getVotersPercentage() {
+		return votersPercentage;
+	}
+	private void setVotersPercentage(double votersPercentage) {
+		this.votersPercentage = votersPercentage;
 	}
 	public int[] getResults() {
 		return results;
+	}
+	private void setResults(int[] results) {
+		this.results = results;
 	}
 	
 	// Constructors
@@ -33,36 +52,57 @@ public class Ballot {
 		this("<UNKNOWN>", votingDate);
 	}
 	public Ballot(String address, YearMonth votingDate) {
-		ID = IDGenerator++;
+		setID(IDGenerator++);
 		setAddress(address);
-		voterRegistry = new VoterRegistry(votingDate);
+		setVoterRegistry(new VoterRegistry(votingDate));
+		setVotersPercentage(0);
+		setResults(null);
 	}
 
 	// Methods
-	public Citizen getCitizenByID(int voterID) {
-		return voterRegistry.getCitizenByID(voterID);
+	public Citizen getCitizenByID(int citizenID) {
+		return voterRegistry.getCitizenByID(citizenID);
 	}
 	public boolean addVoter(Citizen citizen) {
-		if (citizen.getAssociatedBallotID() == ID)
+		if (citizen.getAssociatedBallot().getID() == ID)
 			return true;
 
-		if (citizen.getAssociatedBallotID() == -1)
+		if (citizen.getAssociatedBallot().getID() == -1)
 			if (voterRegistry.addCitizen(citizen)) {
-				citizen.setAssociatedBallotID(this);
+				citizen.setAssociatedBallot(this);
+				setVotersPercentage((votersPercentage / voterRegistry.getVoterCount()) * 100);
+				
 				return true;
 			}
 
 		return false;
 	}
-	public boolean vote(String partyName) {
-		int partyOffset = Elections.getPartyOffsetByName(partyName);
+	public boolean removeVoter(int citizenID) {
+		Citizen citizen = getCitizenByID(citizenID);
 		
-		if(partyOffset == -1)
-			return false;
+		if(citizen == null)
+			return false;		
+		if(citizen.getAssociatedBallot().getID() == ID) {
+			if (voterRegistry.removeCitizen(citizenID)) {
+				citizen.setAssociatedBallot(null);
+				setVotersPercentage((votersPercentage / voterRegistry.getVoterCount()) * 100);
+				
+				return true;
+			}
+		}
+
+		return false;
+	}
+	public int[] vote(Scanner scan, Party[] candidateParties) {
+		int voterCount = voterRegistry.getVoterCount(), currVoterChoice;
+		Citizen[] votersArr = voterRegistry.getVoterRegistry();
 		
-		results[partyOffset]++;
+		for (int i = 0; i < voterCount; i++) {
+			currVoterChoice = votersArr[i].vote(scan, candidateParties);
+			results[currVoterChoice]++;
+		}
 		
-		return true;
+		return results;
 	}
 	@Override
 	public String toString() {

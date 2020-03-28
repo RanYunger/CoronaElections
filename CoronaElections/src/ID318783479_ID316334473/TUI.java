@@ -11,7 +11,7 @@ public class TUI {
 		// TODO: implement this method
 	}
 
-	public static int Menu(Scanner scan, boolean electionsOccurred) {
+	public static int menu(Scanner scan, boolean electionsOccurred) {
 		System.out.println("To add a ballot, enter 1");
 		System.out.println("To add a citizen, enter 2");
 		System.out.println("To add a party, enter 3");

@@ -1,20 +1,18 @@
 package ID318783479_ID316334473;
 
-import java.time.YearMonth;
-
 public class Candidate extends Citizen {
 	// Constants
 	
 	// Fields
-	private String associatedPartyName;
+	private Party associatedParty;
 	private int rank;
 	
 	// Properties (Getters and Setters)
-	public String getAssociatedPartyName() {
-		return associatedPartyName;
+	public Party getAssociatedParty() {
+		return associatedParty;
 	}
-	public void setAssociatedPartyName(String associatedPartyName) {
-		this.associatedPartyName = associatedPartyName;
+	public void setAssociatedParty(Party associatedParty) {
+		this.associatedParty = associatedParty;
 	}
 	public int getRank() {
 		return rank;
@@ -28,8 +26,8 @@ public class Candidate extends Citizen {
 		super(ID);
 		setRank(-1);
 	}
-	public Candidate(int ID, String fullName, YearMonth dateOfBirth, int associatedBallotID, boolean isIsolated, boolean isWearingSuit, int rank) {
-		super(ID, fullName, dateOfBirth, associatedBallotID, isIsolated, isWearingSuit);
+	public Candidate(int ID, String fullName, int yearOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit, int rank) {
+		super(ID, fullName, yearOfBirth, associatedBallot, isIsolated, isWearingSuit);
 		setRank(rank);
 	}
 	
@@ -46,10 +44,10 @@ public class Candidate extends Citizen {
 			return false;
 		
 		other = (Candidate) obj;
-		if (associatedPartyName == null) {
-			if (other.associatedPartyName != null)
+		if (associatedParty == null) {
+			if (other.associatedParty != null)
 				return false;
-		} else if (!associatedPartyName.equals(other.associatedPartyName))
+		} else if (!associatedParty.equals(other.associatedParty))
 				return false;		
 		if (rank != other.rank)
 			return false;
@@ -58,6 +56,6 @@ public class Candidate extends Citizen {
 	}	
 	@Override
 	public String toString() {
-		return String.format("Candidate [Full Name: %s | Party: %s (ranked #%d)]", fullName, associatedPartyName, rank);
+		return String.format("Candidate [Full Name: %s | Party: %s (ranked #%d)]", fullName, associatedParty.getName(), rank);
 	}
 }

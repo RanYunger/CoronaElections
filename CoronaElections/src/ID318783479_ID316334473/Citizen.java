@@ -1,7 +1,7 @@
 package ID318783479_ID316334473;
 
-import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
+import java.time.Year;
+import java.util.Scanner;
 
 public class Citizen {
 	// Constants
@@ -11,8 +11,8 @@ public class Citizen {
 	// Fields
 	protected int ID;
 	protected String fullName;
-	protected YearMonth dateOfBirth;
-	protected int associatedBallotID; // can't have ballotID and not Ballot itself... fucks shit up a bit
+	protected int yearOfBirth;
+	protected Ballot associatedBallot;
 	protected boolean isIsolated;
 	protected boolean iswearingSuit;
 
@@ -20,72 +20,64 @@ public class Citizen {
 	public int getID() {
 		return ID;
 	}
-	public void setID(int iD) {
+	private void setID(int iD) {
 		ID = iD;
 	}
 	public String getFullName() {
 		return fullName;
 	}
-	public void setFullName(String fullName) {
+	private void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	public YearMonth getDateOfBirth() {
-		return dateOfBirth;
+	public int getYearOfBirth() {
+		return yearOfBirth;
 	}
-	public void setDateOfBirth(YearMonth dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
+	private void setYearOfBirth(int yearOfBirth) {
+		this.yearOfBirth = yearOfBirth;
 	}
-	public int getAssociatedBallotID() {
-		return associatedBallotID;
+	public Ballot getAssociatedBallot() {
+		return associatedBallot;
 	}
-	public void setAssociatedBallotID(int associatedBallotID) {
-		this.associatedBallotID = associatedBallotID;
-	}
-	public boolean setAssociatedBallotID(Ballot ballot) {
-		if (associatedBallotID == ballot.getID())
-			return true;
-
-		if (associatedBallotID == -1) {
-			if (ballot.addVoter(this)) {
-				associatedBallotID = ballot.getID();
-				
-				return true;
-			}
-		}
-
-		return false;
+	public void setAssociatedBallot(Ballot associatedBallot) {
+		this.associatedBallot = associatedBallot;
 	}
 	public boolean isIsolated() {
 		return isIsolated;
 	}
-	public void setIsIsolated(boolean isIsolated) {
+	private void setIsIsolated(boolean isIsolated) {
 		this.isIsolated = isIsolated;
 	}
 	public boolean isIswearingSuit() {
 		return iswearingSuit;
 	}
-	public void setIswearingSuit(boolean iswearingSuit) {
+	private void setIswearingSuit(boolean iswearingSuit) {
 		this.iswearingSuit = iswearingSuit;
 	}
 
 	// Constructors
 	public Citizen(int ID) {
-		this(ID, "<UNKNOWN>", YearMonth.now(), -1, false, false);
+		this(ID, "<UNKNOWN>", Year.now().getValue(), null, false, false);
 	}
-	public Citizen(int ID, String fullName, YearMonth dateOfBirth, int associatedBallotID, boolean isIsolated, boolean isWearingSuit) {
+	public Citizen(int ID, String fullName, int yearOfBirth, Ballot associatedBallot, boolean isIsolated, boolean isWearingSuit) {
 		setID(ID);
 		setFullName(fullName);
-		setDateOfBirth(dateOfBirth);
-		setAssociatedBallotID(associatedBallotID);
+		setYearOfBirth(yearOfBirth);
+		setAssociatedBallot(associatedBallot);
 		setIsIsolated(isIsolated);
 		setIswearingSuit(isWearingSuit);
 	}
 	
 	// Methods
-	public int calculateAge(YearMonth votingDate) {
-		YearMonth birthMonth = YearMonth.from(dateOfBirth);
+	public int vote(Scanner scan, Party[] candidateParties) {
+		System.out.println(String.format("Greetings, %d. Do you want to vote? (Y/N)", fullName));
+		if(scan.nextLine().toUpperCase() == "Y") {
+			for (int i = 0; i < candidateParties.length; i++)
+				System.out.println(String.format("%d = %s", i + 1, candidateParties[i].getName()));
+			System.out.println("Enter the code for your chosen party:");
+			return scan.nextInt();
+		}
 		
-		return (int) birthMonth.until(votingDate, ChronoUnit.YEARS);
+		return -1;
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -101,12 +93,7 @@ public class Citizen {
 		other = (Citizen) obj;
 		if (ID != other.ID)
 			return false;
-		if (associatedBallotID != other.associatedBallotID)
-			return false;
-		if (dateOfBirth == null) {
-			if (other.dateOfBirth != null)
-				return false;
-		} else if (!dateOfBirth.equals(other.dateOfBirth))
+		if (associatedBallot != other.associatedBallot)
 			return false;
 		if (fullName == null) {
 			if (other.fullName != null)
@@ -117,18 +104,21 @@ public class Citizen {
 			return false;
 		if (iswearingSuit != other.iswearingSuit)
 			return false;
+		if (yearOfBirth != other.yearOfBirth)
+			return false;
 		
 		return true;
 	}
 	@Override
 	public String toString() {
 		String desctiptionStr = "";
-
-//		desctiptionStr += calculateAge(votingDate) ? "Soldier," : "";
+		int age = Year.now().getValue() - yearOfBirth;
+		
+		desctiptionStr += (age >= VOTING_AGE) && (age <= SOLDIER_AGE) ? "Soldier," : "";
 		desctiptionStr += isIsolated ? "Isolated, " : "Not isolated, ";
 		desctiptionStr += iswearingSuit ? "Wearing suit" : "Not wearing suit";
-
-		return String.format("Citizen [ID:%d | Full name: %s | DOB: %s | Status: %s | Associated Ballot ID: %d]", ID,
-				fullName, dateOfBirth.toString(), desctiptionStr, associatedBallotID);
+		
+		return String.format("Citizen [ID:%d | Full name: %s | Born: %d | Status: %s | Associated Ballot ID: %d]", ID,
+				fullName, yearOfBirth, desctiptionStr, associatedBallot.getID());
 	}
 }

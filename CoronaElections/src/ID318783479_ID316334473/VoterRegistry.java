@@ -3,7 +3,6 @@ package ID318783479_ID316334473;
 import java.time.YearMonth;
 import java.util.Arrays;
 
-// Wrapper class for the Citizen[] voterRegistry array
 public class VoterRegistry {
 	// Constants
 
@@ -12,24 +11,39 @@ public class VoterRegistry {
 	private int voterCount;
 	private YearMonth votingDate;
 
-	// Properties (Getters and Setters)
+	// Properties (Getters and Setters)	
+	public Citizen[] getVoterRegistry() {
+		return voterRegistry;
+	}	
+	private void setVoterRegistry(Citizen[] voterRegistry) {
+		this.voterRegistry = voterRegistry;
+	}	
 	public int getVoterCount() {
 		return voterCount;
 	}
+	private void setVoterCount(int voterCount) {
+		this.voterCount = voterCount;
+	}	
 	public YearMonth getVotingDate() {
 		return votingDate;
 	}
-
-	// Constructors
-	public VoterRegistry(YearMonth votingDate) {
-		voterRegistry = new Citizen[Elections.MAX_ARRAY_SIZE];
-		voterCount = 0;
+	private void setVotingDate(YearMonth votingDate) {
 		this.votingDate = votingDate;
 	}
 
+	// Constructors
+	public VoterRegistry() {
+		this(YearMonth.now());
+	}
+	public VoterRegistry(YearMonth votingDate) {
+		setVoterRegistry(new Citizen[Elections.MAX_ARRAY_SIZE]);
+		setVoterCount(0);
+		setVotingDate(votingDate);
+	}
+
 	// Methods
-	public Citizen getCitizenByID(int voterID) {
-		return (voterCount > 0) ? getCitizenByID(0, voterCount - 1, voterID) : null;
+	public Citizen getCitizenByID(int citizenID) {
+		return (voterCount > 0) ? getCitizenByID(0, voterCount - 1, citizenID) : null;
 	}
 	private Citizen getCitizenByID(int leftIndex, int rightIndex, int voterID) {
 		int mid;
@@ -46,38 +60,55 @@ public class VoterRegistry {
 
 		return null;
 	}
-
-	// extra case parameters will be considered in user classes (Ballot,
-	// CoronaBallot, and MilitaryBallot)
+	public int getCitizenOffsetByID(int citizenID) {
+		for (int i = 0; i < voterCount; i++)
+			if(voterRegistry[i].getID() == citizenID)
+				return i;
+		
+		return -1;
+	}
 	public boolean addCitizen(Citizen citizen) {
 		int i;
 		
-		// Edge case: count = 100
+		// Validations
 		if (voterCount == Elections.MAX_ARRAY_SIZE)
 			return false;
-		// Edge case: count = 0
 		if (voterCount == 0) {
 			voterRegistry[voterCount++] = citizen;
 			
 			return true;
 		}
-
-		// Citizen already in registry
 		if (getCitizenByID(citizen.getID()) != null)
 			return false;
-
-		// Voter cannot be younger than 18 years old
-		if (citizen.calculateAge(votingDate) < Citizen.VOTING_AGE)
+		if ((citizen.getYearOfBirth() - votingDate.getYear()) < Citizen.VOTING_AGE)
 			return false;
 
-		// Average case: 0 < count < 100
 		i = voterCount - 1;
 		while (i >= 0 && voterRegistry[i].getID() > citizen.getID()) {
 			voterRegistry[i + 1] = voterRegistry[i];
-			i = i - 1;
+			i--;
 		}
 		voterRegistry[i] = citizen;
 		voterCount++;
+
+		return true;
+	}
+	public boolean removeCitizen(int citizenID) {
+		int citizenOffset = getCitizenOffsetByID(citizenID), i;
+		
+		// Validations
+		if (voterCount == 0)
+			return false;
+		if (citizenOffset == -1)
+			return false;
+
+		voterRegistry[citizenOffset] = null;
+		i = citizenOffset;
+		while (i < voterCount && voterRegistry[i].getID() < voterRegistry[i].getID()) {
+			voterRegistry[i] = voterRegistry[i + 1];
+			i++;
+		}
+		voterCount--;
 
 		return true;
 	}
