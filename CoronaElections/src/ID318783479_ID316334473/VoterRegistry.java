@@ -11,22 +11,27 @@ public class VoterRegistry {
 	private int voterCount;
 	private YearMonth votingDate;
 
-	// Properties (Getters and Setters)	
+	// Properties (Getters and Setters)
 	public Citizen[] getVoterRegistry() {
 		return voterRegistry;
-	}	
+	}
+
 	private void setVoterRegistry(Citizen[] voterRegistry) {
 		this.voterRegistry = voterRegistry;
-	}	
+		voterCount = 0;
+		for (int i = 0; i < voterRegistry.length && voterRegistry[i] != null; i++) {
+			voterCount++;
+		}
+	}
+
 	public int getVoterCount() {
 		return voterCount;
 	}
-	private void setVoterCount(int voterCount) {
-		this.voterCount = voterCount;
-	}	
+
 	public YearMonth getVotingDate() {
 		return votingDate;
 	}
+
 	private void setVotingDate(YearMonth votingDate) {
 		this.votingDate = votingDate;
 	}
@@ -35,57 +40,56 @@ public class VoterRegistry {
 	public VoterRegistry() {
 		this(YearMonth.now());
 	}
+
 	public VoterRegistry(YearMonth votingDate) {
 		setVoterRegistry(new Citizen[Elections.MAX_ARRAY_SIZE]);
-		setVoterCount(0);
+		voterCount = 0;
 		setVotingDate(votingDate);
 	}
 
 	// Methods
-	public Citizen getCitizenByID(int citizenID) {
-		return (voterCount > 0) ? getCitizenByID(0, voterCount - 1, citizenID) : null;
+	public Citizen get(int citizenID) {
+		return (indexOf(citizenID) == -1) ? null : voterRegistry[indexOf(citizenID)];
 	}
-	private Citizen getCitizenByID(int leftIndex, int rightIndex, int voterID) {
+
+	public int indexOf(int citizenID) {
+		return indexOf(0, voterCount - 1, citizenID);
+	}
+
+	private int indexOf(int leftIndex, int rightIndex, int citizenID) {
 		int mid;
-		
+
 		if (rightIndex >= leftIndex) {
 			mid = leftIndex + (rightIndex - leftIndex) / 2;
-			if (voterRegistry[mid].getID() == voterID)
-				return voterRegistry[mid];
-			if (voterRegistry[mid].getID() > voterID)
-				return getCitizenByID(leftIndex, mid - 1, voterID);
+			if (voterRegistry[mid].getID() == citizenID)
+				return mid;
+			if (voterRegistry[mid].getID() > citizenID)
+				return indexOf(leftIndex, mid - 1, citizenID);
 
-			return getCitizenByID(mid + 1, rightIndex, voterID);
+			return indexOf(mid + 1, rightIndex, citizenID);
 		}
 
-		return null;
-	}
-	public int getCitizenOffsetByID(int citizenID) {
-		for (int i = 0; i < voterCount; i++)
-			if(voterRegistry[i].getID() == citizenID)
-				return i;
-		
 		return -1;
 	}
-	public boolean addCitizen(Citizen citizen) {
+
+	public boolean add(Citizen citizen) {
 		int i;
-		
+
 		// Validations
 		if (voterCount == Elections.MAX_ARRAY_SIZE)
 			return false;
 		if (voterCount == 0) {
 			voterRegistry[voterCount++] = citizen;
-			
 			return true;
 		}
-		if (getCitizenByID(citizen.getID()) != null)
+		if (get(citizen.getID()) != null)
 			return false;
-		if ((citizen.getYearOfBirth() - votingDate.getYear()) < Citizen.VOTING_AGE)
+		if ((votingDate.getYear() - citizen.getYearOfBirth()) < Citizen.VOTING_AGE)
 			return false;
 
-		i = voterCount - 1;
-		while (i >= 0 && voterRegistry[i].getID() > citizen.getID()) {
-			voterRegistry[i + 1] = voterRegistry[i];
+		i = voterCount;
+		while (i > 0 && voterRegistry[i - 1].getID() > citizen.getID()) {
+			voterRegistry[i] = voterRegistry[i - 1];
 			i--;
 		}
 		voterRegistry[i] = citizen;
@@ -93,9 +97,10 @@ public class VoterRegistry {
 
 		return true;
 	}
-	public boolean removeCitizen(int citizenID) {
-		int citizenOffset = getCitizenOffsetByID(citizenID), i;
-		
+
+	public boolean remove(int citizenID) {
+		int citizenOffset = indexOf(citizenID), i;
+
 		// Validations
 		if (voterCount == 0)
 			return false;
@@ -112,10 +117,22 @@ public class VoterRegistry {
 
 		return true;
 	}
+
+	public boolean updateCitizenToCandidate(Citizen citizen) {
+		int index = indexOf(citizen.getID());
+		if (index != -1) {
+			if (citizen.getClass() == Citizen.class) // "morphs" the Citizen in to a Candidate
+				voterRegistry[index] = new Candidate(citizen.getID(), citizen.getFullName(), citizen.getYearOfBirth(),
+						citizen.getAssociatedBallot(), citizen.isIsolated(), citizen.isIswearingSuit(), null, -1);
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		VoterRegistry other;
-		
+
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -124,21 +141,22 @@ public class VoterRegistry {
 			return false;
 
 		other = (VoterRegistry) obj;
-		
+
 		return voterCount == other.voterCount && Arrays.equals(voterRegistry, other.voterRegistry)
 				&& votingDate.equals(other.votingDate);
 	}
+
 	@Override
 	public String toString() {
-		StringBuilder stringBuilder;
-		
+		StringBuilder desctiption;
+
 		if (voterCount == 0)
 			return "Nothing to See here..";
 
-		stringBuilder = new StringBuilder("Date of voting: " + votingDate + "\nVoter list:\n");
+		desctiption = new StringBuilder("Date of voting: " + votingDate + "\nVoter list:\n");
 		for (int i = 0; i < voterCount; i++)
-			stringBuilder.append(voterRegistry[i].toString());
-		
-		return stringBuilder.toString();
+			desctiption.append(voterRegistry[i].toString() + "\n");
+
+		return desctiption.toString();
 	}
 }

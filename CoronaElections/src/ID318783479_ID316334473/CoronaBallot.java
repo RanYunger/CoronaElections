@@ -13,6 +13,7 @@ public class CoronaBallot extends Ballot {
 	public CoronaBallot(YearMonth votingDate) {
 		this("<UNKNOWN>", votingDate);
 	}
+
 	public CoronaBallot(String address, YearMonth votingDate) {
 		super(address, votingDate);
 	}
@@ -22,7 +23,7 @@ public class CoronaBallot extends Ballot {
 	public boolean addVoter(Citizen citizen) {
 		if (citizen.isIsolated)
 			return super.addVoter(citizen);
-		
+
 		return false;
 	}
 }

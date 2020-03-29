@@ -5,80 +5,95 @@ import java.util.Arrays;
 
 public class Party {
 	// Constants
-	enum PartyAssociation {Left, Center, Right}
-	
+	public enum PartyAssociation {
+		Left, Center, Right
+	}
+
 	// Fields
 	private int RANK_GENERATOR;
-	
+
 	private String name;
 	private PartyAssociation wing;
 	private LocalDate foundationDate;
 	private Candidate[] candidates;
 	private int candidateCount;
-	
+
 	// Properties (Getters and Setters)
 	public String getName() {
 		return name;
 	}
+
 	private void setName(String name) {
 		this.name = name;
 	}
+
 	public PartyAssociation getWing() {
 		return wing;
 	}
+
 	private void setWing(PartyAssociation wing) {
 		this.wing = wing;
 	}
+
 	public LocalDate getFoundationDate() {
 		return foundationDate;
 	}
+
 	private void setFoundationDate(LocalDate foundationDate) {
 		this.foundationDate = foundationDate;
 	}
+
 	public Candidate[] getCandidates() {
 		return candidates;
 	}
+
 	private void setCandidates(Candidate[] candidates) {
 		this.candidates = candidates;
 	}
+
 	public int getCandidateCount() {
 		return candidateCount;
 	}
+
 	private void setCandidateCount(int candidateCount) {
 		this.candidateCount = candidateCount;
 	}
+
 	// Constructors
 	public Party() {
 		this("<UNKNOWN>", PartyAssociation.Center, LocalDate.now());
 	}
+
 	public Party(String name, PartyAssociation wing, LocalDate foundationDate) {
 		setName(name);
 		setWing(wing);
 		setFoundationDate(foundationDate);
 		setCandidates(new Candidate[Elections.MAX_ARRAY_SIZE]);
 		setCandidateCount(0);
-		
-		RANK_GENERATOR = 1;		
+
+		RANK_GENERATOR = 1;
 	}
-	
+
 	// Methods
 	public Candidate getCandidateByID(int candidateID) {
 		for (int i = 0; i < candidates.length; i++)
-			if(candidates[i].getID() == candidateID)
+			if (candidates[i].getID() == candidateID)
 				return candidates[i];
-		
+
 		return null;
 	}
+
 	public int getCandidateOffsetByID(int candidateID) {
 		for (int i = 0; i < candidates.length; i++)
-			if(candidates[i].getID() == candidateID)
+			if (candidates[i].getID() == candidateID)
 				return i;
-		
+
 		return -1;
 	}
+
 	public boolean addCandidate(Candidate candidate) {
 		int i;
-		
+
 		// Validations
 		if (candidateCount == Elections.MAX_ARRAY_SIZE)
 			return false;
@@ -86,7 +101,7 @@ public class Party {
 			candidates[candidateCount++] = candidate;
 			candidate.setAssociatedParty(this);
 			candidate.setRank(RANK_GENERATOR++);
-			
+
 			return true;
 		}
 		if (getCandidateByID(candidate.getID()) != null)
@@ -104,9 +119,10 @@ public class Party {
 
 		return true;
 	}
+
 	public boolean removeCandidate(int candidateID) {
 		int candidateOffset = getCandidateOffsetByID(candidateID), i;
-		
+
 		// Validations
 		if (candidateCount == 0)
 			return false;
@@ -120,24 +136,25 @@ public class Party {
 			i++;
 		}
 		candidateCount--;
-		
+
 		// prevents inconsistencies, such as 2, 3, 4... or 1, 2, 4, 5...
 		for (i = 0; i < candidateCount; i++)
-			candidates[i].setRank(i + 1); 
-		
+			candidates[i].setRank(i + 1);
+
 		return true;
-	}	
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Party other = null;
-		
+
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		
+
 		other = (Party) obj;
 		if (!Arrays.equals(candidates, other.candidates))
 			return false;
@@ -153,11 +170,13 @@ public class Party {
 			return false;
 		if (wing != other.wing)
 			return false;
-		
+
 		return true;
 	}
+
 	@Override
 	public String toString() {
-		return String.format("Party [Name: %s | Association: %s | Foundation: %d]", name, wing.name(), foundationDate.toString());
+		return String.format("Party [Name: %s | Association: %s | Foundation: %d]", name, wing.name(),
+				foundationDate.toString());
 	}
 }

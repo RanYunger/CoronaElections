@@ -13,6 +13,7 @@ public class MilitaryBallot extends Ballot {
 	public MilitaryBallot(YearMonth votingDate) {
 		this("<UNKNOWN>", votingDate);
 	}
+
 	public MilitaryBallot(String address, YearMonth votingDate) {
 		super(address, votingDate);
 	}
@@ -21,10 +22,10 @@ public class MilitaryBallot extends Ballot {
 	@Override
 	public boolean addVoter(Citizen citizen) {
 		int citizenAge = voterRegistry.getVotingDate().getYear() - citizen.getYearOfBirth();
-		
+
 		if (citizenAge <= Citizen.SOLDIER_AGE)
 			return super.addVoter(citizen);
-		
+
 		return false;
 	}
 }

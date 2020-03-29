@@ -9,60 +9,61 @@ public class Elections {
 
 	// Constants
 	public static final int MAX_ARRAY_SIZE = 100;
-	
-	// Fields
 
-	// These are a bit awful in my opinion, but it works for now, so... ~Shy
-	public static final Party[] partyRegistry = new Party[MAX_ARRAY_SIZE];
-	private static int partyCount = 0;
-	public static final Ballot[] ballots = new Ballot[MAX_ARRAY_SIZE];
-	private static int ballotCount = 0;
+	// Fields
 
 	public static void main(String args[]) {
 		Scanner scan = new Scanner(System.in);
 		final YearMonth votingDate;
 		VoterRegistry voterRegistry;
+		PartyRegistry partyRegistry = new PartyRegistry();
+		BallotRegistry ballotRegistry = new BallotRegistry();
 		int selection;
 		boolean loop = true, electionsOccurred = false;
-		
+
 		System.out.println("Welcome to our voting system.");
-		System.out.println("Please enter the year and month of the elections, in that order:");
-		votingDate = YearMonth.of(scan.nextInt(), scan.nextInt());
+//		System.out.println("Please enter the year and month of the elections, in that order:");
+		votingDate = YearMonth.of(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+//		YearMonth.of(scan.nextInt(),scan.nextInt());
+//		scan.nextLine();
+
 		voterRegistry = new VoterRegistry(votingDate);
-		
-		init(voterRegistry);
-		
+		partyRegistry = new PartyRegistry();
+		ballotRegistry = new BallotRegistry();
+
+		init(voterRegistry, ballotRegistry, partyRegistry);
+
 		while (loop) {
 			selection = TUI.menu(scan, electionsOccurred);
+			scan.nextLine();
 			switch (selection) {
 			case 1:
-				addNewBallotToElections(scan, votingDate);
+				addNewBallotToElections(scan, votingDate, ballotRegistry);
 				break;
 			case 2:
-				addCitizen(scan, voterRegistry, votingDate);
+				addCitizen(scan, voterRegistry, votingDate, ballotRegistry);
 				break;
 			case 3:
-				addPartyToElections(scan);
+				addPartyToElections(scan, partyRegistry);
 				break;
 			case 4:
-				addCandidateToAParty(scan, voterRegistry);
+				addCandidateToAParty(scan, voterRegistry, partyRegistry);
 				break;
 			case 5:
-				showAllBallots();
+				System.out.println(ballotRegistry.toString());
 				break;
 			case 6:
 				System.out.println(voterRegistry.toString());
 				break;
 			case 7:
-				showAllParties();
+				System.out.println(partyRegistry.toString());
 				break;
 			case 8:
-				startElections(scan);
+				startElections(scan, ballotRegistry, partyRegistry);
 				electionsOccurred = true;
 				break;
 			case 9:
-				if (electionsOccurred) // control flow - only allow to show results after they were calculated
-					showResults();
+				showResults(ballotRegistry, partyRegistry);
 				break;
 			case 10:
 				System.out.println("Bye bye");
@@ -73,235 +74,112 @@ public class Elections {
 			}
 		}
 	}
-	private static void init(VoterRegistry voterRegistry) {
+
+	private static void init(VoterRegistry voterRegistry, BallotRegistry ballots, PartyRegistry parties) {
 		// Initiates AT LEAST 2 ballots
-		ballots[0] = new Ballot(voterRegistry.getVotingDate());
-		ballots[1] = new Ballot(voterRegistry.getVotingDate());
-		ballotCount = 2;
-		
+		ballots.add(new Ballot(voterRegistry.getVotingDate()));
+		ballots.add(new Ballot(voterRegistry.getVotingDate()));
+		ballots.add(new MilitaryBallot(voterRegistry.getVotingDate()));
+		ballots.add(new CoronaBallot(voterRegistry.getVotingDate()));
+
 		// Initiates AT LEAST 3 parties
-		partyRegistry[0] = new Party("Halikud", Party.PartyAssociation.Right, LocalDate.of(1973, 9,13));
-		partyRegistry[1] = new Party("Blue and White", Party.PartyAssociation.Center, LocalDate.of(2019, 2, 21));
-		partyRegistry[2] = new Party("Israeli Labor Party", Party.PartyAssociation.Left, LocalDate.of(1968, 1, 21));
-		partyCount = 3;
-		
+		parties.add(new Party("Halikud", Party.PartyAssociation.Right, LocalDate.of(1973, 9, 13)));
+		parties.add(new Party("Blue and White", Party.PartyAssociation.Center, LocalDate.of(2019, 2, 21)));
+		parties.add(new Party("Israeli Labor Party", Party.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
+		parties.add(new Party("Israel is Our Home", Party.PartyAssociation.Center, LocalDate.of(1999, 3, 29)));
+
 		// Initiates AT LEAST 5 citizen
-		voterRegistry.addCitizen(new Citizen(123456789, "Charles Foster Kane", 1941, ballots[2], false, false));
-		voterRegistry.addCitizen(new Citizen(234567890, "Donald John Trump", 1946, ballots[2], true, true));
-		voterRegistry.addCitizen(new Citizen(345678901, "Tonny Stark", 1970, ballots[2], false, false));
-		voterRegistry.addCitizen(new Citizen(456789012, "Steve Rogers", 1918, ballots[2], false, false));
-		voterRegistry.addCitizen(new Citizen(567890123, "Noa Kirel", 2001, ballots[1], false, false));
-		
+		voterRegistry.add(new Citizen(123456789, "Charles Foster Kane", 1941, ballots.get(0), false, false));
+		voterRegistry.add(new Citizen(234567890, "Donald John Trump", 1946, ballots.get(3), true, true));
+		voterRegistry.add(new Citizen(345678901, "Tonny Stark", 1970, ballots.get(1), false, false));
+		voterRegistry.add(new Citizen(456789012, "Steve Rogers", 1918, ballots.get(1), false, false));
+		voterRegistry.add(new Citizen(567890123, "Noa Kirel", 2001, ballots.get(2), false, false));
+
 		// Initiates AT LEAST 6 candidates (2 per party)
-		voterRegistry.addCitizen(new Candidate(678901234, "Benjamin Netanyahu", 1949, ballots[1], true, false, 1));
-		voterRegistry.addCitizen(new Candidate(789012345, "Miri Regev", 1965, ballots[1], true, false, 5));		
-		voterRegistry.addCitizen(new Candidate(890123456, "Benny Gantz", 1959, ballots[2], true, true, 1));
-		voterRegistry.addCitizen(new Candidate(901234567, "Yair Lapdid", 1963, ballots[2], true, true, 2));
-		voterRegistry.addCitizen(new Candidate(901234568, "Avigdor Lieberman", 1958, ballots[2], true, true, 1));		
-		voterRegistry.addCitizen(new Candidate(901234569, "Tamar Zandberg", 1976, ballots[3], false, false, 1));
+		voterRegistry.add(
+				new Candidate(678901234, "Benjamin Netanyahu", 1949, ballots.get(0), true, false, parties.get(0), 1));
+		voterRegistry.add(new Candidate(789012345, "Miri Regev", 1965, ballots.get(3), true, false, parties.get(0), 5));
+		voterRegistry.add(new Candidate(890123456, "Benny Gantz", 1959, ballots.get(3), true, true, parties.get(1), 1));
+		voterRegistry.add(new Candidate(901234567, "Yair Lapdid", 1963, ballots.get(3), true, true, parties.get(1), 2));
+		voterRegistry.add(
+				new Candidate(901234568, "Avigdor Lieberman", 1958, ballots.get(0), true, true, parties.get(3), 1));
+		voterRegistry
+				.add(new Candidate(901234569, "Tamar Zandberg", 1976, ballots.get(1), false, false, parties.get(2), 1));
 	}
+
 	// When entering 1
-	private static boolean addNewBallotToElections(Scanner scan, YearMonth votingDate) {
-		String address;
-		
-		// Validations
-		if (ballotCount == MAX_ARRAY_SIZE) {
-			System.out.println("Cannot add any more ballots!\nplease try again in the next elections.");
-			
-			return false;
-		}
-		
-		System.out.println("Enter ballot's address: ");
-		address = scan.nextLine();
-		ballots[ballotCount++] = new Ballot(address, votingDate);
-		
-		return true;
+
+	private static boolean addNewBallotToElections(Scanner scan, YearMonth votingDate, BallotRegistry ballots) {
+		return TUI.addNewBallotToElections(scan, votingDate, ballots);
 	}
+
 	// When entering 2
-	private static boolean addCitizen(Scanner scan, VoterRegistry registry, YearMonth votingDate) {
-		int citizenID, yearOfBirth, associatedBallotID;
-		boolean isIsolated, isWearingSuit = false;
-		String fullName;
-		
-		// Validations
-		System.out.println("Enter voter's ID:");
-		citizenID = scan.nextInt();
-		scan.nextLine();
-		if (registry.getCitizenByID(citizenID) != null) {
-			System.out.println("This Citizen is already in the registry, try something else.\n");
-			
-			return false;
-		}
-		System.out.println("Enter year of birth, in that order:");
-		yearOfBirth = scan.nextInt();
-		if ((votingDate.getYear() - yearOfBirth) < Citizen.VOTING_AGE) {
-			System.out.println("Sorry, this citizen is too young to vote, try something else.\n");
-			
-			return false;
-		}
-
-		System.out.println("Enter voter's name:");
-		fullName = scan.nextLine();
-		System.out.println("Enter associated Ballot ID:");
-		associatedBallotID = scan.nextInt();
-		scan.nextLine();
-		System.out.println("Is the voter in isolation?");
-		isIsolated = scan.nextBoolean();
-		scan.nextLine();
-		if (isIsolated) {
-			System.out.println("Is the voter wearing a protective suit?");
-			isWearingSuit = scan.nextBoolean();
-			scan.nextLine();
-		}
-
-		registry.addCitizen(new Citizen(citizenID, fullName, yearOfBirth, ballots[associatedBallotID - 1], isIsolated, isWearingSuit));
-		System.out.println("Voter successfully added to the voter registry!");
-		
-		return true;
+	private static boolean addCitizen(Scanner scan, VoterRegistry registry, YearMonth votingDate,
+			BallotRegistry ballots) {
+		return TUI.addCitizen(scan, registry, votingDate, ballots);
 	}
-	// When entering 3
-	// adding a party's candidates is yet to be implemented
-	private static boolean addPartyToElections(Scanner scan) {
-		String partyName;
-		Party.PartyAssociation wing;
-		LocalDate foundationDate;
-		Party party;
-		int i;
 
-		// Validations
-		if (partyCount == MAX_ARRAY_SIZE) {
-			System.out.println("Cannot add any more parties!\nplease try again in the next elections.");
-			
-			return false;
-		}
-		System.out.println("Enter party's name:");
-		partyName = scan.nextLine();
-		if (getPartyByName(partyName) != null) {
-			System.out.println("Looks like this party is already in the lists.");
-			
-			return true;
-		}
-		
-		System.out.println("Enter party's association (Left, Center, or Right):");
-		wing = Party.PartyAssociation.valueOf(scan.next());
-		scan.nextLine();
-		System.out.println("Enter year, month and day of the party's foundation, in that order:");
-		foundationDate = LocalDate.of(scan.nextInt(), scan.nextInt(), scan.nextInt());
-		scan.nextLine();
-
-		party = new Party(partyName, wing, foundationDate);
-		if (partyCount == 0) {
-			partyRegistry[partyCount++] = party;
-			
-			return true;
-		}
-
-		i = partyCount - 1;
-		while (i >= 0 && partyRegistry[i].getName().compareTo(partyName) > 0) {
-			partyRegistry[i + 1] = partyRegistry[i];
-			i--;
-		}
-		partyRegistry[i] = party;
-		partyCount++;
-
-		return true;
+	private static boolean addPartyToElections(Scanner scan, PartyRegistry parties) {
+		return TUI.addPartyToElections(scan, parties);
 	}
-	// When entering 4
-	private static boolean addCandidateToAParty(Scanner scan, VoterRegistry voterRegistry) {
-		Candidate addedCandidate;
+
+	private static boolean addCandidateToAParty(Scanner scan, VoterRegistry voterRegistry, PartyRegistry parties) {
 		int addedCandidateID;
 		String partyName;
-		
+
 		System.out.println("Enter candidate's ID and party's name, in that order:");
 		addedCandidateID = scan.nextInt();
 		partyName = scan.nextLine();
-		addedCandidate = (Candidate) voterRegistry.getCitizenByID(addedCandidateID);
-		
-		if(addedCandidate == null)
+
+		if (voterRegistry.get(addedCandidateID) == null) {
+			System.out.println("Candidate not registered, so he can't be added");
 			return false;
-		
-		getPartyByName(partyName).addCandidate(addedCandidate);
-		
+		}
+
+		voterRegistry.updateCitizenToCandidate(voterRegistry.get(addedCandidateID));
+		parties.get(partyName).addCandidate((Candidate) voterRegistry.get(addedCandidateID));
+
 		return true;
 	}
-	// When entering 5
-	private static void showAllBallots() {
-		if (ballotCount == 0) {
-			System.out.println("Nothing to See here..");
-			
-			return;
-		}
-		
-		for (int i = 0; i < ballotCount; i++)
-			System.out.println(ballots[i].toString() + "\n");
+
+	private static void showResults(BallotRegistry ballots, PartyRegistry parties) {
+		TUI.showResults(ballots, parties);
 	}
-	// When entering 7
-	private static void showAllParties() {
-		if (partyCount == 0) {
-			System.out.println("Nothing to See here..");
-			
-			return;
-		}
-		for (int i = 0; i < partyCount; i++)
-			System.out.println(partyRegistry[i].toString() + "\n");
+
+	private static void startElections(Scanner scan, BallotRegistry ballots, PartyRegistry parties) {
+		ballots.vote(scan, ballots, parties);
 	}
-	private static void showResults() {
-		int[] currBallotResults, finalResults = new int[partyRegistry.length];
-		
-		System.out.println("The votes have been counted. Here are the final results:");
-		for (Ballot ballot : ballots) {
-			currBallotResults = ballot.getResults();
-			System.out.println(String.format("Ballot #%d:", ballot.getID()));
-			for (int i = 0; i < currBallotResults.length; i++) {
-				System.out.println(String.format("%s: %d", partyRegistry[i].getName(), currBallotResults[i]));
-				finalResults[i] += currBallotResults[i];
+
+	public static int[] sortResults(int[] results) {
+		return quickSort(results, 0, results.length - 1);
+	}
+
+	private static int[] quickSort(int arr[], int low, int high) {
+		int pi;
+
+		if (low < high) {
+			pi = partition(arr, low, high);
+			quickSort(arr, low, pi - 1);
+			quickSort(arr, pi + 1, high);
+		}
+
+		return arr;
+	}
+
+	private static int partition(int arr[], int low, int high) {
+		int pivot = arr[high], i = low - 1, temp;
+		for (int j = low; j < high; j++) {
+			if (arr[j] < pivot) {
+				i++;
+				temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
 			}
 		}
-		finalResults = sortResults(finalResults);
-			
-		for (int i = 0; i < finalResults.length; i++)
-			System.out.println(String.format("%s : %d", partyRegistry[i].getName(), finalResults[i]));
-	}
-	private static void startElections(Scanner scan) {
-		for (Ballot ballot : ballots)
-			ballot.vote(scan, partyRegistry);
-	}
+		temp = arr[i + 1];
+		arr[i + 1] = arr[high];
+		arr[high] = temp;
 
-	// Helper functions
-	public static int countParticipatingParties() {
-		int i = 0;
-		
-		while (i < partyRegistry.length && partyRegistry[i] != null)
-			i++;
-		
-		return i;
-	}
-	public static int getPartyOffsetByName(String partyName) {
-		for (int i = 0; i < partyRegistry.length; i++)
-			if(partyRegistry[i].getName() == partyName)
-				return i;
-		
-		return -1;
-	}
-	public static Party getPartyByName(String partyName) {
-		return (partyCount > 0) ? getPartyByName(0, partyCount - 1, partyName) : null;
-	}
-	private static Party getPartyByName(int leftIndex, int rightIndex, String partyName) {
-		int mid;
-		
-		if (rightIndex >= leftIndex) {
-			mid = leftIndex + (rightIndex - leftIndex) / 2;
-			if (partyRegistry[mid].getName().equalsIgnoreCase(partyName))
-				return partyRegistry[mid];
-			if (partyRegistry[mid].getName().compareTo(partyName) > 0)
-				return getPartyByName(leftIndex, mid - 1, partyName);
-
-			return getPartyByName(mid + 1, rightIndex, partyName);
-		}
-		
-		return null;
-	}
-	private static int[] sortResults(int[] results) {
-		return TUI.quickSort(results, 0, results.length - 1);
+		return i + 1;
 	}
 }
