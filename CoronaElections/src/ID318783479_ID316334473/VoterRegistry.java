@@ -121,7 +121,7 @@ public class VoterRegistry {
 	public boolean updateCitizenToCandidate(Citizen citizen) {
 		int index = indexOf(citizen.getID());
 		if (index != -1) {
-			if (citizen.getClass() == Citizen.class) // "morphs" the Citizen in to a Candidate
+			if (citizen.getClass() == Citizen.class) // "morphs" the Citizen into a Candidate
 				voterRegistry[index] = new Candidate(citizen.getID(), citizen.getFullName(), citizen.getYearOfBirth(),
 						citizen.getAssociatedBallot(), citizen.isIsolated(), citizen.isIswearingSuit(), null, -1);
 			return true;

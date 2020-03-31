@@ -29,14 +29,12 @@ public class TUI {
 		if (electionsOccurred) { // don't allow options 1, 2, 3, 4, or 8 if the elections have taken place
 			if ((1 <= selection && selection <= 4) || selection == 8)
 				return 0;
-
 		}
 
 		else if (selection == 9)
 			return 0;
 
 		return selection;
-
 	}
 
 	// when entering 1 in the menu
@@ -51,12 +49,10 @@ public class TUI {
 		}
 		System.out.println("Enter ballot's address: ");
 		address = scan.nextLine();
-
 		while (true) {
 			System.out.println(
 					"For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
 			switch (scan.nextInt()) {
-
 			case 1:
 				return ballots.add(new Ballot(address, votingDate));
 			case 2:
@@ -80,13 +76,11 @@ public class TUI {
 		System.out.println("Enter voter's ID:");
 		citizenID = scan.nextInt();
 		scan.nextLine();
-
 		if (registry.get(citizenID) != null) {
 			System.out.println("This Citizen is already in the registry, try something else.\n");
 
 			return false;
 		}
-
 		System.out.println("Enter year of birth:");
 		yearOfBirth = scan.nextInt();
 		scan.nextLine();
@@ -98,29 +92,25 @@ public class TUI {
 
 		System.out.println("Enter voter's name:");
 		fullName = scan.nextLine();
-
 		System.out.println("Enter associated Ballot ID:");
 		associatedBallotID = scan.nextInt();
 		scan.nextLine();
-
 		if (associatedBallotID < 0 || ballots.getBallotCount() < associatedBallotID) {
 			System.out.printf("Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n\n",
 					ballots.getBallotCount(), ballots.getBallotCount() - 1);
 		}
 
-		System.out.println("Is the voter in isolation?");
+		System.out.println("Is the voter in isolation (True/False)?");
 		isIsolated = scan.nextBoolean();
 		scan.nextLine();
-
 		if (isIsolated) {
-			System.out.println("Is the voter wearing a protective suit?");
+			System.out.println("Is the voter wearing a protective suit (True/False)?");
 			isWearingSuit = scan.nextBoolean();
 			scan.nextLine();
 		}
 
 		registry.add(new Citizen(citizenID, fullName, yearOfBirth, ballots.get(associatedBallotID - 1), isIsolated,
 				isWearingSuit));
-
 		System.out.println("Voter successfully added to the voter registry!");
 
 		return true;
@@ -154,19 +144,43 @@ public class TUI {
 		scan.nextLine();
 
 		return parties.add(new Party(partyName, wing, foundationDate));
+	}
 
+	// When entering 4 in the menu
+	public static boolean addCandidateToAParty(Scanner scan, VoterRegistry voterRegistry, PartyRegistry parties) {
+		int addedCandidateID;
+		String partyName;
+
+		System.out.println("Enter candidate's ID and party's name, in that order:");
+		addedCandidateID = scan.nextInt();
+		scan.nextLine();
+		partyName = scan.nextLine();
+
+		if (voterRegistry.get(addedCandidateID) == null) {
+			System.out.println("Candidate not registered, so he can't be added");
+			return false;
+		}
+
+		voterRegistry.updateCitizenToCandidate(voterRegistry.get(addedCandidateID));
+		parties.get(partyName).addCandidate((Candidate) voterRegistry.get(addedCandidateID));
+		System.out.println("Candidate successfully added to the party!");
+		
+		return true;
 	}
 
 	// When entering 8 in the menu
 	public static int vote(Scanner scan, PartyRegistry candidateParties, Citizen citizen) {
-		System.out.println(String.format("Greetings, %d. Do you want to vote? (Y/N)", citizen.getFullName()));
-		if (scan.nextLine().toUpperCase() == "Y") {
+		int voterChoice;
+		
+		System.out.println(String.format("Greetings, %s. Do you want to vote? (True/False)", citizen.getFullName()));
+		if (scan.nextBoolean()) {
 			for (int i = 0; i < candidateParties.getPartyCount(); i++)
 				System.out.println(String.format("%d = %s", i + 1, candidateParties.get(i).getName()));
 			System.out.println("Enter the code for your chosen party:");
-			int result = scan.nextInt();
+			voterChoice = scan.nextInt();
 			scan.nextLine();
-			return result;
+
+			return voterChoice;
 		}
 
 		return -1;

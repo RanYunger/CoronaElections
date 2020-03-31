@@ -58,7 +58,6 @@ public class Candidate extends Citizen {
 
 	@Override
 	public String toString() {
-		return String.format("%s | Party: %s (ranked #%d)]", super.toString(), associatedParty.getName(),
-				rank);
+		return String.format("%s | Party: %s (ranked #%d)]", super.toString(), associatedParty.getName(), rank);
 	}
 }

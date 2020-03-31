@@ -77,7 +77,7 @@ public class Party {
 	// Methods
 	public Candidate getCandidateByID(int candidateID) {
 		for (int i = 0; i < candidates.length; i++)
-			if (candidates[i].getID() == candidateID)
+			if ((candidates[i] != null) && (candidates[i].getID() == candidateID))
 				return candidates[i];
 
 		return null;
@@ -85,15 +85,13 @@ public class Party {
 
 	public int getCandidateOffsetByID(int candidateID) {
 		for (int i = 0; i < candidates.length; i++)
-			if (candidates[i].getID() == candidateID)
+			if ((candidates[i] != null) && (candidates[i].getID() == candidateID))
 				return i;
 
 		return -1;
 	}
 
 	public boolean addCandidate(Candidate candidate) {
-		int i;
-
 		// Validations
 		if (candidateCount == Elections.MAX_ARRAY_SIZE)
 			return false;
@@ -107,15 +105,9 @@ public class Party {
 		if (getCandidateByID(candidate.getID()) != null)
 			return false;
 
-		i = candidateCount - 1;
-		while (i >= 0 && candidates[i].getRank() > candidate.getRank()) {
-			candidates[i + 1] = candidates[i];
-			i--;
-		}
-		candidates[i] = candidate;
+		candidates[candidateCount++] = candidate;
 		candidate.setAssociatedParty(this);
 		candidate.setRank(RANK_GENERATOR++);
-		candidateCount++;
 
 		return true;
 	}
@@ -176,7 +168,6 @@ public class Party {
 
 	@Override
 	public String toString() {
-		return String.format("Party [Name: %s | Association: %s | Foundation: %d]", name, wing.name(),
-				foundationDate.toString());
+		return String.format("Party [Name: %s | Association: %s | Foundation: %s]", name, wing.toString(), foundationDate.toString());
 	}
 }

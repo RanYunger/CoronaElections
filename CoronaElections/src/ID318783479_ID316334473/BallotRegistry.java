@@ -73,11 +73,12 @@ public class BallotRegistry {
 		}
 		ballotRegistry[i] = ballot;
 		ballotCount++;
+		System.out.println("Ballot successfully added to the ballot registry!");
 
 		return true;
 	}
 
-	public void vote(Scanner scan, BallotRegistry ballots, PartyRegistry parties) {
+	public void vote(Scanner scan, PartyRegistry parties) {
 		for (int i = 0; i < ballotCount; i++)
 			ballotRegistry[i].vote(scan, parties);
 	}
@@ -107,19 +108,21 @@ public class BallotRegistry {
 		}
 		finalResults = Elections.sortResults(finalResults);
 
+		results.append("Final Results:\n");
 		for (int i = 0; i < finalResults.length; i++)
 			results.append(String.format("%s : %d\n", parties.get(i).getName(), finalResults[i]));
-		
+
 		return results.toString();
 	}
 
 	@Override
 	public String toString() {
+		StringBuilder sb;
+		
 		if (ballotCount == 0)
 			return "Nothing to See here..";
 
-		StringBuilder sb = new StringBuilder();
-
+		sb = new StringBuilder();
 		for (int i = 0; i < ballotCount; i++)
 			sb.append(ballotRegistry[i].toString() + "\n");
 

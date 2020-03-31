@@ -34,12 +34,12 @@ public class PartyRegistry {
 		return (indexOf(partyName) == -1) ? null : partyRegistry[indexOf(partyName)];
 	}
 
+	public Party get(int index) {
+		return (0 <= index && index <= partyCount) ? partyRegistry[index] : null;
+	}
+	
 	public int indexOf(String partyName) {
 		return indexOf(0, partyCount - 1, partyName);
-	}
-
-	public Party get(int index) {
-		return (0 < index && index <= partyCount) ? partyRegistry[index] : null;
 	}
 
 	private int indexOf(int leftIndex, int rightIndex, String partyName) {
@@ -79,6 +79,7 @@ public class PartyRegistry {
 		}
 		partyRegistry[i] = party;
 		partyCount++;
+		System.out.println("Party successfully added to the party registry!");
 
 		return true;
 	}
@@ -97,15 +98,15 @@ public class PartyRegistry {
 
 	@Override
 	public String toString() {
+		StringBuilder sb;
+		
 		if (partyCount == 0)
 			return "Nothing to See here..";
 
-		StringBuilder sb = new StringBuilder();
-
+		sb = new StringBuilder();
 		for (int i = 0; i < partyCount; i++)
 			sb.append(partyRegistry[i].toString() + "\n");
 
 		return sb.toString();
 	}
-
 }

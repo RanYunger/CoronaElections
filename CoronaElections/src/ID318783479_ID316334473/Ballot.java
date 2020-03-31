@@ -108,7 +108,8 @@ public class Ballot {
 		results = new int[candidateParties.getPartyCount()];
 		for (int i = 0; i < voterCount; i++) {
 			currVoterChoice = votersArr[i].vote(scan, candidateParties);
-			results[currVoterChoice]++;
+			if (currVoterChoice != -1)
+				results[currVoterChoice - 1]++;
 		}
 
 		setVotersPercentage((votersPercentage / voterRegistry.getVoterCount()) * 100);

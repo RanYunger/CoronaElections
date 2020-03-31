@@ -118,14 +118,13 @@ public class Citizen {
 	public String toString() {
 		StringBuilder desctiption = new StringBuilder();
 		int age = Year.now().getValue() - yearOfBirth;
+		int ballotID = (associatedBallot != null) ? associatedBallot.getID() : -1;
 
 		desctiption.append((VOTING_AGE <= age) && (age <= SOLDIER_AGE) ? "Soldier, " : "");
 		desctiption.append(isIsolated ? "Isolated, " : "Not isolated, ");
 		desctiption.append(iswearingSuit ? "Wearing suit" : "Not wearing suit");
-		int ballotID = (associatedBallot != null) ? associatedBallot.getID() : -1;
-		return String.format(
-				getClass().getSimpleName()
-						+ " | ID:%d | Full name: %s | Born: %d | Status: %s | Associated Ballot ID: %d",
+		
+		return String.format(getClass().getSimpleName()	+ " | ID:%d | Full name: %s | Born: %d | Status: %s | Associated Ballot ID: %d",
 				ID, fullName, yearOfBirth, desctiption, ballotID);
 	}
 }
