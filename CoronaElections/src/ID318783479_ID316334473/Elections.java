@@ -4,9 +4,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Scanner;
 
-// TODO: Debug all menu methods, making sure everything works as expected ~Ran
 public class Elections {
-
 	// Constants
 	public static final int MAX_ARRAY_SIZE = 100;
 
@@ -76,38 +74,36 @@ public class Elections {
 	}
 
 	private static void init(VoterRegistry voterRegistry, BallotRegistry ballots, PartyRegistry parties) {
+		System.out.println("===== Initiation (4 ballots, 4 parties, 13 citizens (6 candidates)) =====");
+		
 		// Initiates AT LEAST 2 ballots
 		ballots.add(new Ballot(voterRegistry.getVotingDate()));
 		ballots.add(new Ballot(voterRegistry.getVotingDate()));
 		ballots.add(new MilitaryBallot(voterRegistry.getVotingDate()));
 		ballots.add(new CoronaBallot(voterRegistry.getVotingDate()));
 
-		// Initiates AT LEAST 5 citizen
-		voterRegistry.add(new Citizen(123456789, "Charles Foster Kane", 1941, ballots.get(0), false, false));
-		voterRegistry.add(new Citizen(234567890, "Donald John Trump", 1946, ballots.get(3), true, true));
-		voterRegistry.add(new Citizen(345678901, "Tonny Stark", 1970, ballots.get(1), false, false));
-		voterRegistry.add(new Citizen(456789012, "Steve Rogers", 1918, ballots.get(1), false, false));
-		voterRegistry.add(new Citizen(567890123, "Noa Kirel", 2001, ballots.get(2), false, false));
-
-		// Initiates AT LEAST 6 candidates (2 per party)
-		voterRegistry.add(
-				new Candidate(678901234, "Benjamin Netanyahu", 1949, ballots.get(0), true, false, parties.get(0), 1));
-		voterRegistry.add(new Candidate(789012345, "Miri Regev", 1965, ballots.get(3), true, false, parties.get(0), 5));
-		voterRegistry.add(new Candidate(890123456, "Benny Gantz", 1959, ballots.get(3), true, true, parties.get(1), 1));
-		voterRegistry.add(new Candidate(901234567, "Yair Lapid", 1963, ballots.get(3), true, true, parties.get(1), 2));
-		voterRegistry.add(
-				new Candidate(901234568, "Avigdor Lieberman", 1958, ballots.get(0), true, true, parties.get(2), 1));
-		voterRegistry.add(new Candidate(901234566, "Oded Forer", 1977, ballots.get(0), true, true, parties.get(2), 1));
-		voterRegistry
-				.add(new Candidate(901234569, "Tamar Zandberg", 1976, ballots.get(1), false, false, parties.get(3), 1));
-		voterRegistry.add(
-				new Candidate(901234565, "Nitzan Horowitz", 1965, ballots.get(1), false, false, parties.get(3), 1));
-
 		// Initiates AT LEAST 3 parties
 		parties.add(new Party("Halikud", Party.PartyAssociation.Right, LocalDate.of(1973, 9, 13)));
 		parties.add(new Party("Blue and White", Party.PartyAssociation.Center, LocalDate.of(2019, 2, 21)));
 		parties.add(new Party("Israel is Our Home", Party.PartyAssociation.Center, LocalDate.of(1999, 3, 29)));
 		parties.add(new Party("Israeli Labor Party", Party.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
+		
+		// Initiates AT LEAST 5 citizen
+		voterRegistry.add(new Citizen(123456789, "Charles Foster Kane", 1941, ballots.get(0), false, false));
+		voterRegistry.add(new Citizen(234567890, "Donald John Trump", 1946, ballots.get(1), true, true));
+		voterRegistry.add(new Citizen(345678901, "Tonny Stark", 1970, ballots.get(2), false, false));
+		voterRegistry.add(new Citizen(456789012, "Steve Rogers", 1918, ballots.get(3), false, false));
+		voterRegistry.add(new Citizen(567890123, "Noa Kirel", 2001, ballots.get(2), false, false));
+		
+		// Initiates AT LEAST 6 candidates (2 per party)
+		voterRegistry.add(new Candidate(678901234, "Benjamin Netanyahu", 1949, ballots.get(0), true, false, parties.get(0), 1));
+		voterRegistry.add(new Candidate(789012345, "Miri Regev", 1965, ballots.get(3), true, false, parties.get(0), 5));
+		voterRegistry.add(new Candidate(890123456, "Benny Gantz", 1959, ballots.get(3), true, true, parties.get(1), 1));
+		voterRegistry.add(new Candidate(901234567, "Yair Lapid", 1963, ballots.get(3), true, true, parties.get(1), 2));
+		voterRegistry.add(new Candidate(901234568, "Avigdor Lieberman", 1958, ballots.get(0), true, true, parties.get(2), 1));
+		voterRegistry.add(new Candidate(901234566, "Oded Forer", 1977, ballots.get(0), true, true, parties.get(2), 1));
+		voterRegistry.add(new Candidate(901234569, "Tamar Zandberg", 1976, ballots.get(2), false, false, parties.get(3), 1));
+		voterRegistry.add(new Candidate(901234565, "Nitzan Horowitz", 1965, ballots.get(1), false, false, parties.get(3), 1));
 
 		// Adds initiated candidates to parties
 		parties.get("Halikud").addCandidate((Candidate) voterRegistry.get(678901234));
@@ -118,6 +114,8 @@ public class Elections {
 		parties.get("Israel is Our Home").addCandidate((Candidate) voterRegistry.get(901234566));
 		parties.get("Israeli Labor Party").addCandidate((Candidate) voterRegistry.get(901234569));
 		parties.get("Israeli Labor Party").addCandidate((Candidate) voterRegistry.get(901234565));
+		
+		System.out.println("===== Initiation complete =====");
 	}
 
 	// When entering 1
@@ -138,7 +136,7 @@ public class Elections {
 
 	// When entering 4
 	private static boolean addCandidateToAParty(Scanner scan, VoterRegistry voterRegistry, PartyRegistry parties) {
-		return TUI.addCandidateToAParty(scan, voterRegistry, parties);
+		return TUI.addCandidateToParty(scan, voterRegistry, parties);
 	}
 
 	// When entering 5
@@ -152,8 +150,12 @@ public class Elections {
 	}
 
 	// When entering 9
-	public static int[] sortResults(int[] results) {
-		return quickSort(results, 0, results.length - 1);
+	public static void sortResults(int[] results) {
+		quickSort(results, 0, results.length - 1);
+	}
+
+	public static void sortParties(int[] finalResults, PartyRegistry parties) {
+		sortPartiesByResults(finalResults, parties);
 	}
 
 	private static int[] quickSort(int arr[], int low, int high) {
@@ -171,7 +173,7 @@ public class Elections {
 	private static int partition(int arr[], int low, int high) {
 		int pivot = arr[high], i = low - 1, temp;
 		for (int j = low; j < high; j++) {
-			if (arr[j] < pivot) {
+			if (arr[j] > pivot) {
 				i++;
 				temp = arr[i];
 				arr[i] = arr[j];
@@ -183,5 +185,40 @@ public class Elections {
 		arr[high] = temp;
 
 		return i + 1;
+	}
+
+	private static void sortPartiesByResults(int[] finalResults, PartyRegistry parties) {		
+		int maxValueOffset;
+		int[] sortedPartyOffsets = new int[finalResults.length];
+		Party[] sortedParties = parties.getPartyRegistry().clone();
+		
+		for (int i = 0; i < finalResults.length; i++) {
+			maxValueOffset = indexOf(finalResults, getMaxValue(finalResults));
+			sortedPartyOffsets[i] = maxValueOffset;
+			finalResults[maxValueOffset] = -1;
+		}
+		
+		for (int i = 0; i < sortedPartyOffsets.length; i++) {
+			sortedParties[i] = parties.getPartyRegistry()[sortedPartyOffsets[i]];
+		}
+		parties.setPartyRegistry(sortedParties);
+	}
+	
+	private static int getMaxValue(int[] arr) {
+		int max = arr[0];
+		
+		for (int i = 1; i < arr.length; i++)
+			max = arr[i] > max ? arr[i] : max;
+		
+		return max;
+	}
+	
+	private static int indexOf(int[] arr, int value) {
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i] == value)
+				return i;
+		}
+		
+		return -1;
 	}
 }

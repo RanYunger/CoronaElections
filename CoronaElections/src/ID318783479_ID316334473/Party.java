@@ -168,6 +168,13 @@ public class Party {
 
 	@Override
 	public String toString() {
-		return String.format("Party [Name: %s | Association: %s | Foundation: %s]", name, wing.toString(), foundationDate.toString());
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(String.format("Party [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(), foundationDate.toString()));
+		sb.append("Candidates:\n");
+		for (int i = 0; i < candidateCount; i++)
+			sb.append(candidates[i].toString() + "\n");
+		
+		return sb.toString();
 	}
 }

@@ -78,6 +78,7 @@ public class Ballot {
 		if (voterRegistry.add(citizen)) {
 			if (citizen.getAssociatedBallot() != this)
 				citizen.setAssociatedBallot(this);
+			
 			return true;
 		}
 

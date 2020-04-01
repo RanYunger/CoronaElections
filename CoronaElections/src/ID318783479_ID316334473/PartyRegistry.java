@@ -10,7 +10,11 @@ public class PartyRegistry {
 	private int partyCount;
 
 	// Properties (Getters and Setters)
-	private void setPartyRegistry(Party[] partyRegistry) {
+	public Party[] getPartyRegistry() {
+		return partyRegistry;
+	}
+	
+	public void setPartyRegistry(Party[] partyRegistry) {
 		this.partyRegistry = partyRegistry;
 	}
 
@@ -65,7 +69,9 @@ public class PartyRegistry {
 		if (partyCount == Elections.MAX_ARRAY_SIZE)
 			return false;
 		if (partyCount == 0) {
-			partyRegistry[partyCount++] = party;
+			partyRegistry[partyCount] = party;
+			partyCount++;
+			System.out.println("Party successfully added to the party registry!");
 
 			return true;
 		}
@@ -73,13 +79,33 @@ public class PartyRegistry {
 			return false;
 
 		i = partyCount;
-		while (i > 0 && partyRegistry[i - 1].getName().compareTo(party.getName()) > 0) {
+		while ((i > 0) && (partyRegistry[i - 1].getName().compareTo(party.getName()) > 0)) {
 			partyRegistry[i] = partyRegistry[i - 1];
 			i--;
 		}
 		partyRegistry[i] = party;
 		partyCount++;
 		System.out.println("Party successfully added to the party registry!");
+
+		return true;
+	}
+	
+	public boolean remove(String partyName) {
+		int partyOffset = indexOf(partyName), i;
+
+		// Validations
+		if (partyCount == 0)
+			return false;
+		if (partyOffset == -1)
+			return false;
+
+		partyRegistry[partyOffset] = null;
+		i = partyOffset;
+		while ((i > 0) && (partyRegistry[i - 1].getName().compareTo(partyRegistry[i + 1].getName()) > 0)) {
+			partyRegistry[i] = partyRegistry[i + 1];
+			i++;
+		}
+		partyCount--;
 
 		return true;
 	}

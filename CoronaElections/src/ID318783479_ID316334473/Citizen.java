@@ -14,7 +14,7 @@ public class Citizen {
 	protected int yearOfBirth;
 	protected Ballot associatedBallot;
 	protected boolean isIsolated;
-	protected boolean iswearingSuit;
+	protected boolean isWearingSuit;
 
 	// Properties (Getters and Setters)
 	public int getID() {
@@ -47,8 +47,6 @@ public class Citizen {
 
 	public void setAssociatedBallot(Ballot associatedBallot) {
 		this.associatedBallot = associatedBallot;
-		if (associatedBallot != null && associatedBallot.getCitizenByID(ID) == null)
-			associatedBallot.addVoter(this);
 	}
 
 	public boolean isIsolated() {
@@ -59,12 +57,12 @@ public class Citizen {
 		this.isIsolated = isIsolated;
 	}
 
-	public boolean isIswearingSuit() {
-		return iswearingSuit;
+	public boolean iswearingSuit() {
+		return isWearingSuit;
 	}
 
 	private void setIswearingSuit(boolean iswearingSuit) {
-		this.iswearingSuit = iswearingSuit;
+		this.isWearingSuit = iswearingSuit;
 	}
 
 	// Constructors
@@ -106,7 +104,7 @@ public class Citizen {
 			return false;
 		if (isIsolated != other.isIsolated)
 			return false;
-		if (iswearingSuit != other.iswearingSuit)
+		if (isWearingSuit != other.isWearingSuit)
 			return false;
 		if (yearOfBirth != other.yearOfBirth)
 			return false;
@@ -116,15 +114,13 @@ public class Citizen {
 
 	@Override
 	public String toString() {
-		StringBuilder desctiption = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		int age = Year.now().getValue() - yearOfBirth;
-		int ballotID = (associatedBallot != null) ? associatedBallot.getID() : -1;
 
-		desctiption.append((VOTING_AGE <= age) && (age <= SOLDIER_AGE) ? "Soldier, " : "");
-		desctiption.append(isIsolated ? "Isolated, " : "Not isolated, ");
-		desctiption.append(iswearingSuit ? "Wearing suit" : "Not wearing suit");
+		sb.append((VOTING_AGE <= age) && (age <= SOLDIER_AGE) ? "Soldier, " : "");
+		sb.append(isIsolated ? "Isolated, " : "Not isolated, ");
+		sb.append(isWearingSuit ? "Wearing suit" : "Not wearing suit");
 		
-		return String.format(getClass().getSimpleName()	+ " | ID:%d | Full name: %s | Born: %d | Status: %s | Associated Ballot ID: %d",
-				ID, fullName, yearOfBirth, desctiption, ballotID);
+		return String.format("Citizen [ID:%d | Full name: %s | Born: %d | Status: %s]",	ID, fullName, yearOfBirth, sb.toString());
 	}
 }

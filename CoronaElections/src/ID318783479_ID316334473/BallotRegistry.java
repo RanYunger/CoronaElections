@@ -4,10 +4,17 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class BallotRegistry {
+	// Constants
+	
+	// Fields
 	private Ballot[] ballotRegistry;
 	private int ballotCount;
 
 	// Properties (Getters and Setters)
+	public Ballot[] getBallotRegistry() {
+		return ballotRegistry;
+	}
+	
 	private void setBallotRegistry(Ballot[] ballotRegistry) {
 		this.ballotRegistry = ballotRegistry;
 	}
@@ -27,7 +34,6 @@ public class BallotRegistry {
 	}
 
 	// Methods
-
 	public Ballot get(int ballotID) {
 		return (indexOf(ballotID) == -1) ? null : ballotRegistry[indexOf(ballotID)];
 	}
@@ -59,15 +65,17 @@ public class BallotRegistry {
 		if (ballotCount == Elections.MAX_ARRAY_SIZE)
 			return false;
 		if (ballotCount == 0) {
-			ballotRegistry[ballotCount++] = ballot;
-
+			ballotRegistry[ballotCount] = ballot;
+			ballotCount++;
+			System.out.println("Ballot successfully added to the ballot registry!");
+			
 			return true;
 		}
 		if (indexOf(ballot.getID()) != -1)
 			return false;
 
 		i = ballotCount;
-		while (i > 0 && ballotRegistry[i - 1].getID() > ballot.getID()) {
+		while ((i > 0) && (ballotRegistry[i - 1].getID() > ballot.getID())) {
 			ballotRegistry[i] = ballotRegistry[i - 1];
 			i--;
 		}
@@ -78,47 +86,85 @@ public class BallotRegistry {
 		return true;
 	}
 
+	public boolean remove(int ballotID) {
+		int ballotOffset = indexOf(ballotID), i;
+
+		// Validations
+		if (ballotCount == 0)
+			return false;
+		if (ballotCount == -1)
+			return false;
+
+		ballotRegistry[ballotOffset] = null;
+		i = ballotOffset;
+		while ((i > 0) && (ballotRegistry[i - 1].getID() < ballotRegistry[i].getID())) {
+			ballotRegistry[i] = ballotRegistry[i + 1];
+			i++;
+		}
+		ballotCount--;
+
+		return true;
+	}
+
 	public void vote(Scanner scan, PartyRegistry parties) {
 		for (int i = 0; i < ballotCount; i++)
 			ballotRegistry[i].vote(scan, parties);
 	}
+	
+	public int countVotes(int partyOffset) {
+		int votes = 0;
+		
+		for (Ballot ballot : ballotRegistry)
+			votes += ballot.getResults()[partyOffset];
+		
+		return votes;
+	}
+	
+	public String showResults(PartyRegistry parties) {
+		StringBuilder sb = new StringBuilder();
+		int[] currBallotResults;
+		int[] finalResults = new int[parties.getPartyCount()];
+		
+		for (int ballotOffset = 0; ballotOffset < ballotCount; ballotOffset++) {
+			currBallotResults = ballotRegistry[ballotOffset].getResults();
+			sb.append(String.format("Ballot #%d:\n", ballotRegistry[ballotOffset].getID()));
+			for (int i = 0; i < currBallotResults.length; i++) {
+				sb.append(String.format("%s: %d\t", parties.get(i).getName(), currBallotResults[i]));
+				finalResults[i] += currBallotResults[i];
+			}
+			sb.append("\n");
+		}
+
+		Elections.sortParties(finalResults.clone(), parties);
+		Elections.sortResults(finalResults);
+
+		sb.append("Final Results:\n");
+		for (int i = 0; i < finalResults.length; i++)
+			sb.append(String.format("%s : %d\n", parties.get(i).getName(), finalResults[i]));
+
+		return sb.toString();
+	}
 
 	@Override
 	public boolean equals(Object obj) {
+		BallotRegistry other;
+		
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BallotRegistry other = (BallotRegistry) obj;
+		
+		other = (BallotRegistry) obj;
+		
 		return ballotCount == other.ballotCount && Arrays.equals(ballotRegistry, other.ballotRegistry);
 	}
-
-	public String showResults(PartyRegistry parties) {
-		StringBuilder results = new StringBuilder();
-		int[] currBallotResults, finalResults = new int[parties.getPartyCount()];
-		for (int i = 0; i < ballotCount; i++) {
-			currBallotResults = ballotRegistry[i].getResults();
-			results.append(String.format("Ballot #%d:\n", ballotRegistry[i].getID()));
-			for (int j = 0; j < currBallotResults.length; j++) {
-				results.append(String.format("%s: %d\n", parties.get(j).getName(), currBallotResults[j]));
-				finalResults[j] += currBallotResults[j];
-			}
-		}
-		finalResults = Elections.sortResults(finalResults);
-
-		results.append("Final Results:\n");
-		for (int i = 0; i < finalResults.length; i++)
-			results.append(String.format("%s : %d\n", parties.get(i).getName(), finalResults[i]));
-
-		return results.toString();
-	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder sb;
-		
+
 		if (ballotCount == 0)
 			return "Nothing to See here..";
 

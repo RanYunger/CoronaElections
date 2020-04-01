@@ -58,6 +58,11 @@ public class Candidate extends Citizen {
 
 	@Override
 	public String toString() {
-		return String.format("%s | Party: %s (ranked #%d)]", super.toString(), associatedParty.getName(), rank);
+		String citizenStr = super.toString();
+		
+		citizenStr = citizenStr.replaceFirst("Citizen ", "Candidate ");
+		citizenStr = citizenStr.replace("]", "");
+		
+		return String.format("%s | Party: %s (ranked #%d)]", citizenStr, associatedParty.getName(), rank);
 	}
 }

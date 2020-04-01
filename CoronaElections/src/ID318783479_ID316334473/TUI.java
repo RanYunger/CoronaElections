@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Scanner;
 
-// Helper class, should aid the Elections main class (and other classes ass well...?)
+// Helper class, should aid the Elections main class
 public class TUI {
 
 	public static int menu(Scanner scan, boolean electionsOccurred) {
@@ -30,7 +30,6 @@ public class TUI {
 			if ((1 <= selection && selection <= 4) || selection == 8)
 				return 0;
 		}
-
 		else if (selection == 9)
 			return 0;
 
@@ -50,8 +49,7 @@ public class TUI {
 		System.out.println("Enter ballot's address: ");
 		address = scan.nextLine();
 		while (true) {
-			System.out.println(
-					"For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
+			System.out.println("For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
 			switch (scan.nextInt()) {
 			case 1:
 				return ballots.add(new Ballot(address, votingDate));
@@ -100,17 +98,16 @@ public class TUI {
 					ballots.getBallotCount(), ballots.getBallotCount() - 1);
 		}
 
-		System.out.println("Is the voter in isolation (True/False)?");
-		isIsolated = scan.nextBoolean();
+		System.out.println("Is the voter in isolation (Y/N)?");
+		isIsolated = scan.next().toUpperCase() == "Y";
 		scan.nextLine();
 		if (isIsolated) {
-			System.out.println("Is the voter wearing a protective suit (True/False)?");
-			isWearingSuit = scan.nextBoolean();
+			System.out.println("Is the voter wearing a protective suit (Y/N)?");
+			isWearingSuit = scan.next().toUpperCase() == "Y";
 			scan.nextLine();
 		}
 
-		registry.add(new Citizen(citizenID, fullName, yearOfBirth, ballots.get(associatedBallotID - 1), isIsolated,
-				isWearingSuit));
+		registry.add(new Citizen(citizenID, fullName, yearOfBirth, ballots.get(associatedBallotID - 1), isIsolated,	isWearingSuit));
 		System.out.println("Voter successfully added to the voter registry!");
 
 		return true;
@@ -124,7 +121,7 @@ public class TUI {
 
 		// Validations
 		if (parties.getPartyCount() == Elections.MAX_ARRAY_SIZE) {
-			System.out.println("Cannot add any more parties!\nPlease try again in the next elections.");
+			System.out.println("Cannot add any more parties! Please try again in the next elections.");
 
 			return false;
 		}
@@ -147,7 +144,8 @@ public class TUI {
 	}
 
 	// When entering 4 in the menu
-	public static boolean addCandidateToAParty(Scanner scan, VoterRegistry voterRegistry, PartyRegistry parties) {
+	public static boolean addCandidateToParty(Scanner scan, VoterRegistry voterRegistry, PartyRegistry parties) {
+		Candidate candidate;
 		int addedCandidateID;
 		String partyName;
 
@@ -162,7 +160,8 @@ public class TUI {
 		}
 
 		voterRegistry.updateCitizenToCandidate(voterRegistry.get(addedCandidateID));
-		parties.get(partyName).addCandidate((Candidate) voterRegistry.get(addedCandidateID));
+		candidate = (Candidate) voterRegistry.get(addedCandidateID);
+		parties.get(partyName).addCandidate(candidate);
 		System.out.println("Candidate successfully added to the party!");
 		
 		return true;
@@ -172,8 +171,8 @@ public class TUI {
 	public static int vote(Scanner scan, PartyRegistry candidateParties, Citizen citizen) {
 		int voterChoice;
 		
-		System.out.println(String.format("Greetings, %s. Do you want to vote? (True/False)", citizen.getFullName()));
-		if (scan.nextBoolean()) {
+		System.out.println(String.format("Greetings, %s. Do you want to vote? (Y/N)", citizen.getFullName()));
+		if (scan.next().toUpperCase() == "Y") {
 			for (int i = 0; i < candidateParties.getPartyCount(); i++)
 				System.out.println(String.format("%d = %s", i + 1, candidateParties.get(i).getName()));
 			System.out.println("Enter the code for your chosen party:");
