@@ -47,6 +47,8 @@ public class Citizen {
 
 	public void setAssociatedBallot(Ballot associatedBallot) {
 		this.associatedBallot = associatedBallot;
+		if (this.associatedBallot != null)
+			this.associatedBallot.addVoter(this);
 	}
 
 	public boolean isIsolated() {
@@ -71,9 +73,9 @@ public class Citizen {
 		setID(ID);
 		setFullName(fullName);
 		setYearOfBirth(yearOfBirth);
-		setAssociatedBallot(associatedBallot);
 		setIsIsolated(isIsolated);
 		setIswearingSuit(isWearingSuit);
+		setAssociatedBallot(associatedBallot);
 	}
 
 	// Methods
@@ -83,33 +85,12 @@ public class Citizen {
 
 	@Override
 	public boolean equals(Object obj) {
-		Citizen other;
-
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!(obj instanceof Citizen))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-
-		other = (Citizen) obj;
-		if (ID != other.ID)
-			return false;
-		if (associatedBallot != other.associatedBallot)
-			return false;
-		if (fullName == null) {
-			if (other.fullName != null)
-				return false;
-		} else if (!fullName.equals(other.fullName))
-			return false;
-		if (isIsolated != other.isIsolated)
-			return false;
-		if (isWearingSuit != other.isWearingSuit)
-			return false;
-		if (yearOfBirth != other.yearOfBirth)
-			return false;
-
-		return true;
+		Citizen other = (Citizen) obj;
+		return ID == other.ID;
 	}
 
 	@Override
@@ -120,7 +101,8 @@ public class Citizen {
 		sb.append((VOTING_AGE <= age) && (age <= SOLDIER_AGE) ? "Soldier, " : "");
 		sb.append(isIsolated ? "Isolated, " : "Not isolated, ");
 		sb.append(isWearingSuit ? "Wearing suit" : "Not wearing suit");
-		
-		return String.format("Citizen [ID:%d | Full name: %s | Born: %d | Status: %s]",	ID, fullName, yearOfBirth, sb.toString());
+
+		return String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: %s]", ID, fullName, yearOfBirth,
+				sb.toString());
 	}
 }

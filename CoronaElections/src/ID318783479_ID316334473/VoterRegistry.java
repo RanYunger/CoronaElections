@@ -19,7 +19,8 @@ public class VoterRegistry {
 	private void setVoterRegistry(Citizen[] voterRegistry) {
 		this.voterRegistry = voterRegistry;
 		voterCount = 0;
-		for (int i = 0; (i < voterRegistry.length) && (voterRegistry[i] != null); i++, voterCount++);
+		for (int i = 0; (i < voterRegistry.length) && (voterRegistry[i] != null); i++, voterCount++)
+			;
 	}
 
 	public int getVoterCount() {
@@ -46,8 +47,12 @@ public class VoterRegistry {
 	}
 
 	// Methods
-	public Citizen get(int citizenID) {
+	public Citizen getByID(int citizenID) {
 		return (indexOf(citizenID) == -1) ? null : voterRegistry[indexOf(citizenID)];
+	}
+
+	public Citizen get(int index) {
+		return (index < 0 || voterCount <= index) ? null : voterRegistry[index];
 	}
 
 	public int indexOf(int citizenID) {
@@ -79,11 +84,10 @@ public class VoterRegistry {
 		if (voterCount == 0) {
 			voterRegistry[voterCount] = citizen;
 			voterCount++;
-			System.out.println("Citizen successfully added to the voter registry!");
-			
+
 			return true;
 		}
-		if (get(citizen.getID()) != null)
+		if (getByID(citizen.getID()) != null)
 			return false;
 		if ((votingDate.getYear() - citizen.getYearOfBirth()) < Citizen.VOTING_AGE)
 			return false;
@@ -95,8 +99,6 @@ public class VoterRegistry {
 		}
 		voterRegistry[i] = citizen;
 		voterCount++;
-		System.out.println("Citizen successfully added to the voter registry!");
-
 		return true;
 	}
 
@@ -122,15 +124,15 @@ public class VoterRegistry {
 
 	public boolean updateCitizenToCandidate(Citizen citizen) {
 		int index = indexOf(citizen.getID());
-		
+
 		if (index != -1) {
 			if (citizen.getClass() == Citizen.class) // "morphs" the Citizen into a Candidate
 				voterRegistry[index] = new Candidate(citizen.getID(), citizen.getFullName(), citizen.getYearOfBirth(),
 						citizen.getAssociatedBallot(), citizen.isIsolated(), citizen.iswearingSuit(), null, -1);
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 

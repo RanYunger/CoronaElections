@@ -33,7 +33,6 @@ public class PartyRegistry {
 	}
 
 	// Methods
-
 	public Party get(String partyName) {
 		return (indexOf(partyName) == -1) ? null : partyRegistry[indexOf(partyName)];
 	}
@@ -71,7 +70,6 @@ public class PartyRegistry {
 		if (partyCount == 0) {
 			partyRegistry[partyCount] = party;
 			partyCount++;
-			System.out.println("Party successfully added to the party registry!");
 
 			return true;
 		}
@@ -85,7 +83,6 @@ public class PartyRegistry {
 		}
 		partyRegistry[i] = party;
 		partyCount++;
-		System.out.println("Party successfully added to the party registry!");
 
 		return true;
 	}

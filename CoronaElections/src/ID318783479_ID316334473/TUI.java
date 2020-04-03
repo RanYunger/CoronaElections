@@ -29,8 +29,7 @@ public class TUI {
 		if (electionsOccurred) { // don't allow options 1, 2, 3, 4, or 8 if the elections have taken place
 			if ((1 <= selection && selection <= 4) || selection == 8)
 				return 0;
-		}
-		else if (selection == 9)
+		} else if (selection == 9)
 			return 0;
 
 		return selection;
@@ -49,7 +48,8 @@ public class TUI {
 		System.out.println("Enter ballot's address: ");
 		address = scan.nextLine();
 		while (true) {
-			System.out.println("For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
+			System.out.println(
+					"For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
 			switch (scan.nextInt()) {
 			case 1:
 				return ballots.add(new Ballot(address, votingDate));
@@ -74,7 +74,7 @@ public class TUI {
 		System.out.println("Enter voter's ID:");
 		citizenID = scan.nextInt();
 		scan.nextLine();
-		if (registry.get(citizenID) != null) {
+		if (registry.getByID(citizenID) != null) {
 			System.out.println("This Citizen is already in the registry, try something else.\n");
 
 			return false;
@@ -107,7 +107,8 @@ public class TUI {
 			scan.nextLine();
 		}
 
-		registry.add(new Citizen(citizenID, fullName, yearOfBirth, ballots.get(associatedBallotID - 1), isIsolated,	isWearingSuit));
+		registry.add(new Citizen(citizenID, fullName, yearOfBirth, ballots.get(associatedBallotID - 1), isIsolated,
+				isWearingSuit));
 		System.out.println("Voter successfully added to the voter registry!");
 
 		return true;
@@ -154,35 +155,51 @@ public class TUI {
 		scan.nextLine();
 		partyName = scan.nextLine();
 
-		if (voterRegistry.get(addedCandidateID) == null) {
+		if (voterRegistry.getByID(addedCandidateID) == null) {
 			System.out.println("Candidate not registered, so he can't be added");
 			return false;
 		}
 
-		voterRegistry.updateCitizenToCandidate(voterRegistry.get(addedCandidateID));
-		candidate = (Candidate) voterRegistry.get(addedCandidateID);
+		voterRegistry.updateCitizenToCandidate(voterRegistry.getByID(addedCandidateID));
+		candidate = (Candidate) voterRegistry.getByID(addedCandidateID);
 		parties.get(partyName).addCandidate(candidate);
 		System.out.println("Candidate successfully added to the party!");
-		
+
 		return true;
 	}
 
 	// When entering 8 in the menu
 	public static int vote(Scanner scan, PartyRegistry candidateParties, Citizen citizen) {
-		int voterChoice;
-		
-		System.out.println(String.format("Greetings, %s. Do you want to vote? (Y/N)", citizen.getFullName()));
-		if (scan.next().toUpperCase() == "Y") {
-			for (int i = 0; i < candidateParties.getPartyCount(); i++)
-				System.out.println(String.format("%d = %s", i + 1, candidateParties.get(i).getName()));
-			System.out.println("Enter the code for your chosen party:");
-			voterChoice = scan.nextInt();
-			scan.nextLine();
-
-			return voterChoice;
+		if (citizen.isIsolated() && citizen.getAssociatedBallot() instanceof CoronaBallot && !citizen.iswearingSuit()) {
+			System.out.println(
+					String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.\n",
+							citizen.getFullName()));
+			return -1;
 		}
 
-		return -1;
+		int voterChoice;
+
+		System.out.println(String.format("Greetings, %s. Do you want to vote? (Y/N)", citizen.getFullName()));
+		while (true) {
+			String selection = scan.next();
+			if (selection.equalsIgnoreCase("Y")) {
+				for (int i = 0; i < candidateParties.getPartyCount(); i++)
+					System.out.println(String.format("%d = %s", i + 1, candidateParties.get(i).getName()));
+				while (true) {
+					System.out.println("Enter the code for your chosen party:");
+					voterChoice = scan.nextInt();
+					if (1 <= voterChoice && voterChoice <= candidateParties.getPartyCount()) {
+						selection = scan.nextLine();
+						return voterChoice;
+					}
+					System.out.println("Invalid choice");
+				}
+			} else if (!selection.equalsIgnoreCase("N")) {
+				scan.nextLine();
+				System.out.println("Please enter a valid choice - Y to vote, N to skip voting.");
+			} else
+				return -1;
+		}
 	}
 
 	// When entering 9 in the menu

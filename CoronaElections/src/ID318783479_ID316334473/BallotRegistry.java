@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class BallotRegistry {
 	// Constants
-	
+
 	// Fields
 	private Ballot[] ballotRegistry;
 	private int ballotCount;
@@ -14,7 +14,7 @@ public class BallotRegistry {
 	public Ballot[] getBallotRegistry() {
 		return ballotRegistry;
 	}
-	
+
 	private void setBallotRegistry(Ballot[] ballotRegistry) {
 		this.ballotRegistry = ballotRegistry;
 	}
@@ -67,8 +67,6 @@ public class BallotRegistry {
 		if (ballotCount == 0) {
 			ballotRegistry[ballotCount] = ballot;
 			ballotCount++;
-			System.out.println("Ballot successfully added to the ballot registry!");
-			
 			return true;
 		}
 		if (indexOf(ballot.getID()) != -1)
@@ -81,8 +79,6 @@ public class BallotRegistry {
 		}
 		ballotRegistry[i] = ballot;
 		ballotCount++;
-		System.out.println("Ballot successfully added to the ballot registry!");
-
 		return true;
 	}
 
@@ -110,21 +106,21 @@ public class BallotRegistry {
 		for (int i = 0; i < ballotCount; i++)
 			ballotRegistry[i].vote(scan, parties);
 	}
-	
+
 	public int countVotes(int partyOffset) {
 		int votes = 0;
-		
+
 		for (Ballot ballot : ballotRegistry)
 			votes += ballot.getResults()[partyOffset];
-		
+
 		return votes;
 	}
-	
+
 	public String showResults(PartyRegistry parties) {
 		StringBuilder sb = new StringBuilder();
 		int[] currBallotResults;
 		int[] finalResults = new int[parties.getPartyCount()];
-		
+
 		for (int ballotOffset = 0; ballotOffset < ballotCount; ballotOffset++) {
 			currBallotResults = ballotRegistry[ballotOffset].getResults();
 			sb.append(String.format("Ballot #%d:\n", ballotRegistry[ballotOffset].getID()));
@@ -132,7 +128,7 @@ public class BallotRegistry {
 				sb.append(String.format("%s: %d\t", parties.get(i).getName(), currBallotResults[i]));
 				finalResults[i] += currBallotResults[i];
 			}
-			sb.append("\n");
+			sb.append("voter percentage: " + ballotRegistry[ballotOffset].getVotersPercentage() + "\n");
 		}
 
 		Elections.sortParties(finalResults.clone(), parties);
@@ -148,19 +144,19 @@ public class BallotRegistry {
 	@Override
 	public boolean equals(Object obj) {
 		BallotRegistry other;
-		
+
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		
+
 		other = (BallotRegistry) obj;
-		
+
 		return ballotCount == other.ballotCount && Arrays.equals(ballotRegistry, other.ballotRegistry);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb;

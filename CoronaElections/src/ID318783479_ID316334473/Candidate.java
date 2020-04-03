@@ -1,5 +1,7 @@
 package ID318783479_ID316334473;
 
+import java.util.Objects;
+
 public class Candidate extends Citizen {
 	// Constants
 
@@ -32,37 +34,25 @@ public class Candidate extends Citizen {
 		setAssociatedParty(associatedParty);
 	}
 
-	// Methods
 	@Override
 	public boolean equals(Object obj) {
-		Candidate other;
-
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Candidate))
 			return false;
-
-		other = (Candidate) obj;
-		if (associatedParty == null) {
-			if (other.associatedParty != null)
-				return false;
-		} else if (!associatedParty.equals(other.associatedParty))
-			return false;
-		if (rank != other.rank)
-			return false;
-
-		return true;
+		Candidate other = (Candidate) obj;
+		return Objects.equals(associatedParty, other.associatedParty) && rank == other.rank;
 	}
 
 	@Override
 	public String toString() {
 		String citizenStr = super.toString();
-		
-		citizenStr = citizenStr.replaceFirst("Citizen ", "Candidate ");
+
+		citizenStr = citizenStr.replaceFirst("Citizen", "Candidate");
 		citizenStr = citizenStr.replace("]", "");
-		
+
 		return String.format("%s | Party: %s (ranked #%d)]", citizenStr, associatedParty.getName(), rank);
 	}
 }
