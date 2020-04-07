@@ -62,11 +62,15 @@ public class BallotRegistry {
 		int i;
 
 		// Validations
-		if (ballotCount == Elections.MAX_ARRAY_SIZE)
+		if (ballotCount == Elections.MAX_ARRAY_SIZE) {
+			System.out.println(String.format("Cannot add more ballots (%d ballots max)", Elections.MAX_ARRAY_SIZE));
+			
 			return false;
+		}
 		if (ballotCount == 0) {
 			ballotRegistry[ballotCount] = ballot;
 			ballotCount++;
+			
 			return true;
 		}
 		if (indexOf(ballot.getID()) != -1)
@@ -79,6 +83,7 @@ public class BallotRegistry {
 		}
 		ballotRegistry[i] = ballot;
 		ballotCount++;
+		
 		return true;
 	}
 
@@ -88,9 +93,9 @@ public class BallotRegistry {
 		// Validations
 		if (ballotCount == 0)
 			return false;
-		if (ballotCount == -1)
+		if(ballotOffset != -1)
 			return false;
-
+			
 		ballotRegistry[ballotOffset] = null;
 		i = ballotOffset;
 		while ((i > 0) && (ballotRegistry[i - 1].getID() < ballotRegistry[i].getID())) {

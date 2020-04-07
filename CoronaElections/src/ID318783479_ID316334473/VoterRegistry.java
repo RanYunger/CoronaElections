@@ -19,8 +19,7 @@ public class VoterRegistry {
 	private void setVoterRegistry(Citizen[] voterRegistry) {
 		this.voterRegistry = voterRegistry;
 		voterCount = 0;
-		for (int i = 0; (i < voterRegistry.length) && (voterRegistry[i] != null); i++, voterCount++)
-			;
+		for (int i = 0; (i < voterRegistry.length) && (voterRegistry[i] != null); i++, voterCount++);
 	}
 
 	public int getVoterCount() {

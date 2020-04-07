@@ -5,8 +5,11 @@ import java.time.YearMonth;
 import java.util.Scanner;
 
 // Helper class, should aid the Elections main class
-public class TUI {
-
+public class UIHandler {
+	// Fields
+	public static boolean isTUI; // indicates whether UI is textual (TUI) or graphic (GUI). will be used in the future
+	
+	// Methods
 	public static int menu(Scanner scan, boolean electionsOccurred) {
 		if (!electionsOccurred) { // only add if the elections haven't taken place
 			System.out.println("To add a ballot, enter 1");
@@ -48,8 +51,7 @@ public class TUI {
 		System.out.println("Enter ballot's address: ");
 		address = scan.nextLine();
 		while (true) {
-			System.out.println(
-					"For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
+			System.out.println("For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
 			switch (scan.nextInt()) {
 			case 1:
 				return ballots.add(new Ballot(address, votingDate));
@@ -170,14 +172,15 @@ public class TUI {
 
 	// When entering 8 in the menu
 	public static int vote(Scanner scan, PartyRegistry candidateParties, Citizen citizen) {
+		int voterChoice;
+		
+		// Validations
 		if (citizen.isIsolated() && citizen.getAssociatedBallot() instanceof CoronaBallot && !citizen.iswearingSuit()) {
-			System.out.println(
-					String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.\n",
+			System.out.println(String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.\n",
 							citizen.getFullName()));
+			
 			return -1;
 		}
-
-		int voterChoice;
 
 		System.out.println(String.format("Greetings, %s. Do you want to vote? (Y/N)", citizen.getFullName()));
 		while (true) {

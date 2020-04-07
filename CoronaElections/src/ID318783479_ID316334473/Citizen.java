@@ -80,7 +80,7 @@ public class Citizen {
 
 	// Methods
 	public int vote(Scanner scan, PartyRegistry candidateParties) {
-		return TUI.vote(scan, candidateParties, this);
+		return UIHandler.vote(scan, candidateParties, this);
 	}
 
 	@Override

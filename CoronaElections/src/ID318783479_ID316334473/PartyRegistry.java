@@ -67,6 +67,7 @@ public class PartyRegistry {
 		// Validations
 		if (partyCount == Elections.MAX_ARRAY_SIZE)
 			return false;
+
 		if (partyCount == 0) {
 			partyRegistry[partyCount] = party;
 			partyCount++;
@@ -83,7 +84,7 @@ public class PartyRegistry {
 		}
 		partyRegistry[i] = party;
 		partyCount++;
-
+		
 		return true;
 	}
 	

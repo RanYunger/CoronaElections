@@ -172,7 +172,9 @@ public class Party {
 		
 		sb.append(String.format("Party [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(), foundationDate.toString()));
 		sb.append("Candidates:\n");
-		for (int i = 0; i < candidateCount; i++)
+		if(candidateCount == 0)
+			sb.append("Nothing to see here...");
+		else for (int i = 0; i < candidateCount; i++)
 			sb.append(candidates[i].toString() + "\n");
 		
 		return sb.toString();

@@ -10,12 +10,13 @@ public class Elections {
 
 	// Fields
 
+	// Methods
 	public static void main(String args[]) {
 		Scanner scan = new Scanner(System.in);
 		final YearMonth votingDate;
 		VoterRegistry voterRegistry;
-		PartyRegistry partyRegistry = new PartyRegistry();
-		BallotRegistry ballotRegistry = new BallotRegistry();
+		PartyRegistry partyRegistry;
+		BallotRegistry ballotRegistry;
 		int selection;
 		boolean loop = true, electionsOccurred = false;
 
@@ -31,7 +32,7 @@ public class Elections {
 		init(voterRegistry, ballotRegistry, partyRegistry);
 
 		while (loop) {
-			selection = TUI.menu(scan, electionsOccurred);
+			selection = UIHandler.menu(scan, electionsOccurred);
 			scan.nextLine();
 			switch (selection) {
 			case 1:
@@ -63,7 +64,7 @@ public class Elections {
 				showResults(ballotRegistry, partyRegistry);
 				break;
 			case 10:
-				System.out.println("Bye bye");
+				System.out.println("Thank you for your vote (or not). See you again in 3 months!");
 				loop = false;
 				break;
 			default:
@@ -73,12 +74,10 @@ public class Elections {
 	}
 
 	private static void init(VoterRegistry voterRegistry, BallotRegistry ballots, PartyRegistry parties) {
-		System.out.println("===== Initiation (4 ballots, 4 parties, 13 citizens (6 candidates)) =====");
-
 		// Initiates 4 ballots
 		ballots.add(new Ballot("21st Road Street, Town City", voterRegistry.getVotingDate()));
 		ballots.add(new Ballot(voterRegistry.getVotingDate()));
-		ballots.add(new MilitaryBallot("Top Secret", voterRegistry.getVotingDate()));
+		ballots.add(new MilitaryBallot("Area 51, Nevada", voterRegistry.getVotingDate()));
 		ballots.add(new CoronaBallot(voterRegistry.getVotingDate()));
 
 		// Initiates 4 parties
@@ -90,23 +89,19 @@ public class Elections {
 		// Initiates 5 citizen
 		voterRegistry.add(new Citizen(123456789, "Charles Foster Kane", 1941, ballots.get(0), false, false));
 		voterRegistry.add(new Citizen(234567890, "Donald John Trump", 1946, ballots.get(1), true, true));
-		voterRegistry.add(new Citizen(345678901, "Tonny Stark", 1970, ballots.get(2), false, false));
-		voterRegistry.add(new Citizen(456789012, "Steve Rogers", 1918, ballots.get(3), false, false));
-		voterRegistry.add(new Citizen(567890123, "Noa Kirel", 2001, ballots.get(2), false, false));
+		voterRegistry.add(new Citizen(345678901, "Tonny Stark", 1970, ballots.get(1), false, false));
+		voterRegistry.add(new Citizen(456789012, "Steve Rogers", 1918, ballots.get(3), true, true));
+		voterRegistry.add(new Citizen(567890123, "Childish Gambino", 2001, ballots.get(2), false, false));
 
 		// Initiates 8 candidates (2 per party)
-		voterRegistry.add(
-				new Candidate(678901234, "Benjamin Netanyahu", 1949, ballots.get(0), true, false, parties.get(0), 1));
+		voterRegistry.add(new Candidate(678901234, "Benjamin Netanyahu", 1949, ballots.get(0), true, false, parties.get(0), 1));
 		voterRegistry.add(new Candidate(789012345, "Miri Regev", 1965, ballots.get(3), true, false, parties.get(0), 5));
 		voterRegistry.add(new Candidate(890123456, "Benny Gantz", 1959, ballots.get(3), true, true, parties.get(1), 1));
 		voterRegistry.add(new Candidate(901234567, "Yair Lapid", 1963, ballots.get(3), true, true, parties.get(1), 2));
-		voterRegistry.add(
-				new Candidate(901234568, "Avigdor Lieberman", 1958, ballots.get(0), true, true, parties.get(2), 1));
-		voterRegistry.add(new Candidate(901234566, "Oded Forer", 1977, ballots.get(0), true, true, parties.get(2), 1));
-		voterRegistry
-				.add(new Candidate(901234569, "Tamar Zandberg", 1976, ballots.get(2), false, false, parties.get(3), 1));
-		voterRegistry.add(
-				new Candidate(901234565, "Nitzan Horowitz", 1965, ballots.get(1), false, false, parties.get(3), 1));
+		voterRegistry.add(new Candidate(901234568, "Avigdor Lieberman", 1958, ballots.get(0), true, true, parties.get(2), 1));
+		voterRegistry.add(new Candidate(901234566, "Oded Forer", 1977, ballots.get(0), false, true, parties.get(2), 1));
+		voterRegistry.add(new Candidate(901234569, "Tamar Zandberg", 1976, ballots.get(0), false, false, parties.get(3), 1));
+		voterRegistry.add(new Candidate(901234565, "Nitzan Horowitz", 1965, ballots.get(1), false, false, parties.get(3), 2));
 
 		// Adds initiated candidates to parties
 		parties.get("Halikud").addCandidate((Candidate) voterRegistry.getByID(678901234));
@@ -118,33 +113,33 @@ public class Elections {
 		parties.get("Israeli Labor Party").addCandidate((Candidate) voterRegistry.getByID(901234569));
 		parties.get("Israeli Labor Party").addCandidate((Candidate) voterRegistry.getByID(901234565));
 
-		System.out.println("===== Initiation complete =====");
+		System.out.println("===== Initiation complete (4 ballots, 4 parties, 13 citizens (6 candidates)) =====");
 	}
 
 	// When entering 1
 	private static boolean addNewBallotToElections(Scanner scan, YearMonth votingDate, BallotRegistry ballots) {
-		return TUI.addNewBallotToElections(scan, votingDate, ballots);
+		return UIHandler.addNewBallotToElections(scan, votingDate, ballots);
 	}
 
 	// When entering 2
 	private static boolean addCitizen(Scanner scan, VoterRegistry registry, YearMonth votingDate,
 			BallotRegistry ballots) {
-		return TUI.addCitizen(scan, registry, votingDate, ballots);
+		return UIHandler.addCitizen(scan, registry, votingDate, ballots);
 	}
 
 	// When entering 3
 	private static boolean addPartyToElections(Scanner scan, PartyRegistry parties) {
-		return TUI.addPartyToElections(scan, parties);
+		return UIHandler.addPartyToElections(scan, parties);
 	}
 
 	// When entering 4
 	private static boolean addCandidateToAParty(Scanner scan, VoterRegistry voterRegistry, PartyRegistry parties) {
-		return TUI.addCandidateToParty(scan, voterRegistry, parties);
+		return UIHandler.addCandidateToParty(scan, voterRegistry, parties);
 	}
 
 	// When entering 5
 	private static void showResults(BallotRegistry ballots, PartyRegistry parties) {
-		TUI.showResults(ballots, parties);
+		UIHandler.showResults(ballots, parties);
 	}
 
 	// When entering 8
