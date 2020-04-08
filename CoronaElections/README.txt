@@ -1,5 +1,5 @@
-מספר תרגיל: 1
-מגישים: 	רן יונגר, 316334473
-	שי אוהב ציון, 318783479
-הנחיות מיוחדות לבדיקה:
-1. הכניסה לפנקס הבוחרים ולרשימת הבוחרים בקלפיות נעשית מגיל 18 ומעלה 
+Exercise #01
+By: Shy Ohev Zion, 318783479
+	Ran Yunger, 316334473
+Testing instructions:
+1. Entering voter registry is restricted from 18 years old

@@ -1,11 +1,8 @@
 package ID318783479_ID316334473;
 
-import java.time.Year;
-import java.util.Scanner;
-
 public class Citizen {
 	// Constants
-	public static final int VOTING_AGE = 18;
+	public static final int VOTER_AGE = 18;
 	public static final int SOLDIER_AGE = 21;
 
 	// Fields
@@ -78,31 +75,48 @@ public class Citizen {
 		setAssociatedBallot(associatedBallot);
 	}
 
-	// Methods
-	public int vote(Scanner scan, PartyRegistry candidateParties) {
-		return UIHandler.vote(scan, candidateParties, this);
-	}
-
 	@Override
 	public boolean equals(Object obj) {
+		Citizen other;
+		
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Citizen))
+		if (obj == null)
 			return false;
-		Citizen other = (Citizen) obj;
-		return ID == other.ID;
-	}
+		if (getClass() != obj.getClass())
+			return false;
 
+		other = (Citizen) obj;
+		if (ID != other.ID)
+			return false;
+		if (associatedBallot == null) {
+			if (other.associatedBallot != null)
+				return false;
+		} else if (!associatedBallot.equals(other.associatedBallot))
+			return false;
+		if (fullName == null) {
+			if (other.fullName != null)
+				return false;
+		} else if (!fullName.equals(other.fullName))
+			return false;
+		if (isIsolated != other.isIsolated)
+			return false;
+		if (isWearingSuit != other.isWearingSuit)
+			return false;
+		if (yearOfBirth != other.yearOfBirth)
+			return false;
+		
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		int age = Year.now().getValue() - yearOfBirth;
-
-		sb.append((VOTING_AGE <= age) && (age <= SOLDIER_AGE) ? "Soldier, " : "");
+		
+		sb.append(String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: ", ID, fullName, yearOfBirth));
 		sb.append(isIsolated ? "Isolated, " : "Not isolated, ");
-		sb.append(isWearingSuit ? "Wearing suit" : "Not wearing suit");
-
-		return String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: %s]", ID, fullName, yearOfBirth,
-				sb.toString());
+		sb.append(isWearingSuit ? "Wearing suit]" : "Not wearing suit]");
+		
+		return sb.toString();
 	}
 }

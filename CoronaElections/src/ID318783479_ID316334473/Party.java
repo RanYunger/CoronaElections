@@ -68,7 +68,7 @@ public class Party {
 		setName(name);
 		setWing(wing);
 		setFoundationDate(foundationDate);
-		setCandidates(new Candidate[Elections.MAX_ARRAY_SIZE]);
+		setCandidates(new Candidate[Program.MAX_ARRAY_SIZE]);
 		setCandidateCount(0);
 
 		RANK_GENERATOR = 1;
@@ -93,7 +93,7 @@ public class Party {
 
 	public boolean addCandidate(Candidate candidate) {
 		// Validations
-		if (candidateCount == Elections.MAX_ARRAY_SIZE)
+		if (candidateCount == Program.MAX_ARRAY_SIZE)
 			return false;
 		if (candidateCount == 0) {
 			candidates[candidateCount++] = candidate;
@@ -174,8 +174,11 @@ public class Party {
 		sb.append("Candidates:\n");
 		if(candidateCount == 0)
 			sb.append("Nothing to see here...");
-		else for (int i = 0; i < candidateCount; i++)
-			sb.append(candidates[i].toString() + "\n");
+		else{
+			for (int i = 0; i < candidateCount; i++)
+				sb.append(candidates[i].toString() + "\n");
+			sb.deleteCharAt(sb.length() - 1); // Removes last \n
+		}
 		
 		return sb.toString();
 	}

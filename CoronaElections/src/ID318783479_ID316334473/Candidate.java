@@ -36,23 +36,31 @@ public class Candidate extends Citizen {
 
 	@Override
 	public boolean equals(Object obj) {
+		Candidate other;
+		
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
 			return false;
 		if (!(obj instanceof Candidate))
 			return false;
-		Candidate other = (Candidate) obj;
-		return Objects.equals(associatedParty, other.associatedParty) && rank == other.rank;
+		
+		other = (Candidate) obj;
+		
+		return (Objects.equals(associatedParty, other.associatedParty)) && (rank == other.rank);
 	}
-
+	
 	@Override
 	public String toString() {
+		StringBuilder sb = new StringBuilder();
 		String citizenStr = super.toString();
-
+		
 		citizenStr = citizenStr.replaceFirst("Citizen", "Candidate");
 		citizenStr = citizenStr.replace("]", "");
-
-		return String.format("%s | Party: %s (ranked #%d)]", citizenStr, associatedParty.getName(), rank);
+		
+		sb.append(citizenStr);
+		sb.append(String.format(" | Party: %s (ranked #%d)]", associatedParty.getName(), rank));
+		
+		return sb.toString();	
 	}
 }

@@ -3,7 +3,6 @@ package ID318783479_ID316334473;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Scanner;
 
 public class Ballot {
 	// Constants
@@ -25,9 +24,17 @@ public class Ballot {
 	private void setID(int ID) {
 		this.ID = ID;
 	}
+	
+	public String getAddress() {
+		return address;
+	}
 
 	private void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public VoterRegistry getVoterRegistry() {
+		return voterRegistry;
 	}
 
 	private void setVoterRegistry(VoterRegistry voterRegistry) {
@@ -39,12 +46,15 @@ public class Ballot {
 	}
 
 	protected void setVotersPercentage(int numOfVoters) {
-		this.votersPercentage = (voterRegistry.getVoterCount() > 0) ? 100 * numOfVoters / voterRegistry.getVoterCount()
-				: 0;
+		this.votersPercentage = (voterRegistry.getVoterCount() > 0) ? 100 * numOfVoters / voterRegistry.getVoterCount()	: 0;
 	}
 
 	public int[] getResults() {
 		return results;
+	}
+	
+	public void setResults(int[] results) {
+		this.results = results;
 	}
 
 	// Constructors
@@ -57,7 +67,7 @@ public class Ballot {
 		setAddress(address);
 		setVoterRegistry(new VoterRegistry(votingDate));
 		setVotersPercentage(0);
-		this.results = null;
+		setResults(null);
 	}
 
 	// Methods
@@ -71,7 +81,7 @@ public class Ballot {
 				citizen.setAssociatedBallot(this);
 			
 			return true;
-		}
+		}	
 
 		return false;
 	}
@@ -91,19 +101,18 @@ public class Ballot {
 		return false;
 	}
 
-	public int[] vote(Scanner scan, PartyRegistry candidateParties) {
+	public int[] vote(PartyRegistry candidateParties) {
 		int voterCount = voterRegistry.getVoterCount(), currVoterChoice;
 		int numOfVoters = 0;
-		results = new int[candidateParties.getPartyCount()];
-
+		
+		setResults(new int[candidateParties.getPartyCount()]);
 		for (int i = 0; i < voterCount; i++) {
-			currVoterChoice = voterRegistry.get(i).vote(scan, candidateParties);
+			currVoterChoice = Program.vote(candidateParties, voterRegistry.get(i));
 			if (currVoterChoice != -1) {
 				results[currVoterChoice - 1]++;
 				numOfVoters++;
 			}
 		}
-
 		setVotersPercentage(numOfVoters);
 
 		return results;
@@ -111,18 +120,22 @@ public class Ballot {
 
 	@Override
 	public boolean equals(Object obj) {
+		Ballot other;
+		
 		if (this == obj)
 			return true;
 		if (!(obj instanceof Ballot))
 			return false;
-		Ballot other = (Ballot) obj;
-		return ID == other.ID && Objects.equals(address, other.address) && Arrays.equals(results, other.results)
-				&& Objects.equals(voterRegistry, other.voterRegistry)
-				&& Double.doubleToLongBits(votersPercentage) == Double.doubleToLongBits(other.votersPercentage);
+		
+		other = (Ballot) obj;
+		
+		return (ID == other.ID) && (Objects.equals(address, other.address)) && (Arrays.equals(results, other.results))
+				&& (Objects.equals(voterRegistry, other.voterRegistry))
+				&& (Double.doubleToLongBits(votersPercentage) == Double.doubleToLongBits(other.votersPercentage));
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Ballot [ID: %d | Address: %s]\n%s", ID, address, voterRegistry);
+		return String.format("Ballot [ID: %d | Address: %s]\n%s", ID, address, voterRegistry.toString());
 	}
 }
