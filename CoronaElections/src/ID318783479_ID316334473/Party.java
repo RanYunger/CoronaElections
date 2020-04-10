@@ -2,6 +2,7 @@ package ID318783479_ID316334473;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Party {
 	// Constants
@@ -10,7 +11,6 @@ public class Party {
 	}
 
 	// Fields
-	private int RANK_GENERATOR;
 
 	private String name;
 	private PartyAssociation wing;
@@ -68,24 +68,22 @@ public class Party {
 		setName(name);
 		setWing(wing);
 		setFoundationDate(foundationDate);
-		setCandidates(new Candidate[Program.MAX_ARRAY_SIZE]);
+		setCandidates(new Candidate[UIHandler.MAX_ARRAY_SIZE]);
 		setCandidateCount(0);
-
-		RANK_GENERATOR = 1;
 	}
 
 	// Methods
 	public Candidate getCandidateByID(int candidateID) {
-		for (int i = 0; i < candidates.length; i++)
-			if ((candidates[i] != null) && (candidates[i].getID() == candidateID))
+		for (int i = 0; i < candidateCount; i++)
+			if ((candidates[i].getID() == candidateID))
 				return candidates[i];
 
 		return null;
 	}
 
 	public int getCandidateOffsetByID(int candidateID) {
-		for (int i = 0; i < candidates.length; i++)
-			if ((candidates[i] != null) && (candidates[i].getID() == candidateID))
+		for (int i = 0; i < candidateCount; i++)
+			if ((candidates[i].getID() == candidateID))
 				return i;
 
 		return -1;
@@ -93,93 +91,61 @@ public class Party {
 
 	public boolean addCandidate(Candidate candidate) {
 		// Validations
-		if (candidateCount == Program.MAX_ARRAY_SIZE)
+		if (candidateCount == UIHandler.MAX_ARRAY_SIZE)
 			return false;
-		if (candidateCount == 0) {
-			candidates[candidateCount++] = candidate;
-			candidate.setAssociatedParty(this);
-			candidate.setRank(RANK_GENERATOR++);
 
-			return true;
-		}
 		if (getCandidateByID(candidate.getID()) != null)
 			return false;
 
 		candidates[candidateCount++] = candidate;
 		candidate.setAssociatedParty(this);
-		candidate.setRank(RANK_GENERATOR++);
+		candidate.setRank(candidateCount);
 
 		return true;
 	}
 
-	public boolean removeCandidate(int candidateID) {
-		int candidateOffset = getCandidateOffsetByID(candidateID), i;
-
-		// Validations
-		if (candidateCount == 0)
-			return false;
-		if (candidateOffset == -1)
+	public boolean addCandidate(Candidate candidate, int rank) {
+		if (candidateCount == UIHandler.MAX_ARRAY_SIZE)
 			return false;
 
-		candidates[candidateOffset] = null;
-		i = candidateOffset;
-		while (i < candidateCount && candidates[i].getRank() < candidates[i + 1].getRank()) {
-			candidates[i] = candidates[i + 1];
-			i++;
-		}
-		candidateCount--;
+		if (getCandidateByID(candidate.getID()) != null)
+			return false;
 
-		// prevents inconsistencies, such as 2, 3, 4... or 1, 2, 4, 5...
-		for (i = 0; i < candidateCount; i++)
+		for (int i = candidateCount; i > rank - 1; i++) {
+			candidates[i] = candidates[i - 1];
 			candidates[i].setRank(i + 1);
+		}
+
+		candidates[rank - 1] = candidate;
+		candidate.setRank(rank);
 
 		return true;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		Party other = null;
-
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!(obj instanceof Party))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-
-		other = (Party) obj;
-		if (!Arrays.equals(candidates, other.candidates))
-			return false;
-		if (foundationDate == null) {
-			if (other.foundationDate != null)
-				return false;
-		} else if (!foundationDate.equals(other.foundationDate))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (wing != other.wing)
-			return false;
-
-		return true;
+		Party other = (Party) obj;
+		return name.equalsIgnoreCase(other.name);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append(String.format("Party [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(), foundationDate.toString()));
-		sb.append("Candidates:\n");
-		if(candidateCount == 0)
-			sb.append("Nothing to see here...");
-		else{
+
+		sb.append(String.format("Party [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(),
+				foundationDate.toString()));
+		sb.append("\tCandidates:");
+		if (candidateCount == 0)
+			sb.append("\n\t\tNothing to see here...");
+		else {
 			for (int i = 0; i < candidateCount; i++)
-				sb.append(candidates[i].toString() + "\n");
-			sb.deleteCharAt(sb.length() - 1); // Removes last \n
+				sb.append("\n\t\t" + candidates[i].toString());
 		}
-		
+
 		return sb.toString();
 	}
 }

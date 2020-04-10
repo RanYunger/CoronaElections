@@ -19,7 +19,8 @@ public class VoterRegistry {
 	private void setVoterRegistry(Citizen[] voterRegistry) {
 		this.voterRegistry = voterRegistry;
 		voterCount = 0;
-		for (int i = 0; (i < voterRegistry.length) && (voterRegistry[i] != null); i++, voterCount++);
+		for (int i = 0; (i < voterRegistry.length) && (voterRegistry[i] != null); i++, voterCount++)
+			;
 	}
 
 	public int getVoterCount() {
@@ -40,7 +41,7 @@ public class VoterRegistry {
 	}
 
 	public VoterRegistry(YearMonth votingDate) {
-		setVoterRegistry(new Citizen[Program.MAX_ARRAY_SIZE]);
+		setVoterRegistry(new Citizen[UIHandler.MAX_ARRAY_SIZE]);
 		voterCount = 0;
 		setVotingDate(votingDate);
 	}
@@ -78,28 +79,17 @@ public class VoterRegistry {
 		int i;
 
 		// Validations
-		if (voterCount == Program.MAX_ARRAY_SIZE) {
-			System.out.println(String.format("Cannot add more voters (%d voters max)", Program.MAX_ARRAY_SIZE));
-			
+		if (voterCount == UIHandler.MAX_ARRAY_SIZE)
 			return false;
-		}
 		if (voterCount == 0) {
 			voterRegistry[voterCount] = citizen;
 			voterCount++;
-			System.out.println("Voter successfully added to the voter registry.");
-
 			return true;
 		}
-		if (getByID(citizen.getID()) != null) {
-			System.out.println("Voter already exists in the voter registry.");
-			
+		if (getByID(citizen.getID()) != null)
 			return false;
-		}
-		if ((votingDate.getYear() - citizen.getYearOfBirth()) < Citizen.VOTER_AGE) {
-			System.out.println(String.format("Voter cannot participate in elections (minimum %d years old).", Citizen.VOTER_AGE));
-			
+		if ((votingDate.getYear() - citizen.getYearOfBirth()) < Citizen.VOTER_AGE)
 			return false;
-		}
 
 		i = voterCount;
 		while (i > 0 && voterRegistry[i - 1].getID() > citizen.getID()) {
@@ -108,35 +98,6 @@ public class VoterRegistry {
 		}
 		voterRegistry[i] = citizen;
 		voterCount++;
-		System.out.println("Voter successfully added to the voter registry.");
-		
-		return true;
-	}
-
-	public boolean remove(int citizenID) {
-		int citizenOffset = indexOf(citizenID), i;
-
-		// Validations
-		if (voterCount == 0) {
-			System.out.println("Cannot remove any voter (non-existing).");
-			
-			return false;
-		}
-		if (citizenOffset == -1) {
-			System.out.println("Voter already doesn't exist in the citizen registry.");
-			
-			return false;
-		}
-
-		voterRegistry[citizenOffset] = null;
-		i = citizenOffset;
-		while ((i > 0) && (voterRegistry[i - 1].getID() < voterRegistry[i + 1].getID())) {
-			voterRegistry[i] = voterRegistry[i + 1];
-			i++;
-		}
-		voterCount--;
-		System.out.println("Voter successfully removed from the citizen registry.");
-		
 		return true;
 	}
 
@@ -167,20 +128,18 @@ public class VoterRegistry {
 
 		other = (VoterRegistry) obj;
 
-		return (voterCount == other.voterCount) && (Arrays.equals(voterRegistry, other.voterRegistry)) && (votingDate.equals(other.votingDate));
+		return (voterCount == other.voterCount) && (Arrays.equals(voterRegistry, other.voterRegistry))
+				&& (votingDate.equals(other.votingDate));
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb;
-
 		if (voterCount == 0)
 			return "Nothing to See here..";
 
-		sb = new StringBuilder("Date of voting: " + votingDate + "\nVoter list:\n");
+		StringBuilder sb = new StringBuilder("Date of voting: " + votingDate + "\nVoter list:");
 		for (int i = 0; i < voterCount; i++)
-			sb.append(voterRegistry[i].toString() + "\n");
-		sb.deleteCharAt(sb.length() - 1); // Removes last \n
+			sb.append("\n\t" + voterRegistry[i].toString());
 
 		return sb.toString();
 	}

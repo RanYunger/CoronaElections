@@ -25,7 +25,7 @@ public class MilitaryBallot extends Ballot {
 
 		if (citizenAge <= Citizen.SOLDIER_AGE)
 			return super.addVoter(citizen);
-		
+
 		return false;
 	}
 }

@@ -1,6 +1,7 @@
 package ID318783479_ID316334473;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class BallotRegistry {
 	// Constants
@@ -28,7 +29,7 @@ public class BallotRegistry {
 
 	// Constructors
 	public BallotRegistry() {
-		setBallotRegistry(new Ballot[Program.MAX_ARRAY_SIZE]);
+		setBallotRegistry(new Ballot[UIHandler.MAX_ARRAY_SIZE]);
 		setBallotCount(0);
 	}
 
@@ -61,21 +62,15 @@ public class BallotRegistry {
 		int i;
 
 		// Validations
-		if (ballotCount == Program.MAX_ARRAY_SIZE) {
-			System.out.println(String.format("Cannot add more ballots (%d ballots max)", Program.MAX_ARRAY_SIZE));
-			
+		if (ballotCount == UIHandler.MAX_ARRAY_SIZE) {
 			return false;
 		}
 		if (ballotCount == 0) {
 			ballotRegistry[ballotCount] = ballot;
 			ballotCount++;
-			System.out.println("Ballot successfully added to the ballot registry.");
-			
 			return true;
 		}
 		if (indexOf(ballot.getID()) != -1) {
-			System.out.println("Ballot already exists in the ballot registry.");
-			
 			return false;
 		}
 
@@ -86,35 +81,6 @@ public class BallotRegistry {
 		}
 		ballotRegistry[i] = ballot;
 		ballotCount++;
-		System.out.println("Ballot successfully added to the ballot registry.");
-		
-		return true;
-	}
-
-	public boolean remove(int ballotID) {
-		int ballotOffset = indexOf(ballotID), i;
-
-		// Validations
-		if (ballotCount == 0) {
-			System.out.println("Cannot remove any ballot (non-existing).");
-			
-			return false;
-		}
-		if(ballotOffset != -1) {
-			System.out.println("Ballot already doesn't exist in the ballot registry.");
-			
-			return false;
-		}
-			
-		ballotRegistry[ballotOffset] = null;
-		i = ballotOffset;
-		while ((i > 0) && (ballotRegistry[i - 1].getID() < ballotRegistry[i].getID())) {
-			ballotRegistry[i] = ballotRegistry[i + 1];
-			i++;
-		}
-		ballotCount--;
-		System.out.println("Ballot successfully removed from the ballot registry.");
-
 		return true;
 	}
 
@@ -137,54 +103,43 @@ public class BallotRegistry {
 		int[] currBallotResults;
 		int[] finalResults = new int[parties.getPartyCount()];
 
-		for (int ballotOffset = 0; ballotOffset < ballotCount; ballotOffset++) {
-			currBallotResults = ballotRegistry[ballotOffset].getResults();
-			sb.append(String.format("Ballot #%d:\n", ballotRegistry[ballotOffset].getID()));
-			for (int i = 0; i < currBallotResults.length; i++) {
-				sb.append(String.format("%s: %d\t", parties.get(i).getName(), currBallotResults[i]));
-				finalResults[i] += currBallotResults[i];
+		for (int i = 0; i < ballotCount; i++) {
+			currBallotResults = ballotRegistry[i].getResults();
+			sb.append(String.format("Ballot #%d:\n", ballotRegistry[i].getID()));
+			for (int j = 0; j < currBallotResults.length; j++) {
+				sb.append(String.format("%s: %d\t", parties.get(j).getName(), currBallotResults[j]));
+				finalResults[j] += currBallotResults[j];
 			}
-			sb.append("voter percentage: " + ballotRegistry[ballotOffset].getVotersPercentage() + "\n");
+			sb.append("voter percentage: " + ballotRegistry[i].getVotersPercentage() + "\n");
 		}
 
 		Elections.sortParties(finalResults.clone(), parties);
 		Elections.sortResults(finalResults);
 
-		sb.append("Final Results:\n");
+		sb.append("Final Results:");
 		for (int i = 0; i < finalResults.length; i++)
-			sb.append(String.format("%s : %d\n", parties.get(i).getName(), finalResults[i]));
-		sb.deleteCharAt(sb.length() - 1); // Removes last \n
-
+			sb.append(String.format("\n%s : %d", parties.get(i).getName(), finalResults[i]));
 		return sb.toString();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		BallotRegistry other;
-
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!(obj instanceof BallotRegistry))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-
-		other = (BallotRegistry) obj;
-
-		return (ballotCount == other.ballotCount) && (Arrays.equals(ballotRegistry, other.ballotRegistry));
+		BallotRegistry other = (BallotRegistry) obj;
+		return ballotCount == other.ballotCount && Arrays.equals(ballotRegistry, other.ballotRegistry);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb;
-
 		if (ballotCount == 0)
 			return "Nothing to See here..";
 
-		sb = new StringBuilder();
-		for (int i = 0; i < ballotCount; i++)
-			sb.append(ballotRegistry[i].toString() + "\n");			
-		sb.deleteCharAt(sb.length() - 1); // Removes last \n
+		StringBuilder sb = new StringBuilder(ballotRegistry[0].toString());
+		for (int i = 1; i < ballotCount; i++)
+			sb.append("\n" + ballotRegistry[i].toString().replaceAll("\n", "\n\t"));
 
 		return sb.toString();
 	}

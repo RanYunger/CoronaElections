@@ -23,7 +23,6 @@ public class CoronaBallot extends Ballot {
 	public boolean addVoter(Citizen citizen) {
 		if (citizen.isIsolated)
 			return super.addVoter(citizen);
-
 		return false;
 	}
 }

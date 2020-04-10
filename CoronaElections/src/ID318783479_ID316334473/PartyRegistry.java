@@ -13,7 +13,7 @@ public class PartyRegistry {
 	public Party[] getPartyRegistry() {
 		return partyRegistry;
 	}
-	
+
 	public void setPartyRegistry(Party[] partyRegistry) {
 		this.partyRegistry = partyRegistry;
 	}
@@ -28,7 +28,7 @@ public class PartyRegistry {
 
 	// Constructors
 	public PartyRegistry() {
-		setPartyRegistry(new Party[Program.MAX_ARRAY_SIZE]);
+		setPartyRegistry(new Party[UIHandler.MAX_ARRAY_SIZE]);
 		setPartyCount(0);
 	}
 
@@ -40,7 +40,7 @@ public class PartyRegistry {
 	public Party get(int index) {
 		return (0 <= index && index <= partyCount) ? partyRegistry[index] : null;
 	}
-	
+
 	public int indexOf(String partyName) {
 		return indexOf(0, partyCount - 1, partyName);
 	}
@@ -65,21 +65,15 @@ public class PartyRegistry {
 		int i;
 
 		// Validations
-		if (partyCount == Program.MAX_ARRAY_SIZE) {
-			System.out.println(String.format("Cannot add more parties (%d parties max)", Program.MAX_ARRAY_SIZE));
-			
-			return false;	
+		if (partyCount == UIHandler.MAX_ARRAY_SIZE) {
+			return false;
 		}
 		if (partyCount == 0) {
 			partyRegistry[partyCount] = party;
 			partyCount++;
-			System.out.println("Party successfully added to the party registry.");
-
 			return true;
 		}
 		if (indexOf(party.getName()) != -1) {
-			System.out.println("Party already exists in the party registry.");
-			
 			return false;
 		}
 
@@ -90,65 +84,26 @@ public class PartyRegistry {
 		}
 		partyRegistry[i] = party;
 		partyCount++;
-		System.out.println("Party successfully added to the party registry.");
-		
-		return true;
-	}
-	
-	public boolean remove(String partyName) {
-		int partyOffset = indexOf(partyName), i;
-
-		// Validations
-		if (partyCount == 0) {
-			System.out.println("Cannot remove any party (non-existing).");
-			
-			return false;
-		}
-		if (partyOffset == -1) {
-			System.out.println("Party already doesn't exist in the party registry.");
-			
-			return false;
-		}
-
-		partyRegistry[partyOffset] = null;
-		i = partyOffset;
-		while ((i > 0) && (partyRegistry[i - 1].getName().compareTo(partyRegistry[i + 1].getName()) > 0)) {
-			partyRegistry[i] = partyRegistry[i + 1];
-			i++;
-		}
-		partyCount--;
-		System.out.println("Party successfully removed from the party registry.");
-
 		return true;
 	}
 
-	@Override
 	public boolean equals(Object obj) {
-		PartyRegistry other;
-		
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!(obj instanceof PartyRegistry))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		
-		other = (PartyRegistry) obj;
-		
-		return (partyCount == other.partyCount) && (Arrays.equals(partyRegistry, other.partyRegistry));
+		PartyRegistry other = (PartyRegistry) obj;
+		return partyCount == other.partyCount && Arrays.equals(partyRegistry, other.partyRegistry);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb;
-		
 		if (partyCount == 0)
 			return "Nothing to See here..";
 
-		sb = new StringBuilder();
-		for (int i = 0; i < partyCount; i++)
-			sb.append(partyRegistry[i].toString() + "\n");
-		sb.deleteCharAt(sb.length() - 1); // Removes last \n
+		StringBuilder sb = new StringBuilder(partyRegistry[0].toString());
+		for (int i = 1; i < partyCount; i++)
+			sb.append("\n" + partyRegistry[i].toString());
 
 		return sb.toString();
 	}
