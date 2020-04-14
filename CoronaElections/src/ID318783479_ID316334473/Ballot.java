@@ -1,6 +1,7 @@
 package ID318783479_ID316334473;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 
 public class Ballot {
 	// Constants
@@ -10,7 +11,8 @@ public class Ballot {
 
 	protected int ID;
 	protected String address;
-	protected VoterRegistry voterRegistry;
+	protected ArrayList<Citizen> voterRegistry;
+	protected YearMonth votingDate;
 	protected double votersPercentage;
 	protected int[] results;
 
@@ -19,7 +21,9 @@ public class Ballot {
 		return ID;
 	}
 
-	private void setID(int ID) {
+	private void setID(int ID) throws Exception {
+		if (ID < 0)
+			throw new Exception("Ballot's ID must be a positive number.");
 		this.ID = ID;
 	}
 
@@ -27,16 +31,28 @@ public class Ballot {
 		return address;
 	}
 
-	private void setAddress(String address) {
+	private void setAddress(String address) throws Exception {
+		if (address.trim().length() == 0)
+			throw new Exception("Ballot's address must contain at least 1 letter.");
 		this.address = address;
 	}
 
-	public VoterRegistry getVoterRegistry() {
+	public ArrayList<Citizen> getVoterRegistry() {
 		return voterRegistry;
 	}
 
-	private void setVoterRegistry(VoterRegistry voterRegistry) {
+	private void setVoterRegistry(ArrayList<Citizen> voterRegistry) {
 		this.voterRegistry = voterRegistry;
+	}
+
+	public YearMonth getVotingDate() {
+		return votingDate;
+	}
+
+	private void setVotingDate(YearMonth votingDate) throws Exception {
+		if (votingDate.compareTo(YearMonth.now()) > 0)
+			throw new Exception("Time paradox prevented.");
+		this.votingDate = votingDate;
 	}
 
 	public double getVotersPercentage() {
@@ -44,8 +60,7 @@ public class Ballot {
 	}
 
 	private void setVotersPercentage(int numOfVoters) {
-		this.votersPercentage = (voterRegistry.getVoterCount() > 0) ? 100 * numOfVoters / voterRegistry.getVoterCount()
-				: 0;
+		this.votersPercentage = (voterRegistry.size() > 0) ? (100 * numOfVoters) / voterRegistry.size() : 0;
 	}
 
 	public int[] getResults() {
@@ -62,34 +77,48 @@ public class Ballot {
 	}
 
 	public Ballot(String address, YearMonth votingDate) {
-		setID(IDGenerator++);
-		setAddress(address);
-		setVoterRegistry(new VoterRegistry(votingDate));
-		setVotersPercentage(0);
-		setResults(null);
+		try {
+			setID(IDGenerator++);
+			setAddress(address);
+			setVoterRegistry(new ArrayList<Citizen>());
+			setVotingDate(votingDate);
+			setVotersPercentage(0);
+			setResults(null);
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	// Methods
 	public Citizen getCitizenByID(int citizenID) {
-		return voterRegistry.getByID(citizenID);
+		for (int i = 0; i < voterRegistry.size(); i++) {
+			if (voterRegistry.get(i).getID() == citizenID)
+				return voterRegistry.get(i);
+		}
+
+		return null;
 	}
 
 	public boolean addVoter(Citizen citizen) {
-		if (voterRegistry.add(citizen)) {
-			if (citizen.getAssociatedBallot() != this)
-				citizen.setAssociatedBallot(this);
+		try {
+			if (voterRegistry.add(citizen)) {
+				if (citizen.getAssociatedBallot() != this)
+					citizen.setAssociatedBallot(this);
 
-			return true;
+				return true;
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
 		}
 
 		return false;
 	}
 
-	public int[] vote(PartyRegistry candidateParties) {
-		int voterCount = voterRegistry.getVoterCount(), currVoterChoice;
+	public int[] vote(ArrayList<Party> candidateParties) {
+		int voterCount = voterRegistry.size(), currVoterChoice;
 		int numOfVoters = 0;
 
-		setResults(new int[candidateParties.getPartyCount()]);
+		setResults(new int[candidateParties.size()]);
 		for (int i = 0; i < voterCount; i++) {
 			currVoterChoice = UIHandler.vote(candidateParties, voterRegistry.get(i));
 			if (currVoterChoice != -1) {
@@ -118,6 +147,7 @@ public class Ballot {
 
 	@Override
 	public String toString() {
-		return String.format("Ballot [ID: %d | Address: %s]\n%s", ID, address, voterRegistry.toString());
+		return String.format("Ballot [ID: %d | Address: %s]\n%s", ID, address,
+				Elections.showVoterRegistry(voterRegistry, votingDate));
 	}
 }

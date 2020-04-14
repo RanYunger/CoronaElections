@@ -2,6 +2,8 @@ package ID318783479_ID316334473;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Elections {
@@ -12,9 +14,9 @@ public class Elections {
 
 	public static void main(String args[]) {
 		YearMonth votingDate;
-		VoterRegistry voterRegistry;
-		PartyRegistry partyRegistry;
-		BallotRegistry ballotRegistry;
+		ArrayList<Citizen> voterRegistry;
+		ArrayList<Party> partyRegistry;
+		ArrayList<Ballot> ballotRegistry;
 		boolean loop = true, electionsOccurred = false;
 		int selection;
 
@@ -23,9 +25,9 @@ public class Elections {
 		votingDate = YearMonth.of(scanner.nextInt(), scanner.nextInt());
 		scanner.nextLine();
 
-		voterRegistry = new VoterRegistry(votingDate);
-		ballotRegistry = new BallotRegistry();
-		partyRegistry = new PartyRegistry();
+		voterRegistry = new ArrayList<Citizen>();
+		ballotRegistry = new ArrayList<Ballot>();
+		partyRegistry = new ArrayList<Party>();
 		init(votingDate, ballotRegistry, partyRegistry, voterRegistry);
 
 		while (loop) {
@@ -45,20 +47,20 @@ public class Elections {
 				UIHandler.addCandidateToAParty(voterRegistry, partyRegistry);
 				break;
 			case 5:
-				System.out.println(ballotRegistry);
+				System.out.println(showBallotRegistry(ballotRegistry));
 				break;
 			case 6:
-				System.out.println(voterRegistry);
+				System.out.println(showVoterRegistry(voterRegistry, votingDate));
 				break;
 			case 7:
-				System.out.println(partyRegistry);
+				System.out.println(showPartyRegistry(partyRegistry));
 				break;
 			case 8:
 				runElections(ballotRegistry, partyRegistry);
 				electionsOccurred = true;
 				break;
 			case 9:
-				System.out.println(ballotRegistry.showResults(partyRegistry));
+				System.out.println(showResults(ballotRegistry, partyRegistry));
 				break;
 			case 10:
 				System.out.println("Thank you for your vote (or not). See you again in 3 months!");
@@ -70,9 +72,44 @@ public class Elections {
 		}
 	}
 
+	public static String showPartyRegistry(ArrayList<Party> partyRegistry) {
+		if (partyRegistry.size() == 0)
+			return "Nothing to See here..";
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < partyRegistry.size(); i++)
+			sb.append("\n" + partyRegistry.get(i).toString());
+
+		return sb.toString();
+	}
+
+	public static String showVoterRegistry(ArrayList<Citizen> voterRegistry, YearMonth votingDate) {
+		if (voterRegistry.size() == 0)
+			return "Nothing to See here..";
+
+		StringBuilder sb = new StringBuilder("Date of voting: " + votingDate + "\nVoter list:");
+		for (int i = 0; i < voterRegistry.size(); i++) {
+			voterRegistry.get(i).calculateAge(votingDate);
+			sb.append("\n\t" + voterRegistry.get(i).toString());
+		}
+
+		return sb.toString();
+	}
+
+	public static String showBallotRegistry(ArrayList<Ballot> ballotRegistry) {
+		if (ballotRegistry.size() == 0)
+			return "Nothing to See here..";
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < ballotRegistry.size(); i++)
+			sb.append("\n" + ballotRegistry.get(i).toString().replaceAll("\n", "\n\t"));
+
+		return sb.toString();
+	}
+
 	// Methods
-	private static void init(YearMonth votingDate, BallotRegistry ballotRegistry, PartyRegistry partyRegistry,
-			VoterRegistry voterRegistry) {
+	private static void init(YearMonth votingDate, ArrayList<Ballot> ballotRegistry, ArrayList<Party> partyRegistry,
+			ArrayList<Citizen> voterRegistry) {
 		// Initiates 4 ballots
 		ballotRegistry.add(new Ballot("21st Road Street, Town City", votingDate));
 		ballotRegistry.add(new Ballot(votingDate));
@@ -111,18 +148,102 @@ public class Elections {
 				partyRegistry.get(3), 2));
 
 		// Associates candidates to their parties
-		partyRegistry.get("Halikud").addCandidate((Candidate) voterRegistry.getByID(678901234));
-		partyRegistry.get("Halikud").addCandidate((Candidate) voterRegistry.getByID(789012345));
-		partyRegistry.get("Blue and White").addCandidate((Candidate) voterRegistry.getByID(890123456));
-		partyRegistry.get("Blue and White").addCandidate((Candidate) voterRegistry.getByID(901234567));
-		partyRegistry.get("Israel is Our Home").addCandidate((Candidate) voterRegistry.getByID(901234568));
-		partyRegistry.get("Israel is Our Home").addCandidate((Candidate) voterRegistry.getByID(901234566));
-		partyRegistry.get("Israeli Labor Party").addCandidate((Candidate) voterRegistry.getByID(901234569));
-		partyRegistry.get("Israeli Labor Party").addCandidate((Candidate) voterRegistry.getByID(901234565));
+		getPartyByName(partyRegistry, "Halikud").addCandidate((Candidate) getCitizenByID(voterRegistry, 678901234));
+		getPartyByName(partyRegistry, "Halikud").addCandidate((Candidate) getCitizenByID(voterRegistry, 789012345));
+		getPartyByName(partyRegistry, "Blue and White")
+				.addCandidate((Candidate) getCitizenByID(voterRegistry, 890123456));
+		getPartyByName(partyRegistry, "Blue and White")
+				.addCandidate((Candidate) getCitizenByID(voterRegistry, 901234567));
+		getPartyByName(partyRegistry, "Israel is Our Home")
+				.addCandidate((Candidate) getCitizenByID(voterRegistry, 901234568));
+		getPartyByName(partyRegistry, "Israel is Our Home")
+				.addCandidate((Candidate) getCitizenByID(voterRegistry, 901234566));
+		getPartyByName(partyRegistry, "Israeli Labor Party")
+				.addCandidate((Candidate) getCitizenByID(voterRegistry, 901234569));
+		getPartyByName(partyRegistry, "Israeli Labor Party")
+				.addCandidate((Candidate) getCitizenByID(voterRegistry, 901234565));
 	}
 
-	public static void runElections(BallotRegistry ballotRegistry, PartyRegistry partyRegistry) {
-		ballotRegistry.vote(partyRegistry);
+	public static void runElections(ArrayList<Ballot> ballotRegistry, ArrayList<Party> partyRegistry) {
+		for (Ballot ballot : ballotRegistry) {
+			ballot.vote(partyRegistry);
+		}
+	}
+
+	public static Citizen getCitizenByID(ArrayList<Citizen> voterRegistry, int citizenID) {
+		for (int i = 0; i < voterRegistry.size(); i++) {
+			if (voterRegistry.get(i).getID() == citizenID)
+				return voterRegistry.get(i);
+		}
+
+		return null;
+	}
+
+	public static Party getPartyByName(ArrayList<Party> partyRegistry, String partyName) {
+		for (int i = 0; i < partyRegistry.size(); i++) {
+			if (partyRegistry.get(i).getName() == partyName)
+				return partyRegistry.get(i);
+		}
+
+		return null;
+	}
+
+	public static Ballot getBallotByID(ArrayList<Ballot> ballotRegistry, int ballotID) {
+		for (int i = 0; i < ballotRegistry.size(); i++) {
+			if (ballotRegistry.get(i).getID() == ballotID)
+				return ballotRegistry.get(i);
+		}
+
+		return null;
+	}
+
+	public static boolean updateCitizenToCandidate(ArrayList<Citizen> voterRegistry, Citizen citizen) {
+		int index = voterRegistry.indexOf(getCitizenByID(voterRegistry, citizen.getID()));
+
+		if (index != -1) {
+			if (citizen.getClass() == Citizen.class) // "morphs" the Citizen into a Candidate
+				voterRegistry.set(index, new Candidate(citizen.getID(), citizen.getFullName(), citizen.getYearOfBirth(),
+						citizen.getAssociatedBallot(), citizen.isIsolated(), citizen.iswearingSuit(), null, -1));
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public int countVotes(ArrayList<Ballot> ballotRegistry, int partyOffset) {
+		int votes = 0;
+
+		for (Ballot ballot : ballotRegistry)
+			votes += ballot.getResults()[partyOffset];
+
+		return votes;
+	}
+
+	public static String showResults(ArrayList<Ballot> ballotRegistry, ArrayList<Party> partyRegistry) {
+		StringBuilder sb = new StringBuilder();
+		Party[] sortedParties;
+		int[] currBallotResults;
+		int[] finalResults = new int[partyRegistry.size()];
+
+		for (int i = 0; i < ballotRegistry.size(); i++) {
+			currBallotResults = ballotRegistry.get(i).getResults();
+			sb.append(String.format("Ballot #%d:\n", ballotRegistry.get(i).getID()));
+			for (int j = 0; j < currBallotResults.length; j++) {
+				sb.append(String.format("%s: %d\t", partyRegistry.get(j).getName(), currBallotResults[j]));
+				finalResults[j] += currBallotResults[j];
+			}
+			sb.append("voter percentage: " + ballotRegistry.get(i).getVotersPercentage() + "\n");
+		}
+
+		sortedParties = sortParties(finalResults.clone(), partyRegistry);
+		partyRegistry = new ArrayList<>(Arrays.asList(sortedParties));
+		sortResults(finalResults);
+
+		sb.append("Final Results:");
+		for (int i = 0; i < finalResults.length; i++)
+			sb.append(String.format("\n%s : %d", partyRegistry.get(i).getName(), finalResults[i]));
+		return sb.toString();
 	}
 
 	// Methods used to sort the parties and the results in a descending order
@@ -130,20 +251,22 @@ public class Elections {
 		quickSort(results, 0, results.length - 1);
 	}
 
-	public static void sortParties(int[] finalResults, PartyRegistry parties) {
+	public static Party[] sortParties(int[] finalResults, ArrayList<Party> partyRegistry) {
 		int maxValueOffset;
 		int[] sortedPartyOffsets = new int[finalResults.length];
-		Party[] sortedParties = parties.getPartyRegistry();
+		Party[] sortedParties = new Party[partyRegistry.size()];
 
+		sortedParties = partyRegistry.toArray(sortedParties);
 		for (int i = 0; i < finalResults.length; i++) {
 			maxValueOffset = indexOf(finalResults, getMaxValue(finalResults));
 			sortedPartyOffsets[i] = maxValueOffset;
 			finalResults[maxValueOffset] = -1;
 		}
-
 		for (int i = 0; i < sortedPartyOffsets.length; i++) {
-			sortedParties[i] = parties.getPartyRegistry()[sortedPartyOffsets[i]];
+			sortedParties[i] = partyRegistry.get(sortedPartyOffsets[i]);
 		}
+
+		return sortedParties; 
 	}
 
 	private static int[] quickSort(int arr[], int low, int high) {

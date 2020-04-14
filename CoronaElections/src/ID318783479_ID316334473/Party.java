@@ -1,8 +1,7 @@
 package ID318783479_ID316334473;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class Party {
 	// Constants
@@ -11,19 +10,19 @@ public class Party {
 	}
 
 	// Fields
-
 	private String name;
 	private PartyAssociation wing;
 	private LocalDate foundationDate;
-	private Candidate[] candidates;
-	private int candidateCount;
+	private ArrayList<Candidate> candidates;
 
 	// Properties (Getters and Setters)
 	public String getName() {
 		return name;
 	}
 
-	private void setName(String name) {
+	private void setName(String name) throws Exception {
+		if (name.trim().length() == 0)
+			throw new Exception("Party's name must contain at least 1 letter.");
 		this.name = name;
 	}
 
@@ -39,24 +38,18 @@ public class Party {
 		return foundationDate;
 	}
 
-	private void setFoundationDate(LocalDate foundationDate) {
+	private void setFoundationDate(LocalDate foundationDate) throws Exception {
+		if (foundationDate.compareTo(LocalDate.now()) > 0)
+			throw new Exception("Time paradox prevented.");
 		this.foundationDate = foundationDate;
 	}
 
-	public Candidate[] getCandidates() {
+	public ArrayList<Candidate> getCandidates() {
 		return candidates;
 	}
 
-	private void setCandidates(Candidate[] candidates) {
+	private void setCandidates(ArrayList<Candidate> candidates) {
 		this.candidates = candidates;
-	}
-
-	public int getCandidateCount() {
-		return candidateCount;
-	}
-
-	private void setCandidateCount(int candidateCount) {
-		this.candidateCount = candidateCount;
 	}
 
 	// Constructors
@@ -65,61 +58,74 @@ public class Party {
 	}
 
 	public Party(String name, PartyAssociation wing, LocalDate foundationDate) {
-		setName(name);
-		setWing(wing);
-		setFoundationDate(foundationDate);
-		setCandidates(new Candidate[UIHandler.MAX_ARRAY_SIZE]);
-		setCandidateCount(0);
+		try {
+			setName(name);
+			setWing(wing);
+			setFoundationDate(foundationDate);
+			setCandidates(new ArrayList<Candidate>());
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	// Methods
 	public Candidate getCandidateByID(int candidateID) {
-		for (int i = 0; i < candidateCount; i++)
-			if ((candidates[i].getID() == candidateID))
-				return candidates[i];
+		for (int i = 0; i < candidates.size(); i++)
+			if ((candidates.get(i).getID() == candidateID))
+				return candidates.get(i);
 
 		return null;
 	}
 
 	public int getCandidateOffsetByID(int candidateID) {
-		for (int i = 0; i < candidateCount; i++)
-			if ((candidates[i].getID() == candidateID))
+		for (int i = 0; i < candidates.size(); i++)
+			if ((candidates.get(i).getID() == candidateID))
 				return i;
 
 		return -1;
 	}
 
 	public boolean addCandidate(Candidate candidate) {
-		// Validations
-		if (candidateCount == UIHandler.MAX_ARRAY_SIZE)
-			return false;
+		try {
+			// Validations
+			if (candidates.size() == UIHandler.MAX_ARRAY_SIZE)
+				throw new Exception("Cannot add more candidates to this party.");	
+			if (getCandidateByID(candidate.getID()) != null)
+				throw new Exception("This candidate is already in this party.");	
+			
+			candidates.add(candidate);
+			candidate.setAssociatedParty(this);
+			candidate.setRank(candidates.size());
 
-		if (getCandidateByID(candidate.getID()) != null)
-			return false;
+			return true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
 
-		candidates[candidateCount++] = candidate;
-		candidate.setAssociatedParty(this);
-		candidate.setRank(candidateCount);
-
-		return true;
+		return false;
 	}
 
 	public boolean addCandidate(Candidate candidate, int rank) {
-		if (candidateCount == UIHandler.MAX_ARRAY_SIZE)
-			return false;
+		try {
+			// Validations
+			if (candidates.size() == UIHandler.MAX_ARRAY_SIZE)
+				throw new Exception("Cannot add more candidates to this party.");	
+			if (getCandidateByID(candidate.getID()) != null)
+				throw new Exception("This candidate is already in this party.");	
+			
+			for (int i = candidates.size(); i > rank - 1; i++) {
+				candidates.set(i, candidates.get(i - 1));
+				candidates.get(i).setRank(i + 1);
+			}
+			candidates.set(rank - 1, candidate);
+			candidate.setRank(rank);
 
-		if (getCandidateByID(candidate.getID()) != null)
-			return false;
-
-		for (int i = candidateCount; i > rank - 1; i++) {
-			candidates[i] = candidates[i - 1];
-			candidates[i].setRank(i + 1);
+			return true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
 		}
 
-		candidates[rank - 1] = candidate;
-		candidate.setRank(rank);
-
-		return true;
+		return false;
 	}
 
 	@Override
@@ -139,11 +145,11 @@ public class Party {
 		sb.append(String.format("Party [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(),
 				foundationDate.toString()));
 		sb.append("\tCandidates:");
-		if (candidateCount == 0)
+		if (candidates.size() == 0)
 			sb.append("\n\t\tNothing to see here...");
 		else {
-			for (int i = 0; i < candidateCount; i++)
-				sb.append("\n\t\t" + candidates[i].toString());
+			for (int i = 0; i < candidates.size(); i++)
+				sb.append("\n\t\t" + candidates.get(i).toString());
 		}
 
 		return sb.toString();

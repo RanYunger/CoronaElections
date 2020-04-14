@@ -1,6 +1,6 @@
 Assignment Part 1
 By: 	Shy Ohev Zion,	318783479
-	Ran Yunger, 	316334473
+		Ran Yunger, 	316334473
 
 Testing instructions:
 	1. Voting age is 18, so entering the voter registry fails if the Citizen is younger than that.

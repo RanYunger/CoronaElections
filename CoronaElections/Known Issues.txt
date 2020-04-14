@@ -1,0 +1,1 @@
+1. AddCandidateToAParty doesn't find the party for some strange reason ~RAN

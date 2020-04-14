@@ -22,7 +22,9 @@ public class Candidate extends Citizen {
 		return rank;
 	}
 
-	public void setRank(int rank) {
+	public void setRank(int rank) throws Exception {
+		if (rank < 0)
+			throw new Exception("Candidate's rank must be a positive number.");
 		this.rank = rank;
 	}
 
@@ -30,8 +32,12 @@ public class Candidate extends Citizen {
 	public Candidate(int ID, String fullName, int yearOfBirth, Ballot associatedBallot, boolean isIsolated,
 			boolean isWearingSuit, Party associatedParty, int rank) {
 		super(ID, fullName, yearOfBirth, associatedBallot, isIsolated, isWearingSuit);
-		setRank(rank);
-		setAssociatedParty(associatedParty);
+		try {
+			setRank(rank);
+			setAssociatedParty(associatedParty);
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	@Override
