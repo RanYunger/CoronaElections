@@ -11,7 +11,7 @@ public class Ballot implements Comparable<Ballot> {
 
 	protected int ID;
 	protected String address;
-	protected ArrayList<Citizen> voterRegistry;
+	protected Set<Citizen> voterRegistry;
 	protected YearMonth votingDate;
 	protected double votersPercentage;
 	protected ArrayList<Integer> results;
@@ -37,11 +37,11 @@ public class Ballot implements Comparable<Ballot> {
 		this.address = address;
 	}
 
-	public ArrayList<Citizen> getVoterRegistry() {
+	public Set<Citizen> getVoterRegistry() {
 		return voterRegistry;
 	}
 
-	private void setVoterRegistry(ArrayList<Citizen> voterRegistry) {
+	private void setVoterRegistry(Set<Citizen> voterRegistry) {
 		this.voterRegistry = voterRegistry;
 	}
 
@@ -80,7 +80,7 @@ public class Ballot implements Comparable<Ballot> {
 		try {
 			setID(IDGenerator++);
 			setAddress(address);
-			setVoterRegistry(new ArrayList<Citizen>());
+			setVoterRegistry(new Set<Citizen>());
 			setVotingDate(votingDate);
 			setVotersPercentage(0);
 			setResults(null);
@@ -91,9 +91,9 @@ public class Ballot implements Comparable<Ballot> {
 
 	// Methods
 	public Citizen getCitizenByID(int citizenID) {
-		for (Citizen citizen : voterRegistry) {
-			if (citizen.getID() == citizenID)
-				return citizen;
+		for (int i = 0; i < voterRegistry.size(); i++) {
+			if (voterRegistry.get(i).getID() == citizenID)
+				return voterRegistry.get(i);
 		}
 
 		return null;
@@ -104,19 +104,10 @@ public class Ballot implements Comparable<Ballot> {
 			voterRegistry.add(citizen);
 			if (citizen.getAssociatedBallot() != this)
 				citizen.setAssociatedBallot(this);
-			ensureCapacity();
 			return true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			return false;
-		}
-
-	}
-
-	private void ensureCapacity() {
-		if (voterRegistry.size() == capacity) {
-			capacity *= 2;
-			voterRegistry.ensureCapacity(capacity);
 		}
 	}
 
@@ -128,8 +119,8 @@ public class Ballot implements Comparable<Ballot> {
 		for (int i = 0; i < results.size(); i++) {
 			results.add(0);
 		}
-		for (Citizen citizen : voterRegistry) {
-			currVoterChoice = UIHandler.vote(candidateParties, citizen);
+		for (int i = 0; i < voterRegistry.size(); i++) {
+			currVoterChoice = UIHandler.vote(candidateParties, voterRegistry.get(i));
 			if (currVoterChoice != -1) {
 				results.set(currVoterChoice - 1, results.get(currVoterChoice - 1) + 1);
 				numOfVoters++;
@@ -166,9 +157,9 @@ public class Ballot implements Comparable<Ballot> {
 			return sb.append("Nothing else to See here..").toString();
 
 		sb.append("Date of voting: " + votingDate + "\nVoter list:");
-		for (Citizen citizen : voterRegistry) {
-			citizen.calculateAge(votingDate);
-			sb.append("\n\t" + citizen.toString());
+		for (int i = 0; i < voterRegistry.size(); i++) {
+			voterRegistry.get(i).calculateAge(votingDate);
+			sb.append("\n\t" + voterRegistry.get(i).toString());
 		}
 
 		return sb.toString();

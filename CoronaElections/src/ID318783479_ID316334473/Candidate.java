@@ -16,17 +16,18 @@ public class Candidate extends Citizen {
 	}
 
 	public boolean joinParty(Party associatedParty, int rank) {
-		if (associatedParty == null || this.associatedParty != null)
+		if ((associatedParty == null) || (this.associatedParty != null))
 			return false;
 
 		this.associatedParty = associatedParty;
+		
 		return associatedParty.addCandidate(this, rank);
 	}
 
 	// Constructors
-	public Candidate(int ID, String fullName, int yearOfBirth, Ballot associatedBallot, boolean isIsolated,
-			boolean isWearingSuit) {
-		super(ID, fullName, yearOfBirth, associatedBallot, isIsolated, isWearingSuit);
+	public Candidate(int ID, String fullName, int yearOfBirth, int daysOfSickness, Ballot associatedBallot,
+			boolean isCarryingWeapon, boolean isIsolated, boolean isWearingSuit) {
+		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isCarryingWeapon, isIsolated, isWearingSuit);
 	}
 
 	@Override

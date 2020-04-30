@@ -11,8 +11,10 @@ public class Citizen implements Comparable<Citizen> {
 	protected int ID;
 	protected String fullName;
 	protected int yearOfBirth;
+	protected int daysOfSickness;
 	protected Ballot associatedBallot;
 	protected boolean isSoldier;
+	protected boolean isCarryingWeapon;
 	protected boolean isIsolated;
 	protected boolean isWearingSuit;
 
@@ -45,6 +47,26 @@ public class Citizen implements Comparable<Citizen> {
 		if (yearOfBirth > YearMonth.now().getYear())
 			throw new IllegalArgumentException();
 		this.yearOfBirth = yearOfBirth;
+	}
+
+	public int getDaysOfSickness() {
+		return daysOfSickness;
+	}
+
+	private void setDaysOfSickness(int daysOfSickness) throws Exception {
+		if (daysOfSickness < 0)
+			throw new Exception("Citizen can only have non-negative amount of sickness days.");
+		if((isIsolated) && (daysOfSickness < 1))
+			throw new Exception("An Isolated Citizen must've been sick for at least 1 day.");
+		this.daysOfSickness = daysOfSickness;
+	}
+
+	public boolean isCarryingWeapon() {
+		return isCarryingWeapon;
+	}
+
+	public void setIsCarryingWeapon(boolean isCarryingWeapon) {
+		this.isCarryingWeapon = isCarryingWeapon;
 	}
 
 	public Ballot getAssociatedBallot() {
@@ -81,12 +103,14 @@ public class Citizen implements Comparable<Citizen> {
 	}
 
 	// Constructors
-	public Citizen(int ID, String fullName, int yearOfBirth, Ballot associatedBallot, boolean isIsolated,
-			boolean isWearingSuit) {
+	public Citizen(int ID, String fullName, int yearOfBirth, int daysOfSickness, Ballot associatedBallot,
+			boolean isCarryingWeapon, boolean isIsolated, boolean isWearingSuit) {
 		try {
 			setID(ID);
 			setFullName(fullName);
 			setYearOfBirth(yearOfBirth);
+			setDaysOfSickness(daysOfSickness);
+			setIsCarryingWeapon(isCarryingWeapon);
 			setIsIsolated(isIsolated);
 			setIswearingSuit(isWearingSuit);
 			setAssociatedBallot(associatedBallot);
@@ -120,8 +144,9 @@ public class Citizen implements Comparable<Citizen> {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: ", ID, fullName, yearOfBirth));
-		sb.append(isSoldier ? "Soldier, " : "");
-		sb.append(isIsolated ? "Isolated, " : "Not isolated, ");
+		if(isSoldier)
+			sb.append(isCarryingWeapon ? "Soldier (Carrying weapon), " : "Soldier (Not carrying weapon), ");
+		sb.append(isIsolated ? String.format("Isolated (%d Day(s) so far), ", daysOfSickness) : "Not isolated, ");
 		sb.append(isWearingSuit ? "Wearing suit]" : "Not wearing suit]");
 
 		return sb.toString();

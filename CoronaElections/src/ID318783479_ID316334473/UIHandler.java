@@ -87,11 +87,10 @@ public class UIHandler {
 	}
 
 	// When entering 2
-	public static boolean addNewCitizen(ArrayList<Citizen> voterRegistry, YearMonth votingDate,
-			ArrayList<Ballot> ballots) {
+	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate, ArrayList<Ballot> ballots) {
 		Citizen citizen;
-		int citizenID, yearOfBirth, associatedBallotID;
-		boolean isIsolated, isWearingSuit = false;
+		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID;
+		boolean isCarryingWeapon = false, isIsolated, isWearingSuit = false;
 		String fullName;
 
 		try {
@@ -111,6 +110,11 @@ public class UIHandler {
 				throw new Exception("Time paradox prevented - I mean, come on");
 			if ((votingDate.getYear() - yearOfBirth) < Citizen.VOTER_AGE)
 				throw new Exception("Sorry, this citizen is too young to vote, try something else.\n");
+			if ((votingDate.getYear() - yearOfBirth) < Citizen.SOLDIER_AGE) {
+				System.out.println("Is the soldier carrying a weapon (Y/N)?");
+				isCarryingWeapon = getValidYesNoAnswer();
+				Elections.scanner.nextLine();
+			}
 
 			System.out.println("Enter voter's name:");
 			fullName = Elections.scanner.nextLine();
@@ -133,10 +137,13 @@ public class UIHandler {
 				System.out.println("Is the voter wearing a protective suit (Y/N)?");
 				isWearingSuit = getValidYesNoAnswer();
 				Elections.scanner.nextLine();
+				System.out.println("Enter amount of days the voter has been sick:");
+				daysOfSickness = Elections.scanner.nextInt();
+				Elections.scanner.nextLine();
 			}
 
-			citizen = new Citizen(citizenID, fullName, yearOfBirth, ballots.get(associatedBallotID - 1), isIsolated,
-					isWearingSuit);
+			citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness, ballots.get(associatedBallotID - 1),
+					isCarryingWeapon, isIsolated, isWearingSuit);
 			ballots.get(associatedBallotID).addVoter(citizen);
 			voterRegistry.add(citizen);
 
@@ -184,7 +191,7 @@ public class UIHandler {
 	}
 
 	// When entering 4
-	public static boolean addCandidateToAParty(ArrayList<Citizen> voterRegistry, ArrayList<Party> parties) {
+	public static boolean addCandidateToAParty(Set<Citizen> voterRegistry, ArrayList<Party> parties) {
 		Candidate candidate;
 		int addedCandidateID;
 		String partyName;
@@ -237,14 +244,14 @@ public class UIHandler {
 	}
 
 	// When entering 6
-	public static String showVoterRegistry(ArrayList<Citizen> voterRegistry, YearMonth votingDate) {
+	public static String showVoterRegistry(Set<Citizen> voterRegistry, YearMonth votingDate) {
 		if (voterRegistry.size() == 0)
 			return "Nothing to See here..";
 
 		StringBuilder sb = new StringBuilder("Date of voting: " + votingDate + "\nVoter list:");
-		for (Citizen citizen : voterRegistry) {
-			citizen.calculateAge(votingDate);
-			sb.append("\n\t" + citizen.toString());
+		for (int i = 0; i < voterRegistry.size(); i++) {
+			voterRegistry.get(i).calculateAge(votingDate);
+			sb.append("\n\t" + voterRegistry.get(i).toString());	
 		}
 
 		return sb.toString();
@@ -339,7 +346,7 @@ public class UIHandler {
 		}
 		System.out.println(finalResultsString);
 	}
-	
+
 	// When entering 10
 	public static void showExitMessage() {
 		System.out.println("Thank you for your vote (or not). See you again in 3 months!");
