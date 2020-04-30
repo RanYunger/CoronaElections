@@ -2,12 +2,10 @@ package ID318783479_ID316334473;
 
 import java.time.YearMonth;
 
-public class Citizen {
+public class Citizen implements Comparable<Citizen> {
 	// Constants
 	public static final int VOTER_AGE = 18;
 	public static final int SOLDIER_AGE = 21;
-	public static final int MIN_ID_VALUE = 100000000;
-	public static final int MAX_ID_VALUE = 999999999;
 
 	// Fields
 	protected int ID;
@@ -24,7 +22,7 @@ public class Citizen {
 	}
 
 	private void setID(int ID) throws Exception {
-		if ((ID < MIN_ID_VALUE) || (ID > MAX_ID_VALUE))
+		if (String.valueOf(ID).length() != 9)
 			throw new Exception("Citizen's ID must contain exactly 9 digits.");
 		this.ID = ID;
 	}
@@ -43,9 +41,9 @@ public class Citizen {
 		return yearOfBirth;
 	}
 
-	private void setYearOfBirth(int yearOfBirth) throws Exception {
+	private void setYearOfBirth(int yearOfBirth) throws IllegalArgumentException {
 		if (yearOfBirth > YearMonth.now().getYear())
-			throw new Exception("Time paradox prevented.");
+			throw new IllegalArgumentException();
 		this.yearOfBirth = yearOfBirth;
 	}
 
@@ -53,9 +51,7 @@ public class Citizen {
 		return associatedBallot;
 	}
 
-	public void setAssociatedBallot(Ballot associatedBallot) throws Exception {
-		if (associatedBallot == null)
-			throw new Exception("Citizen must be associated to a ballot.");
+	public void setAssociatedBallot(Ballot associatedBallot) throws NullPointerException {
 		this.associatedBallot = associatedBallot;
 		this.associatedBallot.addVoter(this);
 	}
@@ -102,6 +98,11 @@ public class Citizen {
 	public void calculateAge(YearMonth votingDate) {
 		int age = votingDate.getYear() - yearOfBirth;
 		setIsSoldier((age >= VOTER_AGE) && (age <= SOLDIER_AGE));
+	}
+
+	@Override
+	public int compareTo(Citizen other) {
+		return Integer.compare(ID, other.ID);
 	}
 
 	@Override

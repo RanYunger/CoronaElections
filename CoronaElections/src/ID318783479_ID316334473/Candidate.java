@@ -3,41 +3,30 @@ package ID318783479_ID316334473;
 import java.util.Objects;
 
 public class Candidate extends Citizen {
-	// Constants
-
 	// Fields
 	private Party associatedParty;
-	private int rank;
 
 	// Properties (Getters and Setters)
 	public Party getAssociatedParty() {
 		return associatedParty;
 	}
 
-	public void setAssociatedParty(Party associatedParty) {
+	public boolean joinParty(Party associatedParty) {
+		return joinParty(associatedParty, -1);
+	}
+
+	public boolean joinParty(Party associatedParty, int rank) {
+		if (associatedParty == null || this.associatedParty != null)
+			return false;
+
 		this.associatedParty = associatedParty;
-	}
-
-	public int getRank() {
-		return rank;
-	}
-
-	public void setRank(int rank) throws Exception {
-		if (rank < 0)
-			throw new Exception("Candidate's rank must be a positive number.");
-		this.rank = rank;
+		return associatedParty.addCandidate(this, rank);
 	}
 
 	// Constructors
 	public Candidate(int ID, String fullName, int yearOfBirth, Ballot associatedBallot, boolean isIsolated,
-			boolean isWearingSuit, Party associatedParty, int rank) {
+			boolean isWearingSuit) {
 		super(ID, fullName, yearOfBirth, associatedBallot, isIsolated, isWearingSuit);
-		try {
-			setRank(rank);
-			setAssociatedParty(associatedParty);
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		}
 	}
 
 	@Override
@@ -49,19 +38,20 @@ public class Candidate extends Citizen {
 		if (!(obj instanceof Candidate))
 			return false;
 		Candidate other = (Candidate) obj;
-		return Objects.equals(associatedParty, other.associatedParty) && rank == other.rank;
+		return Objects.equals(associatedParty, other.associatedParty);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		String citizenStr = super.toString();
+		StringBuilder sb = new StringBuilder(super.toString());
 
-		citizenStr = citizenStr.replaceFirst("Citizen", "Candidate");
-		citizenStr = citizenStr.replace("]", "");
+		sb.replace(sb.indexOf("Citizen"), sb.indexOf("Citizen") + 7, "Candidate");
+		sb.replace(sb.indexOf("]"), sb.indexOf("]") + 1, "");
 
-		sb.append(citizenStr);
-		sb.append(String.format(" | Party: %s (ranked #%d)]", associatedParty.getName(), rank));
+		if (associatedParty == null)
+			sb.append(" | Is not associated with party yet");
+		else
+			sb.append(String.format(" | Party: %s]", associatedParty.getName()));
 
 		return sb.toString();
 	}

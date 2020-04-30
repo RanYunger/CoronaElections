@@ -3,7 +3,7 @@ package ID318783479_ID316334473;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Party {
+public class Party implements Comparable<Party> {
 	// Constants
 	public enum PartyAssociation {
 		Left, Center, Right
@@ -14,6 +14,7 @@ public class Party {
 	private PartyAssociation wing;
 	private LocalDate foundationDate;
 	private ArrayList<Candidate> candidates;
+	private int capacity;
 
 	// Properties (Getters and Setters)
 	public String getName() {
@@ -40,7 +41,7 @@ public class Party {
 
 	private void setFoundationDate(LocalDate foundationDate) throws Exception {
 		if (foundationDate.compareTo(LocalDate.now()) > 0)
-			throw new Exception("Time paradox prevented.");
+			throw new Exception("Time paradox prevented - creation time can't be in the future.");
 		this.foundationDate = foundationDate;
 	}
 
@@ -50,6 +51,10 @@ public class Party {
 
 	private void setCandidates(ArrayList<Candidate> candidates) {
 		this.candidates = candidates;
+	}
+
+	public int getCandidateCount() {
+		return candidates.size();
 	}
 
 	// Constructors
@@ -70,62 +75,89 @@ public class Party {
 
 	// Methods
 	public Candidate getCandidateByID(int candidateID) {
-		for (int i = 0; i < candidates.size(); i++)
-			if ((candidates.get(i).getID() == candidateID))
-				return candidates.get(i);
-
-		return null;
+		try {
+			return candidates.get(getCandidateOffsetByID(candidateID));
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	public int getCandidateOffsetByID(int candidateID) {
-		for (int i = 0; i < candidates.size(); i++)
-			if ((candidates.get(i).getID() == candidateID))
-				return i;
+		return getCandidateOffsetByID(candidateID, 0, candidates.size() - 1);
+	}
 
+	public int getCandidateOffsetByID(int candidateID, int start, int end) {
+		if (end >= start) {
+			int mid = (start + end) / 2;
+			int ID = candidates.get(mid).getID();
+			if (ID == candidateID)
+				return mid;
+
+			if (ID > candidateID)
+				return getCandidateOffsetByID(candidateID, start, mid - 1);
+
+			return getCandidateOffsetByID(candidateID, mid + 1, end);
+		}
 		return -1;
 	}
 
 	public boolean addCandidate(Candidate candidate) {
-		try {
-			// Validations
-			if (candidates.size() == UIHandler.MAX_ARRAY_SIZE)
-				throw new Exception("Cannot add more candidates to this party.");	
-			if (getCandidateByID(candidate.getID()) != null)
-				throw new Exception("This candidate is already in this party.");	
-			
-			candidates.add(candidate);
-			candidate.setAssociatedParty(this);
-			candidate.setRank(candidates.size());
-
-			return true;
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-
-		return false;
+		return addCandidate(candidate, candidates.size());
 	}
 
 	public boolean addCandidate(Candidate candidate, int rank) {
 		try {
 			// Validations
-			if (candidates.size() == UIHandler.MAX_ARRAY_SIZE)
-				throw new Exception("Cannot add more candidates to this party.");	
+			int lastRank = candidates.size() - 1;
 			if (getCandidateByID(candidate.getID()) != null)
-				throw new Exception("This candidate is already in this party.");	
-			
-			for (int i = candidates.size(); i > rank - 1; i++) {
-				candidates.set(i, candidates.get(i - 1));
-				candidates.get(i).setRank(i + 1);
-			}
-			candidates.set(rank - 1, candidate);
-			candidate.setRank(rank);
+				throw new Exception("This candidate is already in this party.");
+			if (rank > lastRank || rank == -1)
+				candidates.add(candidate);
+			else
+				candidates.add(rank, candidate);
 
+			candidate.joinParty(this);
+			ensureCapacity();
 			return true;
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			// TODO: fix this, or ask about using it
+			if (!ex.getStackTrace()[1].toString().split("[.(]")[1].equals("Candidate")) {
+				System.out.println(ex.getMessage());
+				return false;
+			}
+			return true;
 		}
 
-		return false;
+	}
+
+	private void ensureCapacity() {
+		if (candidates.size() == capacity) {
+			capacity *= 2;
+			candidates.ensureCapacity(capacity);
+		}
+	}
+
+	private static String ordinal(int rank) {
+		switch (rank % 10) {
+		case 1:
+			if (rank % 100 != 11)
+				return (rank + "st");
+			break;
+		case 2:
+			if (rank % 100 != 12)
+				return (rank + "nd");
+			break;
+		case 3:
+			if (rank % 100 != 13)
+				return (rank + "rd");
+			break;
+		}
+		return (rank + "th");
+	}
+
+	@Override
+	public int compareTo(Party other) {
+		return name.compareToIgnoreCase(other.name);
 	}
 
 	@Override
@@ -135,7 +167,7 @@ public class Party {
 		if (!(obj instanceof Party))
 			return false;
 		Party other = (Party) obj;
-		return name.equalsIgnoreCase(other.name);
+		return name.equalsIgnoreCase(other.name); // Two parties can't have the same name
 	}
 
 	@Override
@@ -148,10 +180,10 @@ public class Party {
 		if (candidates.size() == 0)
 			sb.append("\n\t\tNothing to see here...");
 		else {
-			for (int i = 0; i < candidates.size(); i++)
-				sb.append("\n\t\t" + candidates.get(i).toString());
+			sb.append(String.format("\n\t\tParty leader: %s", candidates.get(0).toString()));
+			for (int i = 1; i < candidates.size(); i++)
+				sb.append(String.format("\n\t\t%s runner: %s", ordinal(i), candidates.get(i).toString()));
 		}
-
 		return sb.toString();
 	}
 }

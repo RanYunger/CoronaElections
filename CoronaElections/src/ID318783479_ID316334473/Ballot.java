@@ -2,10 +2,10 @@ package ID318783479_ID316334473;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
-public class Ballot {
-	// Constants
-
+//TODO: check if TreeMap usage is allowed
+public class Ballot implements Comparable<Ballot> {
 	// Fields
 	protected static int IDGenerator = 0;
 
@@ -14,16 +14,16 @@ public class Ballot {
 	protected ArrayList<Citizen> voterRegistry;
 	protected YearMonth votingDate;
 	protected double votersPercentage;
-	protected int[] results;
+	protected ArrayList<Integer> results;
+	protected TreeMap<String, Integer> partyResults;
+	protected int capacity;
 
 	// Properties (Getters and Setters)
 	public int getID() {
 		return ID;
 	}
 
-	private void setID(int ID) throws Exception {
-		if (ID < 0)
-			throw new Exception("Ballot's ID must be a positive number.");
+	private void setID(int ID) {
 		this.ID = ID;
 	}
 
@@ -63,11 +63,11 @@ public class Ballot {
 		this.votersPercentage = (voterRegistry.size() > 0) ? (100 * numOfVoters) / voterRegistry.size() : 0;
 	}
 
-	public int[] getResults() {
+	public ArrayList<Integer> getResults() {
 		return results;
 	}
 
-	public void setResults(int[] results) {
+	public void setResults(ArrayList<Integer> results) {
 		this.results = results;
 	}
 
@@ -91,9 +91,9 @@ public class Ballot {
 
 	// Methods
 	public Citizen getCitizenByID(int citizenID) {
-		for (int i = 0; i < voterRegistry.size(); i++) {
-			if (voterRegistry.get(i).getID() == citizenID)
-				return voterRegistry.get(i);
+		for (Citizen citizen : voterRegistry) {
+			if (citizen.getID() == citizenID)
+				return citizen;
 		}
 
 		return null;
@@ -101,34 +101,48 @@ public class Ballot {
 
 	public boolean addVoter(Citizen citizen) {
 		try {
-			if (voterRegistry.add(citizen)) {
-				if (citizen.getAssociatedBallot() != this)
-					citizen.setAssociatedBallot(this);
-
-				return true;
-			}
+			voterRegistry.add(citizen);
+			if (citizen.getAssociatedBallot() != this)
+				citizen.setAssociatedBallot(this);
+			ensureCapacity();
+			return true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
+			return false;
 		}
 
-		return false;
 	}
 
-	public int[] vote(ArrayList<Party> candidateParties) {
-		int voterCount = voterRegistry.size(), currVoterChoice;
-		int numOfVoters = 0;
+	private void ensureCapacity() {
+		if (voterRegistry.size() == capacity) {
+			capacity *= 2;
+			voterRegistry.ensureCapacity(capacity);
+		}
+	}
 
-		setResults(new int[candidateParties.size()]);
-		for (int i = 0; i < voterCount; i++) {
-			currVoterChoice = UIHandler.vote(candidateParties, voterRegistry.get(i));
+	public ArrayList<Integer> vote(ArrayList<Party> candidateParties) {
+
+		int currVoterChoice, numOfVoters = 0;
+
+		setResults(new ArrayList<Integer>(candidateParties.size()));
+		for (int i = 0; i < results.size(); i++) {
+			results.add(0);
+		}
+		for (Citizen citizen : voterRegistry) {
+			currVoterChoice = UIHandler.vote(candidateParties, citizen);
 			if (currVoterChoice != -1) {
-				results[currVoterChoice - 1]++;
+				results.set(currVoterChoice - 1, results.get(currVoterChoice - 1) + 1);
 				numOfVoters++;
 			}
 		}
 		setVotersPercentage(numOfVoters);
 
 		return results;
+	}
+
+	@Override
+	public int compareTo(Ballot other) {
+		return Integer.compare(ID, other.ID);
 	}
 
 	@Override
@@ -147,7 +161,16 @@ public class Ballot {
 
 	@Override
 	public String toString() {
-		return String.format("Ballot [ID: %d | Address: %s]\n%s", ID, address,
-				Elections.showVoterRegistry(voterRegistry, votingDate));
+		StringBuilder sb = new StringBuilder("Ballot [ID: %d | Address: %s]\n");
+		if (voterRegistry.size() == 0)
+			return sb.append("Nothing else to See here..").toString();
+
+		sb.append("Date of voting: " + votingDate + "\nVoter list:");
+		for (Citizen citizen : voterRegistry) {
+			citizen.calculateAge(votingDate);
+			sb.append("\n\t" + citizen.toString());
+		}
+
+		return sb.toString();
 	}
 }

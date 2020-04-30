@@ -1,1 +1,5 @@
-1. AddCandidateToAParty doesn't find the party for some strange reason ~RAN
+2. Default Interface functions - acceptable?	
+3. Map/TreeMap - acceptable??							
+4. Party:	adding a candidate results in a double call to the method addCandidate(Candidate candidate, int rank), 
+			which will always generate an exception, unless when checking through the stack trace who was the caller class
+			(i.e., if the caller was Candidate then it's okay because of double call, if not - print the error) 
