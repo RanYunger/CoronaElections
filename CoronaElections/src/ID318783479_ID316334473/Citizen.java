@@ -43,9 +43,9 @@ public class Citizen implements Comparable<Citizen> {
 		return yearOfBirth;
 	}
 
-	private void setYearOfBirth(int yearOfBirth) throws IllegalArgumentException {
+	private void setYearOfBirth(int yearOfBirth) throws Exception {
 		if (yearOfBirth > YearMonth.now().getYear())
-			throw new IllegalArgumentException();
+			throw new Exception("Time paradox prevented - I mean, come on");
 		this.yearOfBirth = yearOfBirth;
 	}
 
@@ -56,7 +56,7 @@ public class Citizen implements Comparable<Citizen> {
 	private void setDaysOfSickness(int daysOfSickness) throws Exception {
 		if (daysOfSickness < 0)
 			throw new Exception("Citizen can only have non-negative amount of sickness days.");
-		if((isIsolated) && (daysOfSickness < 1))
+		if ((isIsolated) && (daysOfSickness < 1))
 			throw new Exception("An Isolated Citizen must've been sick for at least 1 day.");
 		this.daysOfSickness = daysOfSickness;
 	}
@@ -144,7 +144,7 @@ public class Citizen implements Comparable<Citizen> {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: ", ID, fullName, yearOfBirth));
-		if(isSoldier)
+		if (isSoldier)
 			sb.append(isCarryingWeapon ? "Soldier (Carrying weapon), " : "Soldier (Not carrying weapon), ");
 		sb.append(isIsolated ? String.format("Isolated (%d Day(s) so far), ", daysOfSickness) : "Not isolated, ");
 		sb.append(isWearingSuit ? "Wearing suit]" : "Not wearing suit]");

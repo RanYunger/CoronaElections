@@ -20,8 +20,8 @@ public class Candidate extends Citizen {
 			return false;
 
 		this.associatedParty = associatedParty;
-		
-		return associatedParty.addCandidate(this, rank);
+
+		return true;
 	}
 
 	// Constructors

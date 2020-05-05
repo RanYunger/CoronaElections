@@ -52,7 +52,7 @@ public class Set<E> {
 
 	// Methods
 	public boolean add(E e) {
-		if (!elements.contains(e)) {
+		if (!contains(e)) {
 			elements.add(e);
 			setSize(elements.size());
 
@@ -101,14 +101,14 @@ public class Set<E> {
 	public boolean remove(Object o) {
 		elements.remove(o);
 		setSize(elements.size());
-		
+
 		return true;
 	}
 
 	public boolean removeAll(Collection<?> c) {
 		elements.removeAll(c);
 		setSize(elements.size());
-		
+
 		return true;
 	}
 

@@ -109,7 +109,7 @@ public class Party implements Comparable<Party> {
 		try {
 			// Validations
 			int lastRank = candidates.size() - 1;
-			
+
 			if (getCandidateByID(candidate.getID()) != null)
 				throw new Exception("This candidate is already in this party.");
 			if (rank > lastRank || rank == -1)
@@ -119,7 +119,7 @@ public class Party implements Comparable<Party> {
 
 			candidate.joinParty(this);
 			ensureCapacity();
-			
+
 			return true;
 		} catch (Exception ex) {
 			// TODO: fix this, or ask about using it

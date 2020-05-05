@@ -171,12 +171,6 @@ public class Elections {
 		return votes;
 	}
 
-	//
-	// TODO: move these functions to a brand new 'Set' class
-	// TODO: other key general methods should also move to 'Set'
-	//
-	// generic implementation of binary search
-
 	private static <T, U> T binarySearch(ArrayList<T> array, U key) {
 		return binarySearch(array, key, 0, array.size() - 1);
 	}

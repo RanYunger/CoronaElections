@@ -251,7 +251,7 @@ public class UIHandler {
 		StringBuilder sb = new StringBuilder("Date of voting: " + votingDate + "\nVoter list:");
 		for (int i = 0; i < voterRegistry.size(); i++) {
 			voterRegistry.get(i).calculateAge(votingDate);
-			sb.append("\n\t" + voterRegistry.get(i).toString());	
+			sb.append("\n\t" + voterRegistry.get(i).toString());
 		}
 
 		return sb.toString();
