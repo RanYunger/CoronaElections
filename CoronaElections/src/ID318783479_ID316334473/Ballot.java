@@ -4,14 +4,13 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-//TODO: check if TreeMap usage is allowed
-public class Ballot implements Comparable<Ballot> {
+public class Ballot<E extends Citizen> {
 	// Fields
 	protected static int IDGenerator = 0;
 
 	protected int ID;
 	protected String address;
-	protected Set<Citizen> voterRegistry;
+	protected Set<E> voterRegistry;
 	protected YearMonth votingDate;
 	protected double votersPercentage;
 	protected ArrayList<Integer> results;
@@ -37,11 +36,11 @@ public class Ballot implements Comparable<Ballot> {
 		this.address = address;
 	}
 
-	public Set<Citizen> getVoterRegistry() {
+	public Set<E> getVoterRegistry() {
 		return voterRegistry;
 	}
 
-	private void setVoterRegistry(Set<Citizen> voterRegistry) {
+	private void setVoterRegistry(Set<E> voterRegistry) {
 		this.voterRegistry = voterRegistry;
 	}
 
@@ -80,7 +79,7 @@ public class Ballot implements Comparable<Ballot> {
 		try {
 			setID(IDGenerator++);
 			setAddress(address);
-			setVoterRegistry(new Set<Citizen>());
+			setVoterRegistry(new Set<E>());
 			setVotingDate(votingDate);
 			setVotersPercentage(0);
 			setResults(null);
@@ -99,14 +98,21 @@ public class Ballot implements Comparable<Ballot> {
 		return null;
 	}
 
-	public boolean addVoter(Citizen citizen) {
+	public boolean addVoter(Citizen voter) {
 		try {
-			voterRegistry.add(citizen);
-			if (citizen.getAssociatedBallot() != this)
-				citizen.setAssociatedBallot(this);
+			//String voterType = voterRegistry.getElements().getClass().getTypeName();			
+			// Validations
+			// TODO: get the generic type this ballot holds (regular whatever or Sick whatever)
+			
+			// TODO: implements checks (citizen.isIsolated() / citizen.isSoldier)
+			voterRegistry.add((E) voter);
+			if (voter.getAssociatedBallot() != this)
+				voter.setAssociatedBallot((Ballot<? extends Citizen>) this);
+			
 			return true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
+			
 			return false;
 		}
 	}
@@ -132,27 +138,22 @@ public class Ballot implements Comparable<Ballot> {
 	}
 
 	@Override
-	public int compareTo(Ballot other) {
-		return Integer.compare(ID, other.ID);
-	}
-
-	@Override
 	public boolean equals(Object obj) {
-		Ballot other;
+		Ballot<E> other;
 
 		if (this == obj)
 			return true;
 		if (!(obj instanceof Ballot))
 			return false;
 
-		other = (Ballot) obj;
+		other = (Ballot<E>) obj;
 
 		return ID == other.ID;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("Ballot [ID: %d | Address: %s]\n");
+		StringBuilder sb = new StringBuilder(String.format("Ballot [ID: %d | Address: %s]\n", ID, address));
 		if (voterRegistry.size() == 0)
 			return sb.append("Nothing else to See here..").toString();
 

@@ -25,9 +25,9 @@ public class Candidate extends Citizen {
 	}
 
 	// Constructors
-	public Candidate(int ID, String fullName, int yearOfBirth, int daysOfSickness, Ballot associatedBallot,
-			boolean isCarryingWeapon, boolean isIsolated, boolean isWearingSuit) {
-		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isCarryingWeapon, isIsolated, isWearingSuit);
+	public Candidate(int ID, String fullName, int yearOfBirth, int daysOfSickness,
+			Ballot<? extends Citizen> associatedBallot, boolean isIsolated, boolean isWearingSuit) {
+		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated, isWearingSuit);
 	}
 
 	@Override
@@ -45,9 +45,10 @@ public class Candidate extends Citizen {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(super.toString());
+		int citizenIndex = sb.indexOf("Citizen");
 
-		sb.replace(sb.indexOf("Citizen"), sb.indexOf("Citizen") + 7, "Candidate");
-		sb.replace(sb.indexOf("]"), sb.indexOf("]") + 1, "");
+		sb.replace(citizenIndex, citizenIndex + 7, "Candidate");
+		sb.deleteCharAt(sb.length() - 1); // removes "]" at the end of the string
 
 		if (associatedParty == null)
 			sb.append(" | Is not associated with party yet");

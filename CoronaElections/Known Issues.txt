@@ -1,2 +1,3 @@
-1. Default Interface functions - acceptable?	
-2. Map/TreeMap - acceptable??							
+1. Tweaks to Generics needs to be finished in all classes
+2. Printing ballots prints each ballot's content twice
+3. Making sure everyhing works (initiation, functions...)					

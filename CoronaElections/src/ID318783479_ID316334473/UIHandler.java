@@ -53,7 +53,7 @@ public class UIHandler {
 	}
 
 	// When entering 1
-	public static boolean addNewBallot(ArrayList<Ballot> ballots, YearMonth votingDate) {
+	public static boolean addNewBallot(ArrayList<Ballot<? extends Citizen>> ballots, YearMonth votingDate) {
 		String address;
 
 		try {
@@ -70,11 +70,11 @@ public class UIHandler {
 						"For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
 				switch (Elections.scanner.nextInt()) {
 				case 1:
-					ballots.add(new Ballot(address, votingDate));
+					ballots.add(new Ballot<Citizen>(address, votingDate));
 				case 2:
-					ballots.add(new MilitaryBallot(address, votingDate));
+					ballots.add(new Ballot<Soldier>(address, votingDate));
 				case 3:
-					ballots.add(new CoronaBallot(address, votingDate));
+					ballots.add(new Ballot<SickCitizen>(address, votingDate));
 				default:
 					validInput = false;
 					System.out.println("Invalid input!");
@@ -87,9 +87,10 @@ public class UIHandler {
 	}
 
 	// When entering 2
-	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate, ArrayList<Ballot> ballots) {
+	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate,
+			ArrayList<Ballot<? extends Citizen>> ballots) {
 		Citizen citizen;
-		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID;
+		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID, voterAge;
 		boolean isCarryingWeapon = false, isIsolated, isWearingSuit = false;
 		String fullName;
 
@@ -108,9 +109,10 @@ public class UIHandler {
 			Elections.scanner.nextLine();
 			if (yearOfBirth > votingDate.getYear())
 				throw new Exception("Time paradox prevented - I mean, come on");
-			if ((votingDate.getYear() - yearOfBirth) < Citizen.VOTER_AGE)
+			voterAge = (votingDate.getYear() - yearOfBirth);
+			if (voterAge < Citizen.VOTER_AGE)
 				throw new Exception("Sorry, this citizen is too young to vote, try something else.\n");
-			if ((votingDate.getYear() - yearOfBirth) < Citizen.SOLDIER_AGE) {
+			if (voterAge < Citizen.SOLDIER_AGE) {
 				System.out.println("Is the soldier carrying a weapon (Y/N)?");
 				isCarryingWeapon = getValidYesNoAnswer();
 				Elections.scanner.nextLine();
@@ -142,9 +144,17 @@ public class UIHandler {
 				Elections.scanner.nextLine();
 			}
 
-			citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness, ballots.get(associatedBallotID - 1),
-					isCarryingWeapon, isIsolated, isWearingSuit);
-			ballots.get(associatedBallotID).addVoter(citizen);
+			if (isIsolated) {
+				citizen = (voterAge < Citizen.SOLDIER_AGE)
+						? new SickSoldier(citizenID, fullName, yearOfBirth, daysOfSickness,
+								ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit, isCarryingWeapon)
+						: new SickCitizen(citizenID, fullName, yearOfBirth, daysOfSickness,
+								ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+			} else
+				citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness,
+						ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+
+			// ballots.get(associatedBallotID).addVoter(citizen);
 			voterRegistry.add(citizen);
 
 			return true;
@@ -230,12 +240,12 @@ public class UIHandler {
 	}
 
 	// When entering 5
-	public static String showBallotRegistry(ArrayList<Ballot> ballots) {
+	public static String showBallotRegistry(ArrayList<Ballot<? extends Citizen>> ballots) {
 		if (ballots.size() == 0)
 			return "Nothing to See here..";
 
 		StringBuilder sb = new StringBuilder();
-		for (Ballot ballot : ballots)
+		for (Ballot<? extends Citizen> ballot : ballots)
 			sb.append("\n"
 					+ (ballot.toString() + "\n" + showVoterRegistry(ballot.getVoterRegistry(), ballot.getVotingDate()))
 							.replaceAll("\n", "\n\t"));
@@ -244,7 +254,7 @@ public class UIHandler {
 	}
 
 	// When entering 6
-	public static String showVoterRegistry(Set<Citizen> voterRegistry, YearMonth votingDate) {
+	public static String showVoterRegistry(Set<? extends Citizen> voterRegistry, YearMonth votingDate) {
 		if (voterRegistry.size() == 0)
 			return "Nothing to See here..";
 
@@ -270,20 +280,20 @@ public class UIHandler {
 	}
 
 	// When entering 8
-	public static void runElections(ArrayList<Ballot> ballots, ArrayList<ArrayList<Integer>> resultsByBallot,
-			ArrayList<Party> parties) {
-		for (Ballot ballot : ballots)
+	public static void runElections(ArrayList<Ballot<? extends Citizen>> ballots,
+			ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<Party> parties) {
+		for (Ballot<? extends Citizen> ballot : ballots)
 			resultsByBallot.add(ballot.vote(parties));
 	}
 
 	public static int vote(ArrayList<Party> parties, Citizen citizen) {
 		int voterChoice;
 		String selection;
+		boolean isCoronaBallot = false; // TODO: complete
 
 		try {
 			// Validations
-			if ((citizen.isIsolated()) && (citizen.associatedBallot instanceof CoronaBallot)
-					&& (!citizen.iswearingSuit()))
+			if ((citizen.isIsolated()) && (isCoronaBallot) && (!citizen.iswearingSuit()))
 				throw new Exception(
 						String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.",
 								citizen.fullName));

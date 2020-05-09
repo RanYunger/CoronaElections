@@ -22,7 +22,7 @@ public class Elections {
 		YearMonth votingDate = null;
 		Set<Citizen> voters;
 		ArrayList<Party> parties;
-		ArrayList<Ballot> ballots;
+		ArrayList<Ballot<? extends Citizen>> allBallots;
 		boolean loop = true, electionsOccurred = false;
 		int selection;
 
@@ -40,20 +40,20 @@ public class Elections {
 		scanner.nextLine();
 
 		voters = new Set<Citizen>();
-		ballots = new ArrayList<Ballot>();
+		allBallots = new ArrayList<Ballot<? extends Citizen>>();
 		parties = new ArrayList<Party>();
-		init(votingDate, ballots, parties, voters);
+		init(votingDate, allBallots, parties, voters);
 
 		while (loop) {
 			selection = UIHandler.showMenu(electionsOccurred);
 			scanner.nextLine();
 			switch (selection) {
 			case 1:
-				UIHandler.addNewBallot(ballots, votingDate);
-				ballotCapacity = ensureCapacity(ballots, ballotCapacity);
+				UIHandler.addNewBallot(allBallots, votingDate);
+				ballotCapacity = ensureCapacity(allBallots, ballotCapacity);
 				break;
 			case 2:
-				UIHandler.addNewCitizen(voters, votingDate, ballots);
+				UIHandler.addNewCitizen(voters, votingDate, allBallots);
 				voterCapacity = ensureCapacity(voters.getElements(), voterCapacity);
 				break;
 			case 3:
@@ -64,7 +64,7 @@ public class Elections {
 				UIHandler.addCandidateToAParty(voters, parties);
 				break;
 			case 5:
-				System.out.println(UIHandler.showBallotRegistry(ballots));
+				System.out.println(UIHandler.showBallotRegistry(allBallots));
 				break;
 			case 6:
 				System.out.println(UIHandler.showVoterRegistry(voters, votingDate));
@@ -73,7 +73,7 @@ public class Elections {
 				System.out.println(UIHandler.showPartyRegistry(parties));
 				break;
 			case 8:
-				UIHandler.runElections(ballots, resultsByBallot, parties);
+				UIHandler.runElections(allBallots, resultsByBallot, parties);
 				break;
 			case 9:
 				UIHandler.showElectionsResults(finalResultsString, resultsByBallot, parties);
@@ -90,13 +90,13 @@ public class Elections {
 	}
 
 	// Methods
-	private static void init(YearMonth votingDate, ArrayList<Ballot> ballots, ArrayList<Party> parties,
-			Set<Citizen> voters) {
+	private static void init(YearMonth votingDate, ArrayList<Ballot<? extends Citizen>> allBallots,
+			ArrayList<Party> parties, Set<Citizen> voters) {
 		// Initiates 4 ballots
-		ballots.add(new Ballot("21st Road Street, Town City", votingDate));
-		ballots.add(new Ballot(votingDate));
-		ballots.add(new MilitaryBallot("Area 51, Nevada", votingDate));
-		ballots.add(new CoronaBallot(votingDate));
+		allBallots.add(new Ballot<Citizen>("21st Road Street, Town City", votingDate));
+		allBallots.add(new Ballot<Citizen>(votingDate));
+		allBallots.add(new Ballot<Soldier>("Area 51, Nevada", votingDate));
+		allBallots.add(new Ballot<SickCitizen>(votingDate));
 
 		// Initiates 4 parties
 		parties.add(new Party("Halikud", Party.PartyAssociation.Right, LocalDate.of(1973, 9, 13)));
@@ -105,21 +105,21 @@ public class Elections {
 		parties.add(new Party("Israeli Labor Party", Party.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
 
 		// Initiates 5 citizen
-		voters.add(new Citizen(123456789, "Charles Foster Kane", 1941, 0, ballots.get(0), false, false, false));
-		voters.add(new Citizen(234567890, "Donald John Trump", 1946, 1, ballots.get(1), false, true, true));
-		voters.add(new Citizen(345678901, "Tonny Stark", 1970, 0, ballots.get(1), false, false, false));
-		voters.add(new Citizen(456789012, "Steve Rogers", 1918, 1, ballots.get(3), false, true, true));
-		voters.add(new Citizen(567890123, "Childish Gambino", 2001, 1, ballots.get(2), true, false, false));
+		voters.add(new Citizen(123456789, "Charles Foster Kane", 1941, 0, allBallots.get(0), false, false));
+		voters.add(new Citizen(234567890, "Donald John Trump", 1946, 1, allBallots.get(1), true, true));
+		voters.add(new Citizen(345678901, "Tonny Stark", 1970, 0, allBallots.get(1), false, false));
+		voters.add(new SickCitizen(456789012, "Steve Rogers", 1918, 1, allBallots.get(3), true, true));
+		voters.add(new Soldier(567890123, "Childish Gambino", 2001, 1, allBallots.get(2), false, false, true));
 
 		// Initiates 8 candidates (2 per party)
-		voters.add(new Candidate(678901234, "Benjamin Netanyahu", 1949, 50, ballots.get(0), false, true, false));
-		voters.add(new Candidate(789012345, "Miri Regev", 1965, 38, ballots.get(3), false, true, false));
-		voters.add(new Candidate(890123456, "Benny Gantz", 1959, 40, ballots.get(3), false, true, true));
-		voters.add(new Candidate(901234567, "Yair Lapid", 1963, 1, ballots.get(3), false, true, true));
-		voters.add(new Candidate(901234568, "Avigdor Lieberman", 1, 1958, ballots.get(0), false, true, true));
-		voters.add(new Candidate(901234566, "Oded Forer", 1977, 1, ballots.get(0), false, false, true));
-		voters.add(new Candidate(901234569, "Tamar Zandberg", 1976, 1, ballots.get(0), false, false, false));
-		voters.add(new Candidate(901234565, "Nitzan Horowitz", 1965, 1, ballots.get(1), false, false, false));
+		voters.add(new Candidate(678901234, "Benjamin Netanyahu", 1949, 50, allBallots.get(0), true, false));
+		voters.add(new SickCandidate(789012345, "Miri Regev", 1965, 38, allBallots.get(3), true, false));
+		voters.add(new SickCandidate(890123456, "Benny Gantz", 1959, 40, allBallots.get(3), true, true));
+		voters.add(new SickCandidate(901234567, "Yair Lapid", 1963, 1, allBallots.get(3), true, true));
+		voters.add(new SickCandidate(901234568, "Avigdor Lieberman", 1958, 1, allBallots.get(0), true, true));
+		voters.add(new Candidate(901234566, "Oded Forer", 1977, 1, allBallots.get(0), false, true));
+		voters.add(new Candidate(901234569, "Tamar Zandberg", 1976, 1, allBallots.get(0), false, false));
+		voters.add(new Candidate(901234565, "Nitzan Horowitz", 1965, 1, allBallots.get(1), false, false));
 
 		// Associates candidates to their parties
 		getPartyByName(parties, "Halikud").addCandidate((Candidate) getCitizenByID(voters, 678901234));
@@ -143,8 +143,8 @@ public class Elections {
 	}
 
 	// Binary Search
-	public static Ballot getBallotByID(ArrayList<Ballot> ballots, int ballotID) {
-		Collections.sort(ballots);
+	public static Ballot<? extends Citizen> getBallotByID(ArrayList<Ballot<? extends Citizen>> ballots, int ballotID) {
+		// Collections.sort(ballots);
 		return binarySearch(ballots, ballotID);
 	}
 
@@ -154,18 +154,22 @@ public class Elections {
 		if (index != -1) {
 			if (citizen.getClass() == Citizen.class) // "morphs" the Citizen into a Candidate
 				voters.set(index,
-						new Candidate(citizen.getID(), citizen.getFullName(), citizen.getYearOfBirth(),
-								citizen.getDaysOfSickness(), citizen.getAssociatedBallot(), citizen.isCarryingWeapon(),
-								citizen.isIsolated(), citizen.iswearingSuit()));
+						citizen.isIsolated()
+								? new SickCandidate(citizen.getID(), citizen.getFullName(), citizen.getYearOfBirth(),
+										citizen.getDaysOfSickness(), citizen.getAssociatedBallot(),
+										citizen.isIsolated(), citizen.iswearingSuit())
+								: new Candidate(citizen.getID(), citizen.getFullName(), citizen.getYearOfBirth(),
+										citizen.getDaysOfSickness(), citizen.getAssociatedBallot(),
+										citizen.isIsolated(), citizen.iswearingSuit()));
 			return true;
 		}
 		return false;
 	}
 
-	public int countVotes(ArrayList<Ballot> ballots, int partyOffset) {
+	public int countVotes(ArrayList<Ballot<Citizen>> ballots, int partyOffset) {
 		int votes = 0;
 
-		for (Ballot ballot : ballots)
+		for (Ballot<Citizen> ballot : ballots)
 			votes += ballot.getResults().get(partyOffset);
 
 		return votes;
@@ -181,7 +185,7 @@ public class Elections {
 
 			T element = array.get(mid);
 			if (array.get(0) instanceof Ballot) {
-				int ballotID = ((Ballot) array.get(mid)).getID();
+				int ballotID = ((Ballot<? extends Citizen>) array.get(mid)).getID();
 				if (ballotID == (int) key)
 					return element;
 

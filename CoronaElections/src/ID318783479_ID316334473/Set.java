@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class Set<E> {
+public class Set<E extends Citizen> {
 	// Constants
 
 	// Fields

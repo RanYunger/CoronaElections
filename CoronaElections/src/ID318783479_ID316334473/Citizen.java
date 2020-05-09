@@ -10,13 +10,11 @@ public class Citizen implements Comparable<Citizen> {
 	// Fields
 	protected int ID;
 	protected String fullName;
-	protected int yearOfBirth;
-	protected int daysOfSickness;
-	protected Ballot associatedBallot;
-	protected boolean isSoldier;
-	protected boolean isCarryingWeapon;
-	protected boolean isIsolated;
-	protected boolean isWearingSuit;
+	protected int yearOfBirth, age;
+	protected int daysOfSickness; // declared here, instead of declaring in each "Sick_" class ~Ran
+	protected Ballot<? extends Citizen> associatedBallot;
+	protected boolean isIsolated; // declared here, instead of declaring in each "Sick_" class ~Ran
+	protected boolean isWearingSuit; // declared here, instead of declaring in each "Sick_" class ~Ran
 
 	// Properties (Getters and Setters)
 	public int getID() {
@@ -49,11 +47,21 @@ public class Citizen implements Comparable<Citizen> {
 		this.yearOfBirth = yearOfBirth;
 	}
 
+	public int getAge() {
+		return age;
+	}
+
+	protected void setAge(int age) throws Exception {
+		if (age <= 0)
+			throw new Exception("Time paradox prevented - I mean, come on");
+		this.age = age;
+	}
+
 	public int getDaysOfSickness() {
 		return daysOfSickness;
 	}
 
-	private void setDaysOfSickness(int daysOfSickness) throws Exception {
+	protected void setDaysOfSickness(int daysOfSickness) throws Exception {
 		if (daysOfSickness < 0)
 			throw new Exception("Citizen can only have non-negative amount of sickness days.");
 		if ((isIsolated) && (daysOfSickness < 1))
@@ -61,29 +69,13 @@ public class Citizen implements Comparable<Citizen> {
 		this.daysOfSickness = daysOfSickness;
 	}
 
-	public boolean isCarryingWeapon() {
-		return isCarryingWeapon;
-	}
-
-	public void setIsCarryingWeapon(boolean isCarryingWeapon) {
-		this.isCarryingWeapon = isCarryingWeapon;
-	}
-
-	public Ballot getAssociatedBallot() {
+	public Ballot<? extends Citizen> getAssociatedBallot() {
 		return associatedBallot;
 	}
 
-	public void setAssociatedBallot(Ballot associatedBallot) throws NullPointerException {
+	public void setAssociatedBallot(Ballot<? extends Citizen> associatedBallot) throws NullPointerException {
 		this.associatedBallot = associatedBallot;
 		this.associatedBallot.addVoter(this);
-	}
-
-	public boolean isSoldier() {
-		return isSoldier;
-	}
-
-	private void setIsSoldier(boolean isSoldier) {
-		this.isSoldier = isSoldier;
 	}
 
 	public boolean isIsolated() {
@@ -103,14 +95,13 @@ public class Citizen implements Comparable<Citizen> {
 	}
 
 	// Constructors
-	public Citizen(int ID, String fullName, int yearOfBirth, int daysOfSickness, Ballot associatedBallot,
-			boolean isCarryingWeapon, boolean isIsolated, boolean isWearingSuit) {
+	public Citizen(int ID, String fullName, int yearOfBirth, int daysOfSickness,
+			Ballot<? extends Citizen> associatedBallot, boolean isIsolated, boolean isWearingSuit) {
 		try {
 			setID(ID);
 			setFullName(fullName);
 			setYearOfBirth(yearOfBirth);
 			setDaysOfSickness(daysOfSickness);
-			setIsCarryingWeapon(isCarryingWeapon);
 			setIsIsolated(isIsolated);
 			setIswearingSuit(isWearingSuit);
 			setAssociatedBallot(associatedBallot);
@@ -120,8 +111,11 @@ public class Citizen implements Comparable<Citizen> {
 	}
 
 	public void calculateAge(YearMonth votingDate) {
-		int age = votingDate.getYear() - yearOfBirth;
-		setIsSoldier((age >= VOTER_AGE) && (age <= SOLDIER_AGE));
+		try {
+			setAge(votingDate.getYear() - yearOfBirth);
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	@Override
@@ -144,8 +138,6 @@ public class Citizen implements Comparable<Citizen> {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: ", ID, fullName, yearOfBirth));
-		if (isSoldier)
-			sb.append(isCarryingWeapon ? "Soldier (Carrying weapon), " : "Soldier (Not carrying weapon), ");
 		sb.append(isIsolated ? String.format("Isolated (%d Day(s) so far), ", daysOfSickness) : "Not isolated, ");
 		sb.append(isWearingSuit ? "Wearing suit]" : "Not wearing suit]");
 
