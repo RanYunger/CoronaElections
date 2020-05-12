@@ -17,6 +17,11 @@ public class SickSoldier extends Soldier {
 	// Methods
 	@Override
 	public String toString() {
-		return super.toString();
+		StringBuilder sb = new StringBuilder(super.toString());
+		int soldierIndex = sb.indexOf("Soldier");
+
+		sb.replace(soldierIndex, soldierIndex + 7, "Sick Soldier");
+
+		return sb.toString();
 	}
 }

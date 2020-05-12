@@ -1,5 +1,7 @@
 package ID318783479_ID316334473;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -89,6 +91,19 @@ public class Ballot<E extends Citizen> {
 	}
 
 	// Methods
+	private String getGenericTypeName() {
+		try {
+			Field voterRegistryField = voterRegistry.getClass().getDeclaredField("elements");
+			ParameterizedType voterRegistryType = (ParameterizedType) voterRegistryField.getGenericType();
+
+			return voterRegistryType.getActualTypeArguments()[0].getTypeName();
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+
+		return "<UNKNOWN>";
+	}
+
 	public Citizen getCitizenByID(int citizenID) {
 		for (int i = 0; i < voterRegistry.size(); i++) {
 			if (voterRegistry.get(i).getID() == citizenID)
@@ -100,19 +115,22 @@ public class Ballot<E extends Citizen> {
 
 	public boolean addVoter(Citizen voter) {
 		try {
-			//String voterType = voterRegistry.getElements().getClass().getTypeName();			
+			String typeName = getGenericTypeName();
+
 			// Validations
-			// TODO: get the generic type this ballot holds (regular whatever or Sick whatever)
-			
-			// TODO: implements checks (citizen.isIsolated() / citizen.isSoldier)
+			if ((typeName.contains("Sick")) && (!voter.isIsolated()))
+				return false;
+			if ((typeName.contains("Soldier")) && !(voter instanceof Soldier))
+				return false;
+
 			voterRegistry.add((E) voter);
 			if (voter.getAssociatedBallot() != this)
 				voter.setAssociatedBallot((Ballot<? extends Citizen>) this);
-			
+
 			return true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
-			
+
 			return false;
 		}
 	}
@@ -153,14 +171,16 @@ public class Ballot<E extends Citizen> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(String.format("Ballot [ID: %d | Address: %s]\n", ID, address));
+		StringBuilder sb = new StringBuilder(
+				String.format("Ballot [ID: %d | Address: %s | Type: %s]\n", ID, address, getGenericTypeName()));
+
 		if (voterRegistry.size() == 0)
 			return sb.append("Nothing else to See here..").toString();
 
-		sb.append("Date of voting: " + votingDate + "\nVoter list:");
+		sb.append("\tDate of voting: " + votingDate + "\n\tVoter list:");
 		for (int i = 0; i < voterRegistry.size(); i++) {
 			voterRegistry.get(i).calculateAge(votingDate);
-			sb.append("\n\t" + voterRegistry.get(i).toString());
+			sb.append("\n\t\t" + voterRegistry.get(i).toString());
 		}
 
 		return sb.toString();

@@ -1,3 +1,2 @@
-1. Tweaks to Generics needs to be finished in all classes
-2. Printing ballots prints each ballot's content twice
+1. Handle possibilities of adding ballot/citizen according by their generic types
 3. Making sure everyhing works (initiation, functions...)					

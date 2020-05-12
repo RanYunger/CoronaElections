@@ -75,6 +75,7 @@ public class UIHandler {
 					ballots.add(new Ballot<Soldier>(address, votingDate));
 				case 3:
 					ballots.add(new Ballot<SickCitizen>(address, votingDate));
+					// TODO: Unite all Sick classes under one class/interface
 				default:
 					validInput = false;
 					System.out.println("Invalid input!");
@@ -140,8 +141,12 @@ public class UIHandler {
 				isWearingSuit = getValidYesNoAnswer();
 				Elections.scanner.nextLine();
 				System.out.println("Enter amount of days the voter has been sick:");
-				daysOfSickness = Elections.scanner.nextInt();
+				daysOfSickness = Elections.scanner.nextInt();		
 				Elections.scanner.nextLine();
+				if (daysOfSickness < 0)
+					throw new Exception("Citizen can only have non-negative amount of sickness days.");
+				if ((isIsolated) && (daysOfSickness < 1))
+					throw new Exception("An Isolated Citizen must've been sick for at least 1 day.");
 			}
 
 			if (isIsolated) {
@@ -246,9 +251,7 @@ public class UIHandler {
 
 		StringBuilder sb = new StringBuilder();
 		for (Ballot<? extends Citizen> ballot : ballots)
-			sb.append("\n"
-					+ (ballot.toString() + "\n" + showVoterRegistry(ballot.getVoterRegistry(), ballot.getVotingDate()))
-							.replaceAll("\n", "\n\t"));
+			sb.append("\n" + ballot.toString());
 
 		return sb.toString();
 	}
@@ -343,7 +346,7 @@ public class UIHandler {
 				for (int party = 0; party < partyCount; party++) {
 					String partyName = parties.get(party).getName();
 					int resultInBallot = resultsByBallot.get(ballot).get(party);
-					sb.append(String.format("%s: %d\t", partyName, resultInBallot));
+					sb.append(String.format("%s: %d\t", partyName, resultInBallot)); // TODO: display voting percentage of each ballot ~Ran
 					partyVotes.put(partyName, partyVotes.get(partyName) + resultInBallot);
 				}
 
