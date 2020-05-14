@@ -1,5 +1,6 @@
 package ID318783479_ID316334473;
 
+import java.lang.reflect.Field;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -13,16 +14,19 @@ public class Elections {
 	protected static final int INITIAL_CAPACITY = 10;
 
 	public static void main(String args[]) {
-
 		String finalResultsString = "";
-		ArrayList<ArrayList<Integer>> resultsByBallot = new ArrayList<>();
 		int voterCapacity = INITIAL_CAPACITY;
 		int partyCapacity = INITIAL_CAPACITY;
 		int ballotCapacity = INITIAL_CAPACITY;
 		YearMonth votingDate = null;
-		Set<Citizen> voters;
-		ArrayList<Party> parties;
-		ArrayList<Ballot<? extends Citizen>> allBallots;
+		Set<Citizen> voters = new Set<Citizen>();
+		ArrayList<Party> parties = new ArrayList<Party>();
+		ArrayList<Ballot<Citizen>> citizenBallots = new ArrayList<Ballot<Citizen>>();
+		ArrayList<Ballot<Soldier>> soldierBallots = new ArrayList<Ballot<Soldier>>();
+		ArrayList<Ballot<SickCitizen>> sickCitizenBallots = new ArrayList<Ballot<SickCitizen>>();
+		ArrayList<Ballot<SickCandidate>> sickCandidatesBallots = new ArrayList<Ballot<SickCandidate>>();
+		ArrayList<Ballot<SickSoldier>> sickSoldierBallots = new ArrayList<Ballot<SickSoldier>>();
+		ArrayList<ArrayList<Integer>> resultsByBallot = new ArrayList<>();
 		boolean loop = true, electionsOccurred = false;
 		int selection;
 
@@ -39,22 +43,22 @@ public class Elections {
 		}
 		scanner.nextLine();
 
-		voters = new Set<Citizen>();
-		allBallots = new ArrayList<Ballot<? extends Citizen>>();
-		parties = new ArrayList<Party>();
-		init(votingDate, allBallots, parties, voters);
+		init(votingDate, citizenBallots, soldierBallots, sickCitizenBallots, sickCandidatesBallots, sickSoldierBallots,
+				parties, voters);
 
 		while (loop) {
 			selection = UIHandler.showMenu(electionsOccurred);
 			scanner.nextLine();
 			switch (selection) {
-			case 1:
-				UIHandler.addNewBallot(allBallots, votingDate);
-				ballotCapacity = ensureCapacity(allBallots, ballotCapacity);
+			case 1: {
+				UIHandler.addNewBallot(votingDate);
+				ballotCapacity = ensureCapacity(getAllBallots(), ballotCapacity);
+			}
 				break;
-			case 2:
-				UIHandler.addNewCitizen(voters, votingDate, allBallots);
+			case 2: {
+				UIHandler.addNewCitizen(voters, votingDate);
 				voterCapacity = ensureCapacity(voters.getElements(), voterCapacity);
+			}
 				break;
 			case 3:
 				UIHandler.addNewParty(parties);
@@ -64,7 +68,7 @@ public class Elections {
 				UIHandler.addCandidateToAParty(voters, parties);
 				break;
 			case 5:
-				System.out.println(UIHandler.showBallotRegistry(allBallots));
+				UIHandler.showBallotRegistry();
 				break;
 			case 6:
 				System.out.println(UIHandler.showVoterRegistry(voters, votingDate));
@@ -73,7 +77,7 @@ public class Elections {
 				System.out.println(UIHandler.showPartyRegistry(parties));
 				break;
 			case 8:
-				UIHandler.runElections(allBallots, resultsByBallot, parties);
+				UIHandler.runElections(resultsByBallot, parties);
 				break;
 			case 9:
 				UIHandler.showElectionsResults(finalResultsString, resultsByBallot, parties);
@@ -90,13 +94,15 @@ public class Elections {
 	}
 
 	// Methods
-	private static void init(YearMonth votingDate, ArrayList<Ballot<? extends Citizen>> allBallots,
+	private static void init(YearMonth votingDate, ArrayList<Ballot<Citizen>> citizenBallots,
+			ArrayList<Ballot<Soldier>> soldierBallots, ArrayList<Ballot<SickCitizen>> sickCitizenBallots,
+			ArrayList<Ballot<SickCandidate>> sickCandidatesBallots, ArrayList<Ballot<SickSoldier>> sickSoldierBallots,
 			ArrayList<Party> parties, Set<Citizen> voters) {
 		// Initiates 4 ballots
-		allBallots.add(new Ballot<Citizen>("21st Road Street, Town City", votingDate));
-		allBallots.add(new Ballot<Citizen>(votingDate));
-		allBallots.add(new Ballot<Soldier>("Area 51, Nevada", votingDate));
-		allBallots.add(new Ballot<SickCitizen>(votingDate));
+		citizenBallots.add(new Ballot<Citizen>("Citizen", "21st Road Street, Town City", votingDate));
+		citizenBallots.add(new Ballot<Citizen>("Citizen", votingDate));
+		soldierBallots.add(new Ballot<Soldier>("Sick Soldier", "Area 51, Nevada", votingDate));
+		sickCitizenBallots.add(new Ballot<SickCitizen>("Sick Citizen", votingDate));
 
 		// Initiates 4 parties
 		parties.add(new Party("Halikud", Party.PartyAssociation.Right, LocalDate.of(1973, 9, 13)));
@@ -105,21 +111,21 @@ public class Elections {
 		parties.add(new Party("Israeli Labor Party", Party.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
 
 		// Initiates 5 citizen
-		voters.add(new Citizen(123456789, "Charles Foster Kane", 1941, 0, allBallots.get(0), false, false));
-		voters.add(new Citizen(234567890, "Donald John Trump", 1946, 1, allBallots.get(1), true, true));
-		voters.add(new Citizen(345678901, "Tonny Stark", 1970, 0, allBallots.get(1), false, false));
-		voters.add(new SickCitizen(456789012, "Steve Rogers", 1918, 1, allBallots.get(3), true, true));
-		voters.add(new Soldier(567890123, "Childish Gambino", 2001, 1, allBallots.get(2), false, false, true));
+		voters.add(new Citizen(123456789, "Charles Foster Kane", 1941, 0, citizenBallots.get(0), false, false));
+		voters.add(new Citizen(234567890, "Donald John Trump", 1946, 1, citizenBallots.get(1), true, true));
+		voters.add(new Citizen(345678901, "Tonny Stark", 1970, 0, citizenBallots.get(1), false, false));
+		voters.add(new SickCitizen(456789012, "Steve Rogers", 1918, 1, sickCitizenBallots.get(0), true, true));
+		voters.add(new Soldier(567890123, "Childish Gambino", 2001, 1, soldierBallots.get(0), false, false, true));
 
 		// Initiates 8 candidates (2 per party)
-		voters.add(new Candidate(678901234, "Benjamin Netanyahu", 1949, 50, allBallots.get(0), true, false));
-		voters.add(new SickCandidate(789012345, "Miri Regev", 1965, 38, allBallots.get(3), true, false));
-		voters.add(new SickCandidate(890123456, "Benny Gantz", 1959, 40, allBallots.get(3), true, true));
-		voters.add(new SickCandidate(901234567, "Yair Lapid", 1963, 1, allBallots.get(3), true, true));
-		voters.add(new SickCandidate(901234568, "Avigdor Lieberman", 1958, 1, allBallots.get(0), true, true));
-		voters.add(new Candidate(901234566, "Oded Forer", 1977, 1, allBallots.get(0), false, true));
-		voters.add(new Candidate(901234569, "Tamar Zandberg", 1976, 1, allBallots.get(0), false, false));
-		voters.add(new Candidate(901234565, "Nitzan Horowitz", 1965, 1, allBallots.get(1), false, false));
+		voters.add(new Candidate(678901234, "Benjamin Netanyahu", 1949, 50, citizenBallots.get(0), true, false));
+		voters.add(new SickCandidate(789012345, "Miri Regev", 1965, 38, sickCitizenBallots.get(0), true, false));
+		voters.add(new SickCandidate(890123456, "Benny Gantz", 1959, 40, sickCitizenBallots.get(0), true, true));
+		voters.add(new SickCandidate(901234567, "Yair Lapid", 1963, 1, sickCitizenBallots.get(0), true, true));
+		voters.add(new SickCandidate(901234568, "Avigdor Lieberman", 1958, 1, citizenBallots.get(0), true, true));
+		voters.add(new Candidate(901234566, "Oded Forer", 1977, 1, citizenBallots.get(0), false, true));
+		voters.add(new Candidate(901234569, "Tamar Zandberg", 1976, 1, citizenBallots.get(0), false, false));
+		voters.add(new Candidate(901234565, "Nitzan Horowitz", 1965, 1, citizenBallots.get(1), false, false));
 
 		// Associates candidates to their parties
 		getPartyByName(parties, "Halikud").addCandidate((Candidate) getCitizenByID(voters, 678901234));
@@ -132,6 +138,35 @@ public class Elections {
 		getPartyByName(parties, "Israeli Labor Party").addCandidate((Candidate) getCitizenByID(voters, 901234565));
 	}
 
+	public static Object getFieldByName(String fieldName) {
+		Field field;
+
+		try {
+			field = Elections.class.getField(fieldName);
+
+			return field.getClass().cast(field.get(field));
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+
+		return null;
+	}
+	
+	public static ArrayList<Ballot<? extends Citizen>> getAllBallots(){
+		Field[] fields = Elections.class.getFields();
+		ArrayList<Ballot<?>> currBallotsCollection;
+		ArrayList<Ballot<? extends Citizen>> allBallots = new ArrayList<Ballot<? extends Citizen>>();
+
+		for (Field field : fields) {
+			if (field.getName().contains("Ballots")) {
+				currBallotsCollection = (ArrayList<Ballot<? extends Citizen>>) getFieldByName(field.getName());
+				allBallots.addAll(currBallotsCollection);
+			}
+		}
+		
+		return allBallots;
+	}
+	
 	public static Citizen getCitizenByID(Set<Citizen> voters, int citizenID) {
 		Collections.sort(voters.getElements());
 		return binarySearch(voters.getElements(), citizenID);

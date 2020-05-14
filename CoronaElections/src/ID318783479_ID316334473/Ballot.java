@@ -1,23 +1,22 @@
 package ID318783479_ID316334473;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Ballot<E extends Citizen> {
 	// Fields
-	protected static int IDGenerator = 0;
-
-	protected int ID;
-	protected String address;
-	protected Set<E> voterRegistry;
-	protected YearMonth votingDate;
-	protected double votersPercentage;
-	protected ArrayList<Integer> results;
-	protected TreeMap<String, Integer> partyResults;
-	protected int capacity;
+	private static int IDGenerator = 0;
+	
+	private int ID;
+	private String ballotType;
+	private String address;
+	private Set<E> voterRegistry;
+	private YearMonth votingDate;
+	private double votersPercentage;
+	private ArrayList<Integer> results;
+	private TreeMap<String, Integer> partyResults;
+	private int capacity;
 
 	// Properties (Getters and Setters)
 	public int getID() {
@@ -28,6 +27,10 @@ public class Ballot<E extends Citizen> {
 		this.ID = ID;
 	}
 
+	private void setBallotType(String ballotType) {
+		this.ballotType = ballotType;
+	}
+	
 	public String getAddress() {
 		return address;
 	}
@@ -73,13 +76,14 @@ public class Ballot<E extends Citizen> {
 	}
 
 	// Constructors
-	public Ballot(YearMonth votingDate) {
-		this("<UNKNOWN>", votingDate);
+	public Ballot(String ballotType, YearMonth votingDate) {
+		this(ballotType, "<UNKNOWN>", votingDate);
 	}
 
-	public Ballot(String address, YearMonth votingDate) {
+	public Ballot(String ballotType, String address, YearMonth votingDate) {
 		try {
 			setID(IDGenerator++);
+			setBallotType(ballotType);
 			setAddress(address);
 			setVoterRegistry(new Set<E>());
 			setVotingDate(votingDate);
@@ -91,19 +95,6 @@ public class Ballot<E extends Citizen> {
 	}
 
 	// Methods
-	private String getGenericTypeName() {
-		try {
-			Field voterRegistryField = voterRegistry.getClass().getDeclaredField("elements");
-			ParameterizedType voterRegistryType = (ParameterizedType) voterRegistryField.getGenericType();
-
-			return voterRegistryType.getActualTypeArguments()[0].getTypeName();
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-
-		return "<UNKNOWN>";
-	}
-
 	public Citizen getCitizenByID(int citizenID) {
 		for (int i = 0; i < voterRegistry.size(); i++) {
 			if (voterRegistry.get(i).getID() == citizenID)
@@ -115,12 +106,10 @@ public class Ballot<E extends Citizen> {
 
 	public boolean addVoter(Citizen voter) {
 		try {
-			String typeName = getGenericTypeName();
-
 			// Validations
-			if ((typeName.contains("Sick")) && (!voter.isIsolated()))
+			if ((ballotType.contains("Sick")) && (!voter.isIsolated()))
 				return false;
-			if ((typeName.contains("Soldier")) && !(voter instanceof Soldier))
+			if ((ballotType.contains("Soldier")) && !(voter instanceof Soldier))
 				return false;
 
 			voterRegistry.add((E) voter);
@@ -172,7 +161,7 @@ public class Ballot<E extends Citizen> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(
-				String.format("Ballot [ID: %d | Address: %s | Type: %s]\n", ID, address, getGenericTypeName()));
+				String.format("Ballot [ID: %d | Address: %s | Type: %s]\n", ID, address, ballotType));
 
 		if (voterRegistry.size() == 0)
 			return sb.append("Nothing else to See here..").toString();

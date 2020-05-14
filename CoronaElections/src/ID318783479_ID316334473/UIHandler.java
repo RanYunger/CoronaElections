@@ -1,14 +1,15 @@
 package ID318783479_ID316334473;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * <b>Helper class which contains all UI methods, plus extra helpful
- * methods</b><br>
+/*
+ * Helper class which contains all UI methods, plus extra helpful
+ * methods.
  * Most of the methods here will be changed when switching to GUI, so there will
  * be no need to change anything in the main method.
  */
@@ -53,8 +54,11 @@ public class UIHandler {
 	}
 
 	// When entering 1
-	public static boolean addNewBallot(ArrayList<Ballot<? extends Citizen>> ballots, YearMonth votingDate) {
+	public static boolean addNewBallot(YearMonth votingDate) {
 		String address;
+		Ballot<?> addedBallot;
+		ArrayList<Ballot<?>> ballots;
+		boolean validInput = false;
 
 		try {
 			// Validations
@@ -63,19 +67,30 @@ public class UIHandler {
 			if (address.trim().length() == 0)
 				throw new Exception("Ballot's address must contain at least 1 letter.");
 
-			boolean validInput = false;
 			while (!validInput) {
 				validInput = true;
-				System.out.println(
-						"For a regular ballot, enter 1\nFor a military ballot, enter 2\nFor a corona ballot, enter 3");
+				System.out.println("1 = Regular Ballot (Citizens / Candidates)");
+				System.out.println("2 = Military Ballot (Soldiers)");
+				System.out.println("3 = Corona Ballot (Citizens / Candidates / Soldiers)");
 				switch (Elections.scanner.nextInt()) {
-				case 1:
-					ballots.add(new Ballot<Citizen>(address, votingDate));
-				case 2:
-					ballots.add(new Ballot<Soldier>(address, votingDate));
-				case 3:
-					ballots.add(new Ballot<SickCitizen>(address, votingDate));
-					// TODO: Unite all Sick classes under one class/interface
+				case 1: {
+					addedBallot = new Ballot<Citizen>(address, votingDate);
+					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("citizenBallots");
+
+					ballots.add(addedBallot);
+				}
+				case 2: {
+					addedBallot = new Ballot<Soldier>(address, votingDate);
+					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("soldierBallots");
+
+					ballots.add(addedBallot);
+				}
+				case 3: {
+					addedBallot = new Ballot<SickCitizen>(address, votingDate);
+					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("sickCitizenBallots");
+
+					ballots.add(addedBallot);
+				}
 				default:
 					validInput = false;
 					System.out.println("Invalid input!");
@@ -88,9 +103,9 @@ public class UIHandler {
 	}
 
 	// When entering 2
-	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate,
-			ArrayList<Ballot<? extends Citizen>> ballots) {
+	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate) {
 		Citizen citizen;
+		ArrayList<Ballot<?>> ballots;
 		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID, voterAge;
 		boolean isCarryingWeapon = false, isIsolated, isWearingSuit = false;
 		String fullName;
@@ -127,11 +142,6 @@ public class UIHandler {
 			System.out.println("Enter associated Ballot ID:");
 			associatedBallotID = Elections.scanner.nextInt();
 			Elections.scanner.nextLine();
-			if ((associatedBallotID < 0) || (ballots.size() < associatedBallotID))
-				throw new Exception(String.format("Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
-						ballots.size(), ballots.size() - 1));
-			if (Elections.getBallotByID(ballots, associatedBallotID) == null)
-				throw new Exception("Citizen must be associated to a ballot.");
 
 			System.out.println("Is the voter in isolation (Y/N)?");
 			isIsolated = getValidYesNoAnswer();
@@ -141,7 +151,7 @@ public class UIHandler {
 				isWearingSuit = getValidYesNoAnswer();
 				Elections.scanner.nextLine();
 				System.out.println("Enter amount of days the voter has been sick:");
-				daysOfSickness = Elections.scanner.nextInt();		
+				daysOfSickness = Elections.scanner.nextInt();
 				Elections.scanner.nextLine();
 				if (daysOfSickness < 0)
 					throw new Exception("Citizen can only have non-negative amount of sickness days.");
@@ -150,16 +160,32 @@ public class UIHandler {
 			}
 
 			if (isIsolated) {
-				citizen = (voterAge < Citizen.SOLDIER_AGE)
-						? new SickSoldier(citizenID, fullName, yearOfBirth, daysOfSickness,
-								ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit, isCarryingWeapon)
-						: new SickCitizen(citizenID, fullName, yearOfBirth, daysOfSickness,
-								ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
-			} else
+				if (voterAge < Citizen.SOLDIER_AGE) {
+					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("sickSolderBallots");
+
+					citizen = new SickSoldier(citizenID, fullName, yearOfBirth, daysOfSickness,
+							ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit, isCarryingWeapon);
+				} else {
+					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("sickSolderBallots");
+
+					citizen = new SickCitizen(citizenID, fullName, yearOfBirth, daysOfSickness,
+							ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+				}
+			} else {
+				ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("citizenBallots");
 				citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness,
 						ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+			}
 
-			// ballots.get(associatedBallotID).addVoter(citizen);
+			// This validation moved to here because the ballots collection changes by the
+			// type of the added voter
+			if ((associatedBallotID < 0) || (ballots.size() < associatedBallotID))
+				throw new Exception(String.format("Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
+						ballots.size(), ballots.size() - 1));
+			if (Elections.getBallotByID(ballots, associatedBallotID) == null)
+				throw new Exception("Citizen must be associated to a ballot.");
+
+			ballots.get(associatedBallotID).addVoter(citizen);
 			voterRegistry.add(citizen);
 
 			return true;
@@ -245,6 +271,18 @@ public class UIHandler {
 	}
 
 	// When entering 5
+	public static void showBallotRegistry() {
+		Field[] fields = Elections.class.getFields();
+		ArrayList<Ballot<?>> currBallotsCollection;
+
+		for (Field field : fields) {
+			if (field.getName().contains("Ballots")) {
+				currBallotsCollection = (ArrayList<Ballot<? extends Citizen>>) Elections.getFieldByName(field.getName());
+				System.out.println(showBallotRegistry(currBallotsCollection));
+			}
+		}
+	}
+
 	public static String showBallotRegistry(ArrayList<Ballot<? extends Citizen>> ballots) {
 		if (ballots.size() == 0)
 			return "Nothing to See here..";
@@ -283,6 +321,21 @@ public class UIHandler {
 	}
 
 	// When entering 8
+	public static void runElections(ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<Party> parties) {
+		Field[] fields = Elections.class.getFields();
+		ArrayList<Ballot<?>> currBallotsCollection;
+		ArrayList<Ballot<? extends Citizen>> allBallots = new ArrayList<Ballot<? extends Citizen>>();
+
+		for (Field field : fields) {
+			if (field.getName().contains("Ballots")) {
+				currBallotsCollection = (ArrayList<Ballot<? extends Citizen>>) Elections.getFieldByName(field.getName());
+				allBallots.addAll(currBallotsCollection);
+			}
+		}
+
+		runElections(allBallots, resultsByBallot, parties);
+	}
+
 	public static void runElections(ArrayList<Ballot<? extends Citizen>> ballots,
 			ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<Party> parties) {
 		for (Ballot<? extends Citizen> ballot : ballots)
@@ -346,7 +399,8 @@ public class UIHandler {
 				for (int party = 0; party < partyCount; party++) {
 					String partyName = parties.get(party).getName();
 					int resultInBallot = resultsByBallot.get(ballot).get(party);
-					sb.append(String.format("%s: %d\t", partyName, resultInBallot)); // TODO: display voting percentage of each ballot ~Ran
+					sb.append(String.format("%s: %d\t", partyName, resultInBallot)); // TODO: display voting percentage
+																						// of each ballot ~Ran
 					partyVotes.put(partyName, partyVotes.get(partyName) + resultInBallot);
 				}
 
