@@ -7,7 +7,7 @@ import java.util.TreeMap;
 public class Ballot<E extends Citizen> {
 	// Fields
 	private static int IDGenerator = 0;
-	
+
 	private int ID;
 	private String ballotType;
 	private String address;
@@ -30,7 +30,7 @@ public class Ballot<E extends Citizen> {
 	private void setBallotType(String ballotType) {
 		this.ballotType = ballotType;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
@@ -107,10 +107,14 @@ public class Ballot<E extends Citizen> {
 	public boolean addVoter(Citizen voter) {
 		try {
 			// Validations
-			if ((ballotType.contains("Sick")) && (!voter.isIsolated()))
+			if ((ballotType.contains("Sick")) && (!voter.isIsolated())) {
+				System.out.println("Cannot add a non-isolated voter to a Corona ballot.");
 				return false;
-			if ((ballotType.contains("Soldier")) && !(voter instanceof Soldier))
+			}
+			if ((ballotType.contains("Soldier")) && !(voter instanceof Soldier)) {
+				System.out.println("Cannot add a non-soldier voter to a military ballot.");
 				return false;
+			}
 
 			voterRegistry.add((E) voter);
 			if (voter.getAssociatedBallot() != this)
@@ -125,11 +129,10 @@ public class Ballot<E extends Citizen> {
 	}
 
 	public ArrayList<Integer> vote(ArrayList<Party> candidateParties) {
-
 		int currVoterChoice, numOfVoters = 0;
 
-		setResults(new ArrayList<Integer>(candidateParties.size()));
-		for (int i = 0; i < results.size(); i++) {
+		setResults(new ArrayList<Integer>(/* candidateParties.size() */));
+		for (int i = 0; i < candidateParties.size(); i++) {
 			results.add(0);
 		}
 		for (int i = 0; i < voterRegistry.size(); i++) {
@@ -142,6 +145,14 @@ public class Ballot<E extends Citizen> {
 		setVotersPercentage(numOfVoters);
 
 		return results;
+	}
+
+	public boolean isCoronaBallot() {
+		return ballotType.contains("Sick");
+	}
+
+	public boolean isMilitaryBallot() {
+		return ballotType == "Soldier";
 	}
 
 	@Override

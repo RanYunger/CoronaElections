@@ -1,2 +1,2 @@
-1. Handle possibilities of adding ballot/citizen according by their generic types
-3. Making sure everyhing works (initiation, functions...)					
+1. Tweak Add Citizen in UIHandler (more proper messages, generalizing the validations, etc), anything else seem to work :)
+2. Optimize the code			

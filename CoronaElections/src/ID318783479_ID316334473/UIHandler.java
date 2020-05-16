@@ -1,6 +1,5 @@
 package ID318783479_ID316334473;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -56,8 +55,6 @@ public class UIHandler {
 	// When entering 1
 	public static boolean addNewBallot(YearMonth votingDate) {
 		String address;
-		Ballot<?> addedBallot;
-		ArrayList<Ballot<?>> ballots;
 		boolean validInput = false;
 
 		try {
@@ -73,24 +70,34 @@ public class UIHandler {
 				System.out.println("2 = Military Ballot (Soldiers)");
 				System.out.println("3 = Corona Ballot (Citizens / Candidates / Soldiers)");
 				switch (Elections.scanner.nextInt()) {
-				case 1: {
-					addedBallot = new Ballot<Citizen>(address, votingDate);
-					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("citizenBallots");
-
-					ballots.add(addedBallot);
-				}
-				case 2: {
-					addedBallot = new Ballot<Soldier>(address, votingDate);
-					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("soldierBallots");
-
-					ballots.add(addedBallot);
-				}
-				case 3: {
-					addedBallot = new Ballot<SickCitizen>(address, votingDate);
-					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("sickCitizenBallots");
-
-					ballots.add(addedBallot);
-				}
+				case 1:
+					return Elections.citizenBallots.add(new Ballot<Citizen>("Citizen", address, votingDate));
+				case 2:
+					return Elections.soldierBallots.add(new Ballot<Soldier>("Soldier", address, votingDate));
+				case 3:
+					validInput = false;
+					while (!validInput) {
+						validInput = true;
+						System.out.println("1 = Corona Citizens Ballot");
+						System.out.println("2 = Corona Candidates Ballot");
+						System.out.println("3 = Corona Soldiers Ballot");
+						switch (Elections.scanner.nextInt()) {
+						case 1:
+							return Elections.sickCitizenBallots
+									.add(new Ballot<SickCitizen>("Sick Citizen", address, votingDate));
+						case 2:
+							return Elections.sickCandidateBallots
+									.add(new Ballot<SickCandidate>("Sick Candidate", address, votingDate));
+						case 3:
+							return Elections.sickSoldierBallots
+									.add(new Ballot<SickSoldier>("Sick Soldier", address, votingDate));
+						default:
+							validInput = false;
+							System.out.println("Invalid input!");
+							break;
+						}
+					}
+					break;
 				default:
 					validInput = false;
 					System.out.println("Invalid input!");
@@ -105,7 +112,6 @@ public class UIHandler {
 	// When entering 2
 	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate) {
 		Citizen citizen;
-		ArrayList<Ballot<?>> ballots;
 		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID, voterAge;
 		boolean isCarryingWeapon = false, isIsolated, isWearingSuit = false;
 		String fullName;
@@ -161,31 +167,41 @@ public class UIHandler {
 
 			if (isIsolated) {
 				if (voterAge < Citizen.SOLDIER_AGE) {
-					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("sickSolderBallots");
+					if ((associatedBallotID < 0) || (Elections.sickSoldierBallots.size() < associatedBallotID))
+						throw new Exception(
+								String.format("Corona-Soldier Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
+										Elections.sickSoldierBallots.size(), Elections.sickSoldierBallots.size() - 1));
+					if (Elections.sickSoldierBallots.get(associatedBallotID) == null)
+						throw new Exception("Citizen must be associated to a ballot.");
 
 					citizen = new SickSoldier(citizenID, fullName, yearOfBirth, daysOfSickness,
-							ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit, isCarryingWeapon);
+							Elections.sickSoldierBallots.get(associatedBallotID - 1), isIsolated, isWearingSuit,
+							isCarryingWeapon);
+					Elections.sickSoldierBallots.get(associatedBallotID).addVoter(citizen);
 				} else {
-					ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("sickSolderBallots");
+					if ((associatedBallotID < 0) || (Elections.sickCitizenBallots.size() < associatedBallotID))
+						throw new Exception(
+								String.format("Corona-Citizen Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
+										Elections.sickCitizenBallots.size(), Elections.sickCitizenBallots.size() - 1));
+					if (Elections.sickCitizenBallots.get(associatedBallotID) == null)
+						throw new Exception("Citizen must be associated to a ballot.");
 
 					citizen = new SickCitizen(citizenID, fullName, yearOfBirth, daysOfSickness,
-							ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+							Elections.sickCitizenBallots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+					Elections.sickCitizenBallots.get(associatedBallotID).addVoter(citizen);
 				}
 			} else {
-				ballots = (ArrayList<Ballot<?>>) Elections.getFieldByName("citizenBallots");
+				if ((associatedBallotID < 0) || (Elections.citizenBallots.size() < associatedBallotID))
+					throw new Exception(
+							String.format("Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
+									Elections.citizenBallots.size(), Elections.citizenBallots.size() - 1));
+				if (Elections.citizenBallots.get(associatedBallotID) == null)
+					throw new Exception("Citizen must be associated to a ballot.");
+
 				citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness,
-						ballots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+						Elections.citizenBallots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
+				Elections.citizenBallots.get(associatedBallotID).addVoter(citizen);
 			}
-
-			// This validation moved to here because the ballots collection changes by the
-			// type of the added voter
-			if ((associatedBallotID < 0) || (ballots.size() < associatedBallotID))
-				throw new Exception(String.format("Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
-						ballots.size(), ballots.size() - 1));
-			if (Elections.getBallotByID(ballots, associatedBallotID) == null)
-				throw new Exception("Citizen must be associated to a ballot.");
-
-			ballots.get(associatedBallotID).addVoter(citizen);
 			voterRegistry.add(citizen);
 
 			return true;
@@ -228,7 +244,6 @@ public class UIHandler {
 			showExceptionMessage(e);
 			return false;
 		}
-
 	}
 
 	// When entering 4
@@ -272,24 +287,17 @@ public class UIHandler {
 
 	// When entering 5
 	public static void showBallotRegistry() {
-		Field[] fields = Elections.class.getFields();
-		ArrayList<Ballot<?>> currBallotsCollection;
-
-		for (Field field : fields) {
-			if (field.getName().contains("Ballots")) {
-				currBallotsCollection = (ArrayList<Ballot<? extends Citizen>>) Elections.getFieldByName(field.getName());
-				System.out.println(showBallotRegistry(currBallotsCollection));
-			}
-		}
+		System.out.println(showBallotRegistry(Elections.getAllBallots()));
 	}
 
-	public static String showBallotRegistry(ArrayList<Ballot<? extends Citizen>> ballots) {
+	public static String showBallotRegistry(ArrayList<Ballot<?>> ballots) {
 		if (ballots.size() == 0)
 			return "Nothing to See here..";
 
 		StringBuilder sb = new StringBuilder();
 		for (Ballot<? extends Citizen> ballot : ballots)
 			sb.append("\n" + ballot.toString());
+		sb.deleteCharAt(0); // removes first /n
 
 		return sb.toString();
 	}
@@ -316,24 +324,14 @@ public class UIHandler {
 		StringBuilder sb = new StringBuilder();
 		for (Party party : parties)
 			sb.append("\n" + party.toString());
+		sb.deleteCharAt(0); // removes first /n
 
 		return sb.toString();
 	}
 
 	// When entering 8
 	public static void runElections(ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<Party> parties) {
-		Field[] fields = Elections.class.getFields();
-		ArrayList<Ballot<?>> currBallotsCollection;
-		ArrayList<Ballot<? extends Citizen>> allBallots = new ArrayList<Ballot<? extends Citizen>>();
-
-		for (Field field : fields) {
-			if (field.getName().contains("Ballots")) {
-				currBallotsCollection = (ArrayList<Ballot<? extends Citizen>>) Elections.getFieldByName(field.getName());
-				allBallots.addAll(currBallotsCollection);
-			}
-		}
-
-		runElections(allBallots, resultsByBallot, parties);
+		runElections(Elections.getAllBallots(), resultsByBallot, parties);
 	}
 
 	public static void runElections(ArrayList<Ballot<? extends Citizen>> ballots,
@@ -345,34 +343,28 @@ public class UIHandler {
 	public static int vote(ArrayList<Party> parties, Citizen citizen) {
 		int voterChoice;
 		String selection;
-		boolean isCoronaBallot = false; // TODO: complete
 
 		try {
 			// Validations
-			if ((citizen.isIsolated()) && (isCoronaBallot) && (!citizen.iswearingSuit()))
+			if ((citizen.isIsolated()) && (citizen.getAssociatedBallot().isCoronaBallot())
+					&& (!citizen.iswearingSuit()))
 				throw new Exception(
 						String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.",
-								citizen.fullName));
+								citizen.getFullName()));
 
-			System.out.println(String.format("Greetings, %s. Do you want to vote? (Y/N)", citizen.fullName));
-			while (true) {
-				selection = Elections.scanner.next();
-				if (selection.equalsIgnoreCase("Y")) {
-					for (int i = 0; i < parties.size(); i++)
-						System.out.println(String.format("%d = %s", i + 1, parties.get(i).getName()));
-					while (true) {
-						System.out.println("Enter the code for your chosen party:");
-						voterChoice = Elections.scanner.nextInt();
-						if ((1 <= voterChoice) && (voterChoice <= parties.size())) {
-							selection = Elections.scanner.nextLine();
+			System.out.println(String.format("Greetings, %s. Do you want to vote? (Y/N)", citizen.getFullName()));
+			if (getValidYesNoAnswer()) {
+				for (int i = 0; i < parties.size(); i++)
+					System.out.println(String.format("%d = %s", i + 1, parties.get(i).getName()));
+				while (true) {
+					System.out.println("Enter the code for your chosen party:");
+					voterChoice = Elections.scanner.nextInt();
+					if ((1 <= voterChoice) && (voterChoice <= parties.size())) {
+						selection = Elections.scanner.nextLine();
 
-							return voterChoice;
-						}
-						System.out.println("Invalid choice.");
+						return voterChoice;
 					}
-				} else if (!selection.equalsIgnoreCase("N")) {
-					Elections.scanner.nextLine();
-					System.out.println("Please enter a valid choice - Y to vote, N to skip voting.");
+					System.out.println("Invalid choice.");
 				}
 			}
 		} catch (Exception e) {
@@ -386,6 +378,7 @@ public class UIHandler {
 			ArrayList<Party> parties) {
 		if (finalResultsString.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
+			ArrayList<Ballot<? extends Citizen>> allBallots = Elections.getAllBallots();
 			int ballotCount = resultsByBallot.size();
 			int partyCount = resultsByBallot.get(0).size();
 			TreeMap<String, Integer> partyVotes = new TreeMap<>();
@@ -395,19 +388,18 @@ public class UIHandler {
 			}
 
 			for (int ballot = 0; ballot < ballotCount; ballot++) {
-				sb.append(String.format("\nBallot #%d:\n", ballot));
+				sb.append(String.format("\nBallot #%d (%.2f %% voted):\n", ballot,
+						allBallots.get(ballot).getVotersPercentage()));
 				for (int party = 0; party < partyCount; party++) {
 					String partyName = parties.get(party).getName();
 					int resultInBallot = resultsByBallot.get(ballot).get(party);
-					sb.append(String.format("%s: %d\t", partyName, resultInBallot)); // TODO: display voting percentage
-																						// of each ballot ~Ran
+					sb.append(String.format("\t%s: %d\t", partyName, resultInBallot));
 					partyVotes.put(partyName, partyVotes.get(partyName) + resultInBallot);
 				}
-
 			}
-			sb.append("Final Results:");
+			sb.append("\nFinal Results:");
 			for (Map.Entry<String, Integer> entry : partyVotes.entrySet())
-				sb.append(String.format("\n%s : %d", entry.getKey(), entry.getValue()));
+				sb.append(String.format("\n\t%s : %d", entry.getKey(), entry.getValue()));
 			System.out.println(sb.toString());
 			finalResultsString = sb.toString();
 		}
@@ -425,11 +417,11 @@ public class UIHandler {
 
 	private static boolean getValidYesNoAnswer() {
 		while (true) {
-			String answer = Elections.scanner.nextLine().toUpperCase();
-			if (answer.equals("Y"))
+			String answer = Elections.scanner.nextLine();
+			if (answer.equalsIgnoreCase("Y"))
 				return true;
 
-			if (answer.equals("N"))
+			if (answer.equalsIgnoreCase("N"))
 				return false;
 
 			System.out.println("please enter a valid answer (Y/N)");
