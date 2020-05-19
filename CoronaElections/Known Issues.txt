@@ -1,2 +1,1 @@
-1. Tweak Add Citizen in UIHandler (more proper messages, generalizing the validations, etc), anything else seem to work :)
-2. Optimize the code			
+1. Optimize the code			

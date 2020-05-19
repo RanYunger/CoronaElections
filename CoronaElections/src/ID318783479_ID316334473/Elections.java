@@ -73,7 +73,7 @@ public class Elections {
 				UIHandler.addCandidateToAParty(voters, parties);
 				break;
 			case 5:
-				UIHandler.showBallotRegistry();
+				System.out.println(UIHandler.showBallotRegistry(getAllBallots()));
 				break;
 			case 6:
 				System.out.println(UIHandler.showVoterRegistry(voters, votingDate));

@@ -70,27 +70,53 @@ public class UIHandler {
 				System.out.println("2 = Military Ballot (Soldiers)");
 				System.out.println("3 = Corona Ballot (Citizens / Candidates / Soldiers)");
 				switch (Elections.scanner.nextInt()) {
-				case 1:
-					return Elections.citizenBallots.add(new Ballot<Citizen>("Citizen", address, votingDate));
-				case 2:
-					return Elections.soldierBallots.add(new Ballot<Soldier>("Soldier", address, votingDate));
+				case 1: {
+
+					if (Elections.citizenBallots.add(new Ballot<Citizen>("Citizen", address, votingDate))) {
+						System.out.println("Regular Ballot added to registry.");
+
+						return true;
+					}
+				}
+				case 2: {
+					if (Elections.soldierBallots.add(new Ballot<Soldier>("Soldier", address, votingDate))) {
+						System.out.println("Military Ballot added to registry.");
+
+						return true;
+					}
+				}
 				case 3:
 					validInput = false;
 					while (!validInput) {
 						validInput = true;
-						System.out.println("1 = Corona Citizens Ballot");
-						System.out.println("2 = Corona Candidates Ballot");
-						System.out.println("3 = Corona Soldiers Ballot");
+						System.out.println("1 = Corona-Citizens Ballot");
+						System.out.println("2 = Corona-Candidates Ballot");
+						System.out.println("3 = Corona-Soldiers Ballot");
 						switch (Elections.scanner.nextInt()) {
-						case 1:
-							return Elections.sickCitizenBallots
-									.add(new Ballot<SickCitizen>("Sick Citizen", address, votingDate));
-						case 2:
-							return Elections.sickCandidateBallots
-									.add(new Ballot<SickCandidate>("Sick Candidate", address, votingDate));
-						case 3:
-							return Elections.sickSoldierBallots
-									.add(new Ballot<SickSoldier>("Sick Soldier", address, votingDate));
+						case 1: {
+							if (Elections.sickCitizenBallots
+									.add(new Ballot<SickCitizen>("Sick Citizen", address, votingDate))) {
+								System.out.println("Corona-Citizens Ballot added to registry.");
+
+								return true;
+							}
+						}
+						case 2: {
+							if (Elections.sickCandidateBallots
+									.add(new Ballot<SickCandidate>("Sick Candidate", address, votingDate))) {
+								System.out.println("Corona-Candidates Ballot added to registry.");
+
+								return true;
+							}
+						}
+						case 3: {
+							if (Elections.sickSoldierBallots
+									.add(new Ballot<SickSoldier>("Sick Soldier", address, votingDate))) {
+								System.out.println("Corona-Soldiers Ballot added to registry.");
+
+								return true;
+							}
+						}
 						default:
 							validInput = false;
 							System.out.println("Invalid input!");
@@ -112,9 +138,10 @@ public class UIHandler {
 	// When entering 2
 	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate) {
 		Citizen citizen;
+		Ballot<? extends Citizen> associatedBallot;
 		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID, voterAge;
 		boolean isCarryingWeapon = false, isIsolated, isWearingSuit = false;
-		String fullName;
+		String fullName, outputMessage = "";
 
 		try {
 			// Validations
@@ -134,74 +161,53 @@ public class UIHandler {
 			voterAge = (votingDate.getYear() - yearOfBirth);
 			if (voterAge < Citizen.VOTER_AGE)
 				throw new Exception("Sorry, this citizen is too young to vote, try something else.\n");
-			if (voterAge < Citizen.SOLDIER_AGE) {
-				System.out.println("Is the soldier carrying a weapon (Y/N)?");
-				isCarryingWeapon = getValidYesNoAnswer();
-				Elections.scanner.nextLine();
-			}
 
 			System.out.println("Enter voter's name:");
 			fullName = Elections.scanner.nextLine();
 			if (fullName.trim().length() == 0)
 				throw new Exception("Citizen's name must contain at least 1 letter.");
-
-			System.out.println("Enter associated Ballot ID:");
+			System.out.println("Enter associated Ballot ID (starting 0):");
 			associatedBallotID = Elections.scanner.nextInt();
-			Elections.scanner.nextLine();
+			associatedBallot = Elections.getBallotByID(Elections.getAllBallots(), associatedBallotID);
+			if (associatedBallot == null)
+				throw new Exception(String.format("Ballot #%d not found.", associatedBallotID));
 
-			System.out.println("Is the voter in isolation (Y/N)?");
-			isIsolated = getValidYesNoAnswer();
-			Elections.scanner.nextLine();
-			if (isIsolated) {
+			if (associatedBallot.isCoronaBallot()) {
+				isIsolated = true;
+				System.out.println("This is a Corona Ballot:");
 				System.out.println("Is the voter wearing a protective suit (Y/N)?");
 				isWearingSuit = getValidYesNoAnswer();
 				Elections.scanner.nextLine();
 				System.out.println("Enter amount of days the voter has been sick:");
 				daysOfSickness = Elections.scanner.nextInt();
 				Elections.scanner.nextLine();
-				if (daysOfSickness < 0)
-					throw new Exception("Citizen can only have non-negative amount of sickness days.");
-				if ((isIsolated) && (daysOfSickness < 1))
+				if (daysOfSickness < 1)
 					throw new Exception("An Isolated Citizen must've been sick for at least 1 day.");
-			}
 
-			if (isIsolated) {
 				if (voterAge < Citizen.SOLDIER_AGE) {
-					if ((associatedBallotID < 0) || (Elections.sickSoldierBallots.size() < associatedBallotID))
-						throw new Exception(
-								String.format("Corona-Soldier Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
-										Elections.sickSoldierBallots.size(), Elections.sickSoldierBallots.size() - 1));
-					if (Elections.sickSoldierBallots.get(associatedBallotID) == null)
-						throw new Exception("Citizen must be associated to a ballot.");
-
-					citizen = new SickSoldier(citizenID, fullName, yearOfBirth, daysOfSickness,
-							Elections.sickSoldierBallots.get(associatedBallotID - 1), isIsolated, isWearingSuit,
-							isCarryingWeapon);
-					Elections.sickSoldierBallots.get(associatedBallotID).addVoter(citizen);
+					System.out.println("This is a Military Ballot:");
+					System.out.println("Is the soldier carrying a weapon (Y/N)?");
+					isCarryingWeapon = getValidYesNoAnswer();
+					Elections.scanner.nextLine();
+					citizen = new SickSoldier(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot,
+							isIsolated, isWearingSuit, isCarryingWeapon);
+					outputMessage = String.format("Sick Soldier named '%s' added to Ballot #%d.", fullName,
+							associatedBallotID);
 				} else {
-					if ((associatedBallotID < 0) || (Elections.sickCitizenBallots.size() < associatedBallotID))
-						throw new Exception(
-								String.format("Corona-Citizen Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
-										Elections.sickCitizenBallots.size(), Elections.sickCitizenBallots.size() - 1));
-					if (Elections.sickCitizenBallots.get(associatedBallotID) == null)
-						throw new Exception("Citizen must be associated to a ballot.");
-
-					citizen = new SickCitizen(citizenID, fullName, yearOfBirth, daysOfSickness,
-							Elections.sickCitizenBallots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
-					Elections.sickCitizenBallots.get(associatedBallotID).addVoter(citizen);
+					citizen = new SickCitizen(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot,
+							isIsolated, isWearingSuit);
+					outputMessage = String.format("Sick Citizen named '%s' added to Ballot #%d.", fullName,
+							associatedBallotID);
 				}
 			} else {
-				if ((associatedBallotID < 0) || (Elections.citizenBallots.size() < associatedBallotID))
-					throw new Exception(
-							String.format("Ballot not in registry, there are only %d ballots, with IDs 0-%d.\n",
-									Elections.citizenBallots.size(), Elections.citizenBallots.size() - 1));
-				if (Elections.citizenBallots.get(associatedBallotID) == null)
-					throw new Exception("Citizen must be associated to a ballot.");
-
-				citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness,
-						Elections.citizenBallots.get(associatedBallotID - 1), isIsolated, isWearingSuit);
-				Elections.citizenBallots.get(associatedBallotID).addVoter(citizen);
+				isIsolated = false;
+				citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
+						isWearingSuit);
+				outputMessage = String.format("Citizen named '%s' added to Ballot #%d.", fullName, associatedBallotID);
 			}
+
+			System.out.println(outputMessage);
+			associatedBallot.addVoter(citizen);
 			voterRegistry.add(citizen);
 
 			return true;
@@ -224,7 +230,7 @@ public class UIHandler {
 			if (partyName.trim().length() == 0)
 				throw new Exception("Party's name must contain at least 1 letter.");
 			if (Elections.getPartyByName(parties, partyName) != null) {
-				System.out.println("Looks like this party is already in the lists.");
+				System.out.println("This party already exists.");
 
 				return true;
 			}
@@ -236,19 +242,25 @@ public class UIHandler {
 					Elections.scanner.nextInt());
 			Elections.scanner.nextLine();
 			if (foundationDate.compareTo(LocalDate.now()) > 0)
-				throw new Exception("Time paradox prevented - creation time can't be in the future!");
+				throw new Exception("Time paradox prevented - I mean, come on");
 
-			return parties.add(new Party(partyName, wing, foundationDate));
+			if (parties.add(new Party(partyName, wing, foundationDate))) {
+				System.out.println(String.format("Party '%s' added to registry.", partyName));
 
+				return true;
+			}
 		} catch (Exception e) {
 			showExceptionMessage(e);
-			return false;
 		}
+
+		return false;
 	}
 
 	// When entering 4
 	public static boolean addCandidateToAParty(Set<Citizen> voterRegistry, ArrayList<Party> parties) {
+		Citizen citizen;
 		Candidate candidate;
+		Party party;
 		int addedCandidateID;
 		String partyName;
 
@@ -259,13 +271,16 @@ public class UIHandler {
 			Elections.scanner.nextLine();
 			if (String.valueOf(addedCandidateID).length() != 9)
 				throw new Exception("Citizen's ID must contain exactly 9 digits.");
-			if (Elections.getCitizenByID(voterRegistry, addedCandidateID) == null)
+			citizen = Elections.getCitizenByID(voterRegistry, addedCandidateID);
+			if (citizen == null)
 				throw new Exception("Candidate not registered, so he can't be added.");
+			if (citizen instanceof Soldier)
+				throw new Exception("Soldier cannot be a candidate in party.");
 			System.out.println("Enter party's name");
 			partyName = Elections.scanner.nextLine().trim();
 			if (partyName.trim().length() == 0)
 				throw new Exception("Party's name must contain at least 1 letter.");
-			Party party = Elections.getPartyByName(parties, partyName);
+			party = Elections.getPartyByName(parties, partyName);
 			if (party == null)
 				throw new Exception(String.format("There's no registered party going by the name %s.\n", partyName));
 
@@ -275,10 +290,10 @@ public class UIHandler {
 			if (!party.addCandidate(candidate))
 				throw new Exception(String.format("Sorry, candidate %s couldn't have been added to %s party.\n",
 						candidate.getFullName(), partyName));
-			System.out.printf("Candidate %s was added to '%s' party.\n", candidate.getFullName(), partyName);
+			System.out.println(
+					String.format("Candidate %s was added to '%s' party.", candidate.getFullName(), partyName));
 
 			return true;
-
 		} catch (Exception e) {
 			showExceptionMessage(e);
 			return false;
@@ -286,10 +301,6 @@ public class UIHandler {
 	}
 
 	// When entering 5
-	public static void showBallotRegistry() {
-		System.out.println(showBallotRegistry(Elections.getAllBallots()));
-	}
-
 	public static String showBallotRegistry(ArrayList<Ballot<?>> ballots) {
 		if (ballots.size() == 0)
 			return "Nothing to See here..";

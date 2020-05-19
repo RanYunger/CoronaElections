@@ -107,12 +107,14 @@ public class Ballot<E extends Citizen> {
 	public boolean addVoter(Citizen voter) {
 		try {
 			// Validations
-			if ((ballotType.contains("Sick")) && (!voter.isIsolated())) {
+			if ((isCoronaBallot()) && (!voter.isIsolated())) {
 				System.out.println("Cannot add a non-isolated voter to a Corona ballot.");
+
 				return false;
 			}
-			if ((ballotType.contains("Soldier")) && !(voter instanceof Soldier)) {
+			if ((isMilitaryBallot()) && !(voter instanceof Soldier)) {
 				System.out.println("Cannot add a non-soldier voter to a military ballot.");
+
 				return false;
 			}
 
@@ -152,7 +154,7 @@ public class Ballot<E extends Citizen> {
 	}
 
 	public boolean isMilitaryBallot() {
-		return ballotType == "Soldier";
+		return ballotType.contains("Soldier");
 	}
 
 	@Override
