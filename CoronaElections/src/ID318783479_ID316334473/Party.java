@@ -69,7 +69,7 @@ public class Party implements Comparable<Party> {
 			setFoundationDate(foundationDate);
 			setCandidates(new ArrayList<Candidate>());
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			System.err.println(ex.getMessage());
 		}
 	}
 
@@ -121,10 +121,10 @@ public class Party implements Comparable<Party> {
 			ensureCapacity();
 
 			return true;
-		} catch (Exception ex) {
+		} catch (Exception e) {
 			// TODO: fix this, or ask about using it
-			if (!ex.getStackTrace()[1].toString().split("[.(]")[1].equals("Candidate")) {
-				System.out.println(ex.getMessage());
+			if (!e.getStackTrace()[1].toString().split("[.(]")[1].equals("Candidate")) {
+				System.err.println(e.getMessage());
 				return false;
 			}
 			return true;

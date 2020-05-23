@@ -157,18 +157,19 @@ public class Elections {
 	}
 
 	public static Citizen getCitizenByID(Set<Citizen> voters, int citizenID) {
-		Collections.sort(voters.getElements());
-		return binarySearch(voters.getElements(), citizenID);
+		ArrayList<Citizen> sortedVoters = (ArrayList<Citizen>) voters.getElements().clone();
+		Collections.sort(sortedVoters);
+		return binarySearch(sortedVoters, citizenID);
 	}
 
 	public static Party getPartyByName(ArrayList<Party> parties, String partyName) {
-		Collections.sort(parties);
-		return binarySearch(parties, partyName);
+		ArrayList<Party> sortedParties = (ArrayList<Party>) parties.clone();
+		Collections.sort(sortedParties);
+		return binarySearch(sortedParties, partyName);
 	}
 
 	// Binary Search
 	public static Ballot<? extends Citizen> getBallotByID(ArrayList<Ballot<? extends Citizen>> ballots, int ballotID) {
-//		Collections.sort(ballots);
 		return binarySearch(ballots, ballotID);
 	}
 

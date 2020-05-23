@@ -2,7 +2,6 @@ package ID318783479_ID316334473;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 public class Ballot<E extends Citizen> {
 	// Fields
@@ -15,8 +14,6 @@ public class Ballot<E extends Citizen> {
 	private YearMonth votingDate;
 	private double votersPercentage;
 	private ArrayList<Integer> results;
-	private TreeMap<String, Integer> partyResults;
-	private int capacity;
 
 	// Properties (Getters and Setters)
 	public int getID() {
@@ -90,7 +87,7 @@ public class Ballot<E extends Citizen> {
 			setVotersPercentage(0);
 			setResults(null);
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			System.err.println(ex.getMessage());
 		}
 	}
 
@@ -108,12 +105,12 @@ public class Ballot<E extends Citizen> {
 		try {
 			// Validations
 			if ((isCoronaBallot()) && (!voter.isIsolated())) {
-				System.out.println("Cannot add a non-isolated voter to a Corona ballot.");
+				System.err.println("Cannot add a non-isolated voter to a Corona ballot.");
 
 				return false;
 			}
 			if ((isMilitaryBallot()) && !(voter instanceof Soldier)) {
-				System.out.println("Cannot add a non-soldier voter to a military ballot.");
+				System.err.println("Cannot add a non-soldier voter to a military ballot.");
 
 				return false;
 			}
@@ -133,7 +130,7 @@ public class Ballot<E extends Citizen> {
 	public ArrayList<Integer> vote(ArrayList<Party> candidateParties) {
 		int currVoterChoice, numOfVoters = 0;
 
-		setResults(new ArrayList<Integer>(/* candidateParties.size() */));
+		setResults(new ArrayList<Integer>());
 		for (int i = 0; i < candidateParties.size(); i++) {
 			results.add(0);
 		}

@@ -2,9 +2,8 @@ package ID318783479_ID316334473;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
-public class Set<E extends Citizen> {
+public class Set<E> {
 	// Constants
 
 	// Fields
@@ -35,7 +34,7 @@ public class Set<E extends Citizen> {
 
 	// Constructors
 	public Set() {
-		this(1);
+		this(10);
 	}
 
 	public Set(int initialCapcatiy) {
@@ -55,17 +54,14 @@ public class Set<E extends Citizen> {
 		if (!contains(e)) {
 			elements.add(e);
 			setSize(elements.size());
-
 			return true;
 		}
-
 		return false;
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
 		for (E e : c)
 			add(e);
-
 		return true;
 	}
 
@@ -76,10 +72,6 @@ public class Set<E extends Citizen> {
 
 	public boolean contains(Object o) {
 		return elements.contains(o);
-	}
-
-	public boolean containsAll(Collection<?> c) {
-		return elements.containsAll(c);
 	}
 
 	public E get(int index) {
@@ -93,27 +85,12 @@ public class Set<E extends Citizen> {
 	public boolean isEmpty() {
 		return elements.isEmpty();
 	}
-
-	public Iterator<E> iterator() {
-		return elements.iterator();
-	}
-
+	
 	public boolean remove(Object o) {
 		elements.remove(o);
 		setSize(elements.size());
 
 		return true;
-	}
-
-	public boolean removeAll(Collection<?> c) {
-		elements.removeAll(c);
-		setSize(elements.size());
-
-		return true;
-	}
-
-	public boolean retainAll(Collection<?> c) {
-		return elements.retainAll(c);
 	}
 
 	public void set(int index, E element) {
@@ -124,23 +101,6 @@ public class Set<E extends Citizen> {
 		return elements.size();
 	}
 
-	public Object[] toArray() {
-		return elements.toArray();
-	}
-
-	public <T> T[] toArray(T[] a) {
-		return elements.toArray(a);
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((elements == null) ? 0 : elements.hashCode());
-		result = prime * result + initialCapacity;
-		result = prime * result + size;
-		return result;
-	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -150,7 +110,7 @@ public class Set<E extends Citizen> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Set<E> other = (Set<E>) obj;
+		Set<?> other = (Set<?>) obj;
 		if (elements == null) {
 			if (other.elements != null)
 				return false;
