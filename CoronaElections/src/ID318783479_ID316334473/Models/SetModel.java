@@ -1,9 +1,9 @@
-package ID318783479_ID316334473;
+package ID318783479_ID316334473.Models;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Set<E> {
+public class SetModel<E> {
 	// Constants
 
 	// Fields
@@ -33,17 +33,17 @@ public class Set<E> {
 	}
 
 	// Constructors
-	public Set() {
+	public SetModel() {
 		this(10);
 	}
 
-	public Set(int initialCapcatiy) {
+	public SetModel(int initialCapcatiy) {
 		setCollection(new ArrayList<E>(initialCapcatiy));
 		setSize(0);
 		setCapacity(initialCapcatiy);
 	}
 
-	public Set(Collection<E> collection) {
+	public SetModel(Collection<E> collection) {
 		setCollection(new ArrayList<E>(collection));
 		setSize(collection.size());
 		setCapacity(size);
@@ -110,7 +110,7 @@ public class Set<E> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Set<?> other = (Set<?>) obj;
+		SetModel<?> other = (SetModel<?>) obj;
 		if (elements == null) {
 			if (other.elements != null)
 				return false;

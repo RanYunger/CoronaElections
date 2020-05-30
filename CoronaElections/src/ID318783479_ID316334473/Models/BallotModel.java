@@ -1,16 +1,18 @@
-package ID318783479_ID316334473;
+package ID318783479_ID316334473.Models;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
 
-public class Ballot<E extends Citizen> {
+import ID318783479_ID316334473.UIHandler;
+
+public class BallotModel<E extends CitizenModel> {
 	// Fields
 	private static int IDGenerator = 0;
 
 	private int ID;
 	private String ballotType;
 	private String address;
-	private Set<E> voterRegistry;
+	private SetModel<E> voterRegistry;
 	private YearMonth votingDate;
 	private double votersPercentage;
 	private ArrayList<Integer> results;
@@ -34,15 +36,15 @@ public class Ballot<E extends Citizen> {
 
 	private void setAddress(String address) throws Exception {
 		if (address.trim().length() == 0)
-			throw new Exception("Ballot's address must contain at least 1 letter.");
+			throw new Exception("BallotModel's address must contain at least 1 letter.");
 		this.address = address;
 	}
 
-	public Set<E> getVoterRegistry() {
+	public SetModel<E> getVoterRegistry() {
 		return voterRegistry;
 	}
 
-	private void setVoterRegistry(Set<E> voterRegistry) {
+	private void setVoterRegistry(SetModel<E> voterRegistry) {
 		this.voterRegistry = voterRegistry;
 	}
 
@@ -73,16 +75,16 @@ public class Ballot<E extends Citizen> {
 	}
 
 	// Constructors
-	public Ballot(String ballotType, YearMonth votingDate) {
+	public BallotModel(String ballotType, YearMonth votingDate) {
 		this(ballotType, "<UNKNOWN>", votingDate);
 	}
 
-	public Ballot(String ballotType, String address, YearMonth votingDate) {
+	public BallotModel(String ballotType, String address, YearMonth votingDate) {
 		try {
 			setID(IDGenerator++);
 			setBallotType(ballotType);
 			setAddress(address);
-			setVoterRegistry(new Set<E>());
+			setVoterRegistry(new SetModel<E>());
 			setVotingDate(votingDate);
 			setVotersPercentage(0);
 			setResults(null);
@@ -92,7 +94,7 @@ public class Ballot<E extends Citizen> {
 	}
 
 	// Methods
-	public Citizen getCitizenByID(int citizenID) {
+	public CitizenModel getCitizenByID(int citizenID) {
 		for (int i = 0; i < voterRegistry.size(); i++) {
 			if (voterRegistry.get(i).getID() == citizenID)
 				return voterRegistry.get(i);
@@ -101,7 +103,7 @@ public class Ballot<E extends Citizen> {
 		return null;
 	}
 
-	public boolean addVoter(Citizen voter) {
+	public boolean addVoter(CitizenModel voter) {
 		try {
 			// Validations
 			if ((isCoronaBallot()) && (!voter.isIsolated())) {
@@ -109,7 +111,7 @@ public class Ballot<E extends Citizen> {
 
 				return false;
 			}
-			if ((isMilitaryBallot()) && !(voter instanceof Soldier)) {
+			if ((isMilitaryBallot()) && !(voter instanceof SoldierModel)) {
 				System.err.println("Cannot add a non-soldier voter to a military ballot.");
 
 				return false;
@@ -117,7 +119,7 @@ public class Ballot<E extends Citizen> {
 
 			voterRegistry.add((E) voter);
 			if (voter.getAssociatedBallot() != this)
-				voter.setAssociatedBallot((Ballot<? extends Citizen>) this);
+				voter.setAssociatedBallot((BallotModel<? extends CitizenModel>) this);
 
 			return true;
 		} catch (Exception ex) {
@@ -127,7 +129,7 @@ public class Ballot<E extends Citizen> {
 		}
 	}
 
-	public ArrayList<Integer> vote(ArrayList<Party> candidateParties) {
+	public ArrayList<Integer> vote(ArrayList<PartyModel> candidateParties) {
 		int currVoterChoice, numOfVoters = 0;
 
 		setResults(new ArrayList<Integer>());
@@ -151,19 +153,19 @@ public class Ballot<E extends Citizen> {
 	}
 
 	public boolean isMilitaryBallot() {
-		return ballotType.contains("Soldier");
+		return ballotType.contains("SoldierModel");
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		Ballot<E> other;
+		BallotModel<E> other;
 
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Ballot))
+		if (!(obj instanceof BallotModel))
 			return false;
 
-		other = (Ballot<E>) obj;
+		other = (BallotModel<E>) obj;
 
 		return ID == other.ID;
 	}
@@ -171,7 +173,7 @@ public class Ballot<E extends Citizen> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(
-				String.format("Ballot [ID: %d | Address: %s | Type: %s]\n", ID, address, ballotType));
+				String.format("BallotModel [ID: %d | Address: %s | Type: %s]\n", ID, address, ballotType));
 
 		if (voterRegistry.size() == 0)
 			return sb.append("Nothing else to See here..").toString();

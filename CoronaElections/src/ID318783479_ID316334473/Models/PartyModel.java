@@ -1,9 +1,9 @@
-package ID318783479_ID316334473;
+package ID318783479_ID316334473.Models;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Party implements Comparable<Party> {
+public class PartyModel implements Comparable<PartyModel> {
 	// Constants
 	public enum PartyAssociation {
 		Left, Center, Right
@@ -13,7 +13,7 @@ public class Party implements Comparable<Party> {
 	private String name;
 	private PartyAssociation wing;
 	private LocalDate foundationDate;
-	private ArrayList<Candidate> candidates;
+	private ArrayList<CandidateModel> candidates;
 	private int capacity;
 
 	// Properties (Getters and Setters)
@@ -23,7 +23,7 @@ public class Party implements Comparable<Party> {
 
 	private void setName(String name) throws Exception {
 		if (name.trim().length() == 0)
-			throw new Exception("Party's name must contain at least 1 letter.");
+			throw new Exception("PartyModel's name must contain at least 1 letter.");
 		this.name = name;
 	}
 
@@ -45,11 +45,11 @@ public class Party implements Comparable<Party> {
 		this.foundationDate = foundationDate;
 	}
 
-	public ArrayList<Candidate> getCandidates() {
+	public ArrayList<CandidateModel> getCandidates() {
 		return candidates;
 	}
 
-	private void setCandidates(ArrayList<Candidate> candidates) {
+	private void setCandidates(ArrayList<CandidateModel> candidates) {
 		this.candidates = candidates;
 	}
 
@@ -58,23 +58,23 @@ public class Party implements Comparable<Party> {
 	}
 
 	// Constructors
-	public Party() {
+	public PartyModel() {
 		this("<UNKNOWN>", PartyAssociation.Center, LocalDate.now());
 	}
 
-	public Party(String name, PartyAssociation wing, LocalDate foundationDate) {
+	public PartyModel(String name, PartyAssociation wing, LocalDate foundationDate) {
 		try {
 			setName(name);
 			setWing(wing);
 			setFoundationDate(foundationDate);
-			setCandidates(new ArrayList<Candidate>());
+			setCandidates(new ArrayList<CandidateModel>());
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 		}
 	}
 
 	// Methods
-	public Candidate getCandidateByID(int candidateID) {
+	public CandidateModel getCandidateByID(int candidateID) {
 		try {
 			return candidates.get(getCandidateOffsetByID(candidateID));
 		} catch (IndexOutOfBoundsException e) {
@@ -101,11 +101,11 @@ public class Party implements Comparable<Party> {
 		return -1;
 	}
 
-	public boolean addCandidate(Candidate candidate) {
+	public boolean addCandidate(CandidateModel candidate) {
 		return addCandidate(candidate, candidates.size());
 	}
 
-	public boolean addCandidate(Candidate candidate, int rank) {
+	public boolean addCandidate(CandidateModel candidate, int rank) {
 		try {
 			// Validations
 			int lastRank = candidates.size() - 1;
@@ -123,7 +123,7 @@ public class Party implements Comparable<Party> {
 			return true;
 		} catch (Exception e) {
 			// TODO: fix this, or ask about using it
-			if (!e.getStackTrace()[1].toString().split("[.(]")[1].equals("Candidate")) {
+			if (!e.getStackTrace()[1].toString().split("[.(]")[1].equals("CandidateModel")) {
 				System.err.println(e.getMessage());
 				return false;
 			}
@@ -158,7 +158,7 @@ public class Party implements Comparable<Party> {
 	}
 
 	@Override
-	public int compareTo(Party other) {
+	public int compareTo(PartyModel other) {
 		return name.compareToIgnoreCase(other.name);
 	}
 
@@ -166,9 +166,9 @@ public class Party implements Comparable<Party> {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Party))
+		if (!(obj instanceof PartyModel))
 			return false;
-		Party other = (Party) obj;
+		PartyModel other = (PartyModel) obj;
 		return name.equalsIgnoreCase(other.name); // Two parties can't have the same name
 	}
 
@@ -176,7 +176,7 @@ public class Party implements Comparable<Party> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(String.format("Party [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(),
+		sb.append(String.format("PartyModel [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(),
 				foundationDate.toString()));
 		sb.append("\tCandidates:");
 		if (candidates.size() == 0)

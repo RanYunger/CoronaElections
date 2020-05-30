@@ -1,21 +1,21 @@
-package ID318783479_ID316334473;
+package ID318783479_ID316334473.Models;
 
 import java.util.Objects;
 
-public class Candidate extends Citizen {
+public class CandidateModel extends CitizenModel {
 	// Fields
-	private Party associatedParty;
+	private PartyModel associatedParty;
 
 	// Properties (Getters and Setters)
-	public Party getAssociatedParty() {
+	public PartyModel getAssociatedParty() {
 		return associatedParty;
 	}
 
-	public boolean joinParty(Party associatedParty) {
+	public boolean joinParty(PartyModel associatedParty) {
 		return joinParty(associatedParty, -1);
 	}
 
-	public boolean joinParty(Party associatedParty, int rank) {
+	public boolean joinParty(PartyModel associatedParty, int rank) {
 		if ((associatedParty == null) || (this.associatedParty != null))
 			return false;
 
@@ -25,8 +25,8 @@ public class Candidate extends Citizen {
 	}
 
 	// Constructors
-	public Candidate(int ID, String fullName, int yearOfBirth, int daysOfSickness,
-			Ballot<? extends Citizen> associatedBallot, boolean isIsolated, boolean isWearingSuit) {
+	public CandidateModel(int ID, String fullName, int yearOfBirth, int daysOfSickness,
+			BallotModel<? extends CitizenModel> associatedBallot, boolean isIsolated, boolean isWearingSuit) {
 		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated, isWearingSuit);
 	}
 
@@ -36,24 +36,24 @@ public class Candidate extends Citizen {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (!(obj instanceof Candidate))
+		if (!(obj instanceof CandidateModel))
 			return false;
-		Candidate other = (Candidate) obj;
+		CandidateModel other = (CandidateModel) obj;
 		return Objects.equals(associatedParty, other.associatedParty);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(super.toString());
-		int citizenIndex = sb.indexOf("Citizen");
+		int citizenIndex = sb.indexOf("CitizenModel");
 
-		sb.replace(citizenIndex, citizenIndex + 7, "Candidate");
+		sb.replace(citizenIndex, citizenIndex + 7, "CandidateModel");
 		sb.deleteCharAt(sb.length() - 1); // removes "]" at the end of the string
 
 		if (associatedParty == null)
 			sb.append(" | Is not associated with party yet");
 		else
-			sb.append(String.format(" | Party: %s]", associatedParty.getName()));
+			sb.append(String.format(" | PartyModel: %s]", associatedParty.getName()));
 
 		return sb.toString();
 	}

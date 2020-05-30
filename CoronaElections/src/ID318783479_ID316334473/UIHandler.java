@@ -6,6 +6,16 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import ID318783479_ID316334473.Models.BallotModel;
+import ID318783479_ID316334473.Models.CandidateModel;
+import ID318783479_ID316334473.Models.CitizenModel;
+import ID318783479_ID316334473.Models.PartyModel;
+import ID318783479_ID316334473.Models.SetModel;
+import ID318783479_ID316334473.Models.SickCandidateModel;
+import ID318783479_ID316334473.Models.SickCitizenModel;
+import ID318783479_ID316334473.Models.SickSoldierModel;
+import ID318783479_ID316334473.Models.SoldierModel;
+
 /*
  * Helper class which contains all UI methods, plus extra helpful
  * methods.
@@ -62,25 +72,25 @@ public class UIHandler {
 			System.out.println("Enter ballot's address: ");
 			address = Elections.scanner.nextLine();
 			if (address.trim().length() == 0)
-				throw new Exception("Ballot's address must contain at least 1 letter.");
+				throw new Exception("BallotModel's address must contain at least 1 letter.");
 
 			while (!validInput) {
 				validInput = true;
-				System.out.println("1 = Regular Ballot (Citizens / Candidates)");
-				System.out.println("2 = Military Ballot (Soldiers)");
-				System.out.println("3 = Corona Ballot (Citizens / Candidates / Soldiers)");
+				System.out.println("1 = Regular BallotModel (Citizens / Candidates)");
+				System.out.println("2 = Military BallotModel (Soldiers)");
+				System.out.println("3 = Corona BallotModel (Citizens / Candidates / Soldiers)");
 				switch (Elections.scanner.nextInt()) {
 				case 1: {
 
-					if (Elections.citizenBallots.add(new Ballot<Citizen>("Citizen", address, votingDate))) {
-						System.out.println("Regular Ballot added to registry.");
+					if (Elections.citizenBallots.add(new BallotModel<CitizenModel>("CitizenModel", address, votingDate))) {
+						System.out.println("Regular BallotModel added to registry.");
 
 						return true;
 					}
 				}
 				case 2: {
-					if (Elections.soldierBallots.add(new Ballot<Soldier>("Soldier", address, votingDate))) {
-						System.out.println("Military Ballot added to registry.");
+					if (Elections.soldierBallots.add(new BallotModel<SoldierModel>("SoldierModel", address, votingDate))) {
+						System.out.println("Military BallotModel added to registry.");
 
 						return true;
 					}
@@ -89,30 +99,30 @@ public class UIHandler {
 					validInput = false;
 					while (!validInput) {
 						validInput = true;
-						System.out.println("1 = Corona-Citizens Ballot");
-						System.out.println("2 = Corona-Candidates Ballot");
-						System.out.println("3 = Corona-Soldiers Ballot");
+						System.out.println("1 = Corona-Citizens BallotModel");
+						System.out.println("2 = Corona-Candidates BallotModel");
+						System.out.println("3 = Corona-Soldiers BallotModel");
 						switch (Elections.scanner.nextInt()) {
 						case 1: {
 							if (Elections.sickCitizenBallots
-									.add(new Ballot<SickCitizen>("Sick Citizen", address, votingDate))) {
-								System.out.println("Corona-Citizens Ballot added to registry.");
+									.add(new BallotModel<SickCitizenModel>("Sick CitizenModel", address, votingDate))) {
+								System.out.println("Corona-Citizens BallotModel added to registry.");
 
 								return true;
 							}
 						}
 						case 2: {
 							if (Elections.sickCandidateBallots
-									.add(new Ballot<SickCandidate>("Sick Candidate", address, votingDate))) {
-								System.out.println("Corona-Candidates Ballot added to registry.");
+									.add(new BallotModel<SickCandidateModel>("Sick CandidateModel", address, votingDate))) {
+								System.out.println("Corona-Candidates BallotModel added to registry.");
 
 								return true;
 							}
 						}
 						case 3: {
 							if (Elections.sickSoldierBallots
-									.add(new Ballot<SickSoldier>("Sick Soldier", address, votingDate))) {
-								System.out.println("Corona-Soldiers Ballot added to registry.");
+									.add(new BallotModel<SickSoldierModel>("Sick SoldierModel", address, votingDate))) {
+								System.out.println("Corona-Soldiers BallotModel added to registry.");
 
 								return true;
 							}
@@ -136,9 +146,9 @@ public class UIHandler {
 	}
 
 	// When entering 2
-	public static boolean addNewCitizen(Set<Citizen> voterRegistry, YearMonth votingDate) {
-		Citizen citizen;
-		Ballot<? extends Citizen> associatedBallot;
+	public static boolean addNewCitizen(SetModel<CitizenModel> voterRegistry, YearMonth votingDate) {
+		CitizenModel citizen;
+		BallotModel<? extends CitizenModel> associatedBallot;
 		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID, voterAge;
 		boolean isCarryingWeapon = false, isIsolated, isWearingSuit = false;
 		String fullName, outputMessage = "";
@@ -149,9 +159,9 @@ public class UIHandler {
 			citizenID = Elections.scanner.nextInt();
 			Elections.scanner.nextLine();
 			if (String.valueOf(citizenID).length() != 9)
-				throw new Exception("Citizen's ID must contain exactly 9 digits.");
+				throw new Exception("CitizenModel's ID must contain exactly 9 digits.");
 			if (Elections.getCitizenByID(voterRegistry, citizenID) != null)
-				throw new Exception("This Citizen is already in the registry, try something else.\n");
+				throw new Exception("This CitizenModel is already in the registry, try something else.\n");
 
 			System.out.println("Enter year of birth:");
 			yearOfBirth = Elections.scanner.nextInt();
@@ -159,22 +169,22 @@ public class UIHandler {
 			if (yearOfBirth > votingDate.getYear())
 				throw new Exception("Time paradox prevented - I mean, come on");
 			voterAge = (votingDate.getYear() - yearOfBirth);
-			if (voterAge < Citizen.VOTER_AGE)
+			if (voterAge < CitizenModel.VOTER_AGE)
 				throw new Exception("Sorry, this citizen is too young to vote, try something else.\n");
 
 			System.out.println("Enter voter's name:");
 			fullName = Elections.scanner.nextLine();
 			if (fullName.trim().length() == 0)
-				throw new Exception("Citizen's name must contain at least 1 letter.");
-			System.out.println("Enter associated Ballot ID (starting 0):");
+				throw new Exception("CitizenModel's name must contain at least 1 letter.");
+			System.out.println("Enter associated BallotModel ID (starting 0):");
 			associatedBallotID = Elections.scanner.nextInt();
 			associatedBallot = Elections.getBallotByID(Elections.getAllBallots(), associatedBallotID);
 			if (associatedBallot == null)
-				throw new Exception(String.format("Ballot #%d not found.", associatedBallotID));
+				throw new Exception(String.format("BallotModel #%d not found.", associatedBallotID));
 
 			if (associatedBallot.isCoronaBallot()) {
 				isIsolated = true;
-				System.out.println("This is a Corona Ballot:");
+				System.out.println("This is a Corona BallotModel:");
 				System.out.println("Is the voter wearing a protective suit (Y/N)?");
 				isWearingSuit = getValidYesNoAnswer();
 				Elections.scanner.nextLine();
@@ -182,28 +192,28 @@ public class UIHandler {
 				daysOfSickness = Elections.scanner.nextInt();
 				Elections.scanner.nextLine();
 				if (daysOfSickness < 1)
-					throw new Exception("An Isolated Citizen must've been sick for at least 1 day.");
+					throw new Exception("An Isolated CitizenModel must've been sick for at least 1 day.");
 
-				if (voterAge < Citizen.SOLDIER_AGE) {
-					System.out.println("This is a Military Ballot:");
+				if (voterAge < CitizenModel.SOLDIER_AGE) {
+					System.out.println("This is a Military BallotModel:");
 					System.out.println("Is the soldier carrying a weapon (Y/N)?");
 					isCarryingWeapon = getValidYesNoAnswer();
 					Elections.scanner.nextLine();
-					citizen = new SickSoldier(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot,
+					citizen = new SickSoldierModel(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot,
 							isIsolated, isWearingSuit, isCarryingWeapon);
-					outputMessage = String.format("Sick Soldier named '%s' added to Ballot #%d.", fullName,
+					outputMessage = String.format("Sick SoldierModel named '%s' added to BallotModel #%d.", fullName,
 							associatedBallotID);
 				} else {
-					citizen = new SickCitizen(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot,
+					citizen = new SickCitizenModel(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot,
 							isIsolated, isWearingSuit);
-					outputMessage = String.format("Sick Citizen named '%s' added to Ballot #%d.", fullName,
+					outputMessage = String.format("Sick CitizenModel named '%s' added to BallotModel #%d.", fullName,
 							associatedBallotID);
 				}
 			} else {
 				isIsolated = false;
-				citizen = new Citizen(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
+				citizen = new CitizenModel(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
 						isWearingSuit);
-				outputMessage = String.format("Citizen named '%s' added to Ballot #%d.", fullName, associatedBallotID);
+				outputMessage = String.format("CitizenModel named '%s' added to BallotModel #%d.", fullName, associatedBallotID);
 			}
 
 			System.out.println(outputMessage);
@@ -218,9 +228,9 @@ public class UIHandler {
 	}
 
 	// When entering 3
-	public static boolean addNewParty(ArrayList<Party> parties) {
+	public static boolean addNewParty(ArrayList<PartyModel> parties) {
 		String partyName;
-		Party.PartyAssociation wing;
+		PartyModel.PartyAssociation wing;
 		LocalDate foundationDate;
 
 		try {
@@ -228,14 +238,14 @@ public class UIHandler {
 			System.out.println("Enter party's name:");
 			partyName = Elections.scanner.nextLine();
 			if (partyName.trim().length() == 0)
-				throw new Exception("Party's name must contain at least 1 letter.");
+				throw new Exception("PartyModel's name must contain at least 1 letter.");
 			if (Elections.getPartyByName(parties, partyName) != null) {
 				System.out.println("This party already exists.");
 
 				return true;
 			}
 			System.out.println("Enter party's association (Left, Center, or Right):");
-			wing = Party.PartyAssociation.valueOf(Elections.scanner.next());
+			wing = PartyModel.PartyAssociation.valueOf(Elections.scanner.next());
 			Elections.scanner.nextLine();
 			System.out.println("Enter year, month and day of the party's foundation, in that order:");
 			foundationDate = LocalDate.of(Elections.scanner.nextInt(), Elections.scanner.nextInt(),
@@ -244,8 +254,8 @@ public class UIHandler {
 			if (foundationDate.compareTo(LocalDate.now()) > 0)
 				throw new Exception("Time paradox prevented - I mean, come on");
 
-			if (parties.add(new Party(partyName, wing, foundationDate))) {
-				System.out.println(String.format("Party '%s' added to registry.", partyName));
+			if (parties.add(new PartyModel(partyName, wing, foundationDate))) {
+				System.out.println(String.format("PartyModel '%s' added to registry.", partyName));
 
 				return true;
 			}
@@ -257,10 +267,10 @@ public class UIHandler {
 	}
 
 	// When entering 4
-	public static boolean addCandidateToAParty(Set<Citizen> voterRegistry, ArrayList<Party> parties) {
-		Citizen citizen;
-		Candidate candidate;
-		Party party;
+	public static boolean addCandidateToAParty(SetModel<CitizenModel> voterRegistry, ArrayList<PartyModel> parties) {
+		CitizenModel citizen;
+		CandidateModel candidate;
+		PartyModel party;
 		int addedCandidateID;
 		String partyName;
 
@@ -270,28 +280,28 @@ public class UIHandler {
 			addedCandidateID = Elections.scanner.nextInt();
 			Elections.scanner.nextLine();
 			if (String.valueOf(addedCandidateID).length() != 9)
-				throw new Exception("Citizen's ID must contain exactly 9 digits.");
+				throw new Exception("CitizenModel's ID must contain exactly 9 digits.");
 			citizen = Elections.getCitizenByID(voterRegistry, addedCandidateID);
 			if (citizen == null)
-				throw new Exception("Candidate not registered, so he can't be added.");
-			if (citizen instanceof Soldier)
-				throw new Exception("Soldier cannot be a candidate in party.");
+				throw new Exception("CandidateModel not registered, so he can't be added.");
+			if (citizen instanceof SoldierModel)
+				throw new Exception("SoldierModel cannot be a candidate in party.");
 			System.out.println("Enter party's name");
 			partyName = Elections.scanner.nextLine().trim();
 			if (partyName.trim().length() == 0)
-				throw new Exception("Party's name must contain at least 1 letter.");
+				throw new Exception("PartyModel's name must contain at least 1 letter.");
 			party = Elections.getPartyByName(parties, partyName);
 			if (party == null)
 				throw new Exception(String.format("There's no registered party going by the name %s.\n", partyName));
 
 			Elections.updateCitizenToCandidate(voterRegistry,
 					Elections.getCitizenByID(voterRegistry, addedCandidateID));
-			candidate = (Candidate) Elections.getCitizenByID(voterRegistry, addedCandidateID);
+			candidate = (CandidateModel) Elections.getCitizenByID(voterRegistry, addedCandidateID);
 			if (!party.addCandidate(candidate))
 				throw new Exception(String.format("Sorry, candidate %s couldn't have been added to %s party.\n",
 						candidate.getFullName(), partyName));
 			System.out.println(
-					String.format("Candidate %s was added to '%s' party.", candidate.getFullName(), partyName));
+					String.format("CandidateModel %s was added to '%s' party.", candidate.getFullName(), partyName));
 
 			return true;
 		} catch (Exception e) {
@@ -301,12 +311,12 @@ public class UIHandler {
 	}
 
 	// When entering 5
-	public static String showBallotRegistry(ArrayList<Ballot<?>> ballots) {
+	public static String showBallotRegistry(ArrayList<BallotModel<?>> ballots) {
 		if (ballots.size() == 0)
 			return "Nothing to See here..";
 
 		StringBuilder sb = new StringBuilder();
-		for (Ballot<? extends Citizen> ballot : ballots)
+		for (BallotModel<? extends CitizenModel> ballot : ballots)
 			sb.append("\n" + ballot.toString());
 		sb.deleteCharAt(0); // removes first /n
 
@@ -314,7 +324,7 @@ public class UIHandler {
 	}
 
 	// When entering 6
-	public static String showVoterRegistry(Set<? extends Citizen> voterRegistry, YearMonth votingDate) {
+	public static String showVoterRegistry(SetModel<? extends CitizenModel> voterRegistry, YearMonth votingDate) {
 		if (voterRegistry.size() == 0)
 			return "Nothing to See here..";
 
@@ -328,12 +338,12 @@ public class UIHandler {
 	}
 
 	// When entering 7
-	public static String showPartyRegistry(ArrayList<Party> parties) {
+	public static String showPartyRegistry(ArrayList<PartyModel> parties) {
 		if (parties.size() == 0)
 			return "Nothing to See here..";
 
 		StringBuilder sb = new StringBuilder();
-		for (Party party : parties)
+		for (PartyModel party : parties)
 			sb.append("\n" + party.toString());
 		sb.deleteCharAt(0); // removes first /n
 
@@ -341,17 +351,17 @@ public class UIHandler {
 	}
 
 	// When entering 8
-	public static void runElections(ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<Party> parties) {
+	public static void runElections(ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<PartyModel> parties) {
 		runElections(Elections.getAllBallots(), resultsByBallot, parties);
 	}
 
-	public static void runElections(ArrayList<Ballot<? extends Citizen>> ballots,
-			ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<Party> parties) {
-		for (Ballot<? extends Citizen> ballot : ballots)
+	public static void runElections(ArrayList<BallotModel<? extends CitizenModel>> ballots,
+			ArrayList<ArrayList<Integer>> resultsByBallot, ArrayList<PartyModel> parties) {
+		for (BallotModel<? extends CitizenModel> ballot : ballots)
 			resultsByBallot.add(ballot.vote(parties));
 	}
 
-	public static int vote(ArrayList<Party> parties, Citizen citizen) {
+	public static int vote(ArrayList<PartyModel> parties, CitizenModel citizen) {
 		int voterChoice;
 		String selection;
 
@@ -386,15 +396,15 @@ public class UIHandler {
 
 	// When entering 9
 	public static void showElectionsResults(String finalResultsString, ArrayList<ArrayList<Integer>> resultsByBallot,
-			ArrayList<Party> parties) {
+			ArrayList<PartyModel> parties) {
 		if (finalResultsString.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
-			ArrayList<Ballot<? extends Citizen>> allBallots = Elections.getAllBallots();
+			ArrayList<BallotModel<? extends CitizenModel>> allBallots = Elections.getAllBallots();
 			int ballotCount = resultsByBallot.size();
 			int partyCount = resultsByBallot.get(0).size();
 			TreeMap<String, Integer> partyVotes = new TreeMap<>();
 
-			for (Party party : parties) {
+			for (PartyModel party : parties) {
 				partyVotes.put(party.getName(), 0);
 			}
 

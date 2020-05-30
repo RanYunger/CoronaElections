@@ -1,8 +1,8 @@
-package ID318783479_ID316334473;
+package ID318783479_ID316334473.Models;
 
 import java.time.YearMonth;
 
-public class Citizen implements Comparable<Citizen> {
+public class CitizenModel implements Comparable<CitizenModel> {
 	// Constants
 	public static final int VOTER_AGE = 18;
 	public static final int SOLDIER_AGE = 21;
@@ -12,7 +12,7 @@ public class Citizen implements Comparable<Citizen> {
 	protected String fullName;
 	protected int yearOfBirth, age;
 	protected int daysOfSickness; // declared here, instead of declaring in each "Sick_" class (subject to change, though) ~Ran
-	protected Ballot<? extends Citizen> associatedBallot;
+	protected BallotModel<? extends CitizenModel> associatedBallot;
 	protected boolean isIsolated; // declared here, instead of declaring in each "Sick_" class (subject to change, though) ~Ran
 	protected boolean isWearingSuit; // declared here, instead of declaring in each "Sick_" class (subject to change, though) ~Ran
 
@@ -23,7 +23,7 @@ public class Citizen implements Comparable<Citizen> {
 
 	private void setID(int ID) throws Exception {
 		if (String.valueOf(ID).length() != 9)
-			throw new Exception("Citizen's ID must contain exactly 9 digits.");
+			throw new Exception("CitizenModel's ID must contain exactly 9 digits.");
 		this.ID = ID;
 	}
 
@@ -33,7 +33,7 @@ public class Citizen implements Comparable<Citizen> {
 
 	private void setFullName(String fullName) throws Exception {
 		if (fullName.trim().length() == 0)
-			throw new Exception("Citizen's name must contain at least 1 letter.");
+			throw new Exception("CitizenModel's name must contain at least 1 letter.");
 		this.fullName = fullName;
 	}
 
@@ -63,17 +63,17 @@ public class Citizen implements Comparable<Citizen> {
 
 	protected void setDaysOfSickness(int daysOfSickness) throws Exception {
 		if (daysOfSickness < 0)
-			throw new Exception("Citizen can only have non-negative amount of sickness days.");
+			throw new Exception("CitizenModel can only have non-negative amount of sickness days.");
 		if ((isIsolated) && (daysOfSickness < 1))
-			throw new Exception("An Isolated Citizen must've been sick for at least 1 day.");
+			throw new Exception("An Isolated CitizenModel must've been sick for at least 1 day.");
 		this.daysOfSickness = daysOfSickness;
 	}
 
-	public Ballot<? extends Citizen> getAssociatedBallot() {
+	public BallotModel<? extends CitizenModel> getAssociatedBallot() {
 		return associatedBallot;
 	}
 
-	public void setAssociatedBallot(Ballot<? extends Citizen> associatedBallot) throws NullPointerException {
+	public void setAssociatedBallot(BallotModel<? extends CitizenModel> associatedBallot) throws NullPointerException {
 		this.associatedBallot = associatedBallot;
 		this.associatedBallot.addVoter(this);
 	}
@@ -95,8 +95,8 @@ public class Citizen implements Comparable<Citizen> {
 	}
 
 	// Constructors
-	public Citizen(int ID, String fullName, int yearOfBirth, int daysOfSickness,
-			Ballot<? extends Citizen> associatedBallot, boolean isIsolated, boolean isWearingSuit) {
+	public CitizenModel(int ID, String fullName, int yearOfBirth, int daysOfSickness,
+			BallotModel<? extends CitizenModel> associatedBallot, boolean isIsolated, boolean isWearingSuit) {
 		try {
 			setID(ID);
 			setFullName(fullName);
@@ -119,7 +119,7 @@ public class Citizen implements Comparable<Citizen> {
 	}
 
 	@Override
-	public int compareTo(Citizen other) {
+	public int compareTo(CitizenModel other) {
 		return Integer.compare(ID, other.ID);
 	}
 
@@ -127,9 +127,9 @@ public class Citizen implements Comparable<Citizen> {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Citizen))
+		if (!(obj instanceof CitizenModel))
 			return false;
-		Citizen other = (Citizen) obj;
+		CitizenModel other = (CitizenModel) obj;
 		return ID == other.ID;
 	}
 
@@ -137,7 +137,7 @@ public class Citizen implements Comparable<Citizen> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: ", ID, fullName, yearOfBirth));
+		sb.append(String.format("CitizenModel [ID:%d | Full name: %s | Born: %s | Status: ", ID, fullName, yearOfBirth));
 		sb.append(isIsolated ? String.format("Isolated (%d Day(s) so far), ", daysOfSickness) : "Not isolated, ");
 		sb.append(isWearingSuit ? "Wearing suit]" : "Not wearing suit]");
 

@@ -1,1 +1,2 @@
-1. Optimize the code			
+1. Limit DatePicker's range to Now and 14.5.1948 (a little hint ;)	
+2. Design MainView

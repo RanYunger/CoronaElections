@@ -1,6 +1,6 @@
-package ID318783479_ID316334473;
+package ID318783479_ID316334473.Models;
 
-public class Soldier extends Citizen {
+public class SoldierModel extends CitizenModel {
 	// Constants
 
 	// Fields
@@ -16,8 +16,8 @@ public class Soldier extends Citizen {
 	}
 
 	// Constructors
-	public Soldier(int ID, String fullName, int yearOfBirth, int daysOfSickness,
-			Ballot<? extends Citizen> associatedBallot, boolean isIsolated, boolean isWearingSuit,
+	public SoldierModel(int ID, String fullName, int yearOfBirth, int daysOfSickness,
+			BallotModel<? extends CitizenModel> associatedBallot, boolean isIsolated, boolean isWearingSuit,
 			boolean isCarryingWeapon) {
 		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated, isWearingSuit);
 		setIsCarryingWeapon(isCarryingWeapon);
@@ -28,13 +28,13 @@ public class Soldier extends Citizen {
 	public String toString() {
 		StringBuilder sb = new StringBuilder(super.toString());
 		boolean isSoldier = (age >= VOTER_AGE) && (age <= SOLDIER_AGE);
-		int citizenIndex = sb.indexOf("Citizen");
+		int citizenIndex = sb.indexOf("CitizenModel");
 
-		sb.replace(citizenIndex, citizenIndex + 7, "Soldier");
+		sb.replace(citizenIndex, citizenIndex + 7, "SoldierModel");
 		sb.deleteCharAt(sb.length() - 1); // removes "]" at the end of the string
 		
 		if (isSoldier)
-			sb.append(isCarryingWeapon ? ", Soldier (Carrying weapon)] " : ", Soldier (Not carrying weapon)] ");
+			sb.append(isCarryingWeapon ? ", SoldierModel (Carrying weapon)] " : ", SoldierModel (Not carrying weapon)] ");
 
 		return sb.toString();
 	}
