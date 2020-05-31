@@ -22,15 +22,15 @@ public class ElectionsDateController {
 	public ElectionsDateModel getElectionsDateModel() {
 		return electionsDateModel;
 	}
-	
+
 	private void setElectionsDateModel(ElectionsDateModel electionsDateModel) {
 		this.electionsDateModel = electionsDateModel;
 	}
-	
+
 	public ElectionsDateView getElectionsDateView() {
 		return electionsDateView;
 	}
-	
+
 	private void setElectionsDateView(ElectionsDateView electionsDateView) {
 		this.electionsDateView = electionsDateView;
 	}
@@ -49,10 +49,10 @@ public class ElectionsDateController {
 				MainModel mainModel;
 				MainView mainView;
 				MainController mainController;
-				
+
 				electionsDateModel.setElectionsDate(electionsDate);
 				electionsDateView.refresh(electionsDateModel);
-				
+
 				electionsDateView.close();
 				mainModel = new MainModel(electionsDate);
 				mainView = new MainView(new Stage());
@@ -62,8 +62,5 @@ public class ElectionsDateController {
 		electionsDateView.addListenerToEnterButton(listener);
 	}
 
-
 	// Methods
-	public void bindToControls() {
-	}
 }

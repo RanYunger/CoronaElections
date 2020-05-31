@@ -11,10 +11,10 @@ public class CitizenModel implements Comparable<CitizenModel> {
 	protected int ID;
 	protected String fullName;
 	protected int yearOfBirth, age;
-	protected int daysOfSickness; // declared here, instead of declaring in each "Sick_" class (subject to change, though) ~Ran
+	protected int daysOfSickness; 
 	protected BallotModel<? extends CitizenModel> associatedBallot;
-	protected boolean isIsolated; // declared here, instead of declaring in each "Sick_" class (subject to change, though) ~Ran
-	protected boolean isWearingSuit; // declared here, instead of declaring in each "Sick_" class (subject to change, though) ~Ran
+	protected boolean isIsolated;
+	protected boolean isWearingSuit;
 
 	// Properties (Getters and Setters)
 	public int getID() {

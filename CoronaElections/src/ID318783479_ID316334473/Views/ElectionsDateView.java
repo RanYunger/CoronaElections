@@ -1,7 +1,6 @@
 package ID318783479_ID316334473.Views;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 
 import ID318783479_ID316334473.Models.ElectionsDateModel;
 import javafx.event.ActionEvent;
@@ -13,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
