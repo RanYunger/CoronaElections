@@ -62,9 +62,9 @@ public class ElectionsDateView {
 
 		vBox.setAlignment(Pos.CENTER);
 		vBox.getChildren().addAll(lblElectionsDate, dtpElectionsDate, btnEnter);
-		vBox.setMargin(lblElectionsDate, new Insets(20));
-		vBox.setMargin(dtpElectionsDate, new Insets(20));
-		vBox.setMargin(btnEnter, new Insets(20));
+		VBox.setMargin(lblElectionsDate, new Insets(20));
+		VBox.setMargin(dtpElectionsDate, new Insets(20));
+		VBox.setMargin(btnEnter, new Insets(20));
 
 		stage.setTitle("Welcome to our system!");
 		stage.setResizable(false);

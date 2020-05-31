@@ -69,12 +69,12 @@ public class MainView {
 		HBox statusHBox = new HBox();
 		CheckBox isolatedCheckBox = new CheckBox("Isolated"), wearingSuitCheckBox = new CheckBox("Wearing suit"),
 				soldierCheckBox = new CheckBox("Soldier"), carryingWeaponCheckBox = new CheckBox("Carrying weapon");
-		
+
 		statusHBox.getChildren().addAll(isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox, carryingWeaponCheckBox);
-		statusHBox.setMargin(isolatedCheckBox, new Insets(0, 10, 0, 0));
-		statusHBox.setMargin(wearingSuitCheckBox, new Insets(0, 10, 0, 10));
-		statusHBox.setMargin(soldierCheckBox, new Insets(0, 10, 0, 10));
-		statusHBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 10));
+		HBox.setMargin(isolatedCheckBox, new Insets(0, 10, 0, 0));
+		HBox.setMargin(wearingSuitCheckBox, new Insets(0, 10, 0, 10));
+		HBox.setMargin(soldierCheckBox, new Insets(0, 10, 0, 10));
+		HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 10));
 		statusHBox.setAlignment(Pos.CENTER);
 
 		return statusHBox;
@@ -102,8 +102,8 @@ public class MainView {
 
 		mainHBox.setAlignment(Pos.CENTER);
 		mainHBox.getChildren().addAll(runElectionsButton, showResultsButton);
-		mainHBox.setMargin(runElectionsButton, new Insets(0, 10, 0, 0));
-		mainHBox.setMargin(showResultsButton, new Insets(0, 0, 0, 10));
+		HBox.setMargin(runElectionsButton, new Insets(0, 10, 0, 0));
+		HBox.setMargin(showResultsButton, new Insets(0, 0, 0, 10));
 
 		finalResultsTableView.getColumns().add(new TableColumn<String, String>("Party"));
 		finalResultsTableView.getColumns().get(0).setMinWidth(200);
@@ -142,8 +142,8 @@ public class MainView {
 
 		ballotsHBox.setAlignment(Pos.CENTER);
 		ballotsHBox.getChildren().addAll(addBallotButton, removeBallotButton);
-		ballotsHBox.setMargin(addBallotButton, new Insets(0, 10, 0, 0));
-		ballotsHBox.setMargin(removeBallotButton, new Insets(0, 0, 0, 10));
+		HBox.setMargin(addBallotButton, new Insets(0, 10, 0, 0));
+		HBox.setMargin(removeBallotButton, new Insets(0, 0, 0, 10));
 
 		ballotsTableView.getColumns().add(new TableColumn<String, String>("ID"));
 		ballotsTableView.getColumns().get(0).setMinWidth(100);
@@ -189,8 +189,8 @@ public class MainView {
 
 		citizensHBox.setAlignment(Pos.CENTER);
 		citizensHBox.getChildren().addAll(addCitizenButton, removeCitizenButton);
-		citizensHBox.setMargin(addCitizenButton, new Insets(0, 10, 0, 0));
-		citizensHBox.setMargin(removeCitizenButton, new Insets(0, 0, 0, 10));
+		HBox.setMargin(addCitizenButton, new Insets(0, 10, 0, 0));
+		HBox.setMargin(removeCitizenButton, new Insets(0, 0, 0, 10));
 
 		citizensTableView.getColumns().add(new TableColumn<String, String>("ID"));
 		citizensTableView.getColumns().get(0).setMinWidth(200);
@@ -230,8 +230,8 @@ public class MainView {
 
 		partiesHBox.setAlignment(Pos.CENTER);
 		partiesHBox.getChildren().addAll(addPartyButton, removePartyButton);
-		partiesHBox.setMargin(addPartyButton, new Insets(0, 10, 0, 0));
-		partiesHBox.setMargin(removePartyButton, new Insets(0, 0, 0, 10));
+		HBox.setMargin(addPartyButton, new Insets(0, 10, 0, 0));
+		HBox.setMargin(removePartyButton, new Insets(0, 0, 0, 10));
 
 		partiesTableView.getColumns().add(new TableColumn<String, String>("Name"));
 		partiesTableView.getColumns().get(0).setMinWidth(300);
