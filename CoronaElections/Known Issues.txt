@@ -1,2 +1,3 @@
 1. Limit DatePicker's range to Now and 14.5.1948 (a little hint ;)	
-2. Design MainView
+2. Set Application's Icon and background
+3. Complete the design of MainView

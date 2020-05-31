@@ -12,6 +12,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -20,6 +21,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class MainView {
@@ -32,6 +35,8 @@ public class MainView {
 	private Button runElectionsButton, showResultsButton, addBallotButton, removeBallotButton, addCitizenButton,
 			removeCitizenButton, addPartyButton, removePartyButton;
 	private HBox mainHBox, ballotsHBox, citizensHBox, partiesHBox;
+	private VBox aboutVBox;
+	private Label projectTitleLabel, madeByLabel, dateLabel;
 	private TableView<String> finalResultsTableView, ballotsTableView, citizensTableView, partiesTableView;
 	private BarChart<String, Number> resultsByBallotBarChart;
 
@@ -45,23 +50,37 @@ public class MainView {
 	}
 
 	// Methods
+	public Node getControlByName(String controlName) {
+		return root.lookup(controlName);
+	}
+
+	public Object getPropertyByName(String controlName, String propertyName) {
+		Node control = getControlByName(controlName);
+
+		return control.getProperties().get(propertyName);
+	}
+
 	public void refresh(MainModel model) {
 		root.getChildren().clear(); // clean the previous view
 		model.show(root);
 	}
 
 	private void buildScene(Stage stage) {
-		String[] tabNames = new String[] { "Main", "Ballots", "Citizens", "Parties" };
-		Node[] tabContents = { buildMainTab(), buildBallotsTab(), buildCitizensTab(), buildPartiesTab() };
-
+		String[] tabNames = new String[] { "Main", "Ballots", "Citizens", "Parties", "About" };
+		Node[] tabContents = { buildMainTab(), buildBallotsTab(), buildCitizensTab(), buildPartiesTab(), buildAboutTab() };
+		Tab currentTab;
+		
 		tabPane = new TabPane();
-		for (int i = 0; i < tabNames.length; i++)
-			tabPane.getTabs().add(new Tab(tabNames[i], tabContents[i]));
+		for (int i = 0; i < tabNames.length; i++) {
+			currentTab = new Tab(tabNames[i], tabContents[i]);
+			currentTab.setClosable(false);
+			tabPane.getTabs().add(currentTab);
+		}
 
 		stage.setTitle("Corona Elections");
 		stage.setResizable(false);
 		// TODO: Set icon + background image
-		stage.setScene(new Scene(tabPane, 1500, 900));
+		stage.setScene(new Scene(tabPane, 1500, 700));
 		stage.show();
 	}
 
@@ -71,10 +90,10 @@ public class MainView {
 				soldierCheckBox = new CheckBox("Soldier"), carryingWeaponCheckBox = new CheckBox("Carrying weapon");
 
 		statusHBox.getChildren().addAll(isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox, carryingWeaponCheckBox);
-		HBox.setMargin(isolatedCheckBox, new Insets(0, 10, 0, 0));
-		HBox.setMargin(wearingSuitCheckBox, new Insets(0, 10, 0, 10));
-		HBox.setMargin(soldierCheckBox, new Insets(0, 10, 0, 10));
-		HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 10));
+		statusHBox.setMargin(isolatedCheckBox, new Insets(0, 10, 0, 0));
+		statusHBox.setMargin(wearingSuitCheckBox, new Insets(0, 10, 0, 10));
+		statusHBox.setMargin(soldierCheckBox, new Insets(0, 10, 0, 10));
+		statusHBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 10));
 		statusHBox.setAlignment(Pos.CENTER);
 
 		return statusHBox;
@@ -258,5 +277,24 @@ public class MainView {
 		partiesGridPane.add(partiesTableView, 0, 1, 1, 1);
 
 		return partiesGridPane;
+	}
+	
+	private Node buildAboutTab() {
+		aboutVBox = new VBox();
+		
+		projectTitleLabel = new Label("Stupid Ass Project V-1");
+		projectTitleLabel.setFont(new Font(50));
+		madeByLabel = new Label("Developed by: Ran Yunger, Shy Ohev Zion");
+		madeByLabel.setFont(new Font(30));
+		dateLabel = new Label("June 2020");
+		dateLabel.setFont(new Font(30));
+		
+		aboutVBox.setAlignment(Pos.CENTER);
+		aboutVBox.getChildren().addAll(projectTitleLabel, madeByLabel, dateLabel);
+		aboutVBox.setMargin(projectTitleLabel, new Insets(0, 10, 0, 0));
+		aboutVBox.setMargin(madeByLabel, new Insets(0, 10, 0, 10));
+		aboutVBox.setMargin(dateLabel, new Insets(0, 0, 0, 10));
+		
+		return aboutVBox;
 	}
 }

@@ -9,6 +9,7 @@ import ID318783479_ID316334473.Views.ElectionsDateView;
 import ID318783479_ID316334473.Views.MainView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 
 public class ElectionsDateController {
@@ -42,10 +43,10 @@ public class ElectionsDateController {
 
 		view.refresh(model);
 
-		EventHandler<ActionEvent> listener = new EventHandler<ActionEvent>() {
+		EventHandler<ActionEvent> enterButtonListener = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				YearMonth electionsDate = YearMonth.from(electionsDateView.getDtpElectionsDate().getValue());
+				YearMonth electionsDate = electionsDateView.getElectionsDate();
 				MainModel mainModel;
 				MainView mainView;
 				MainController mainController;
@@ -59,7 +60,7 @@ public class ElectionsDateController {
 				mainController = new MainController(mainModel, mainView);
 			}
 		};
-		electionsDateView.addListenerToEnterButton(listener);
+		electionsDateView.addListenerToEnterButton(enterButtonListener);
 	}
 
 	// Methods
