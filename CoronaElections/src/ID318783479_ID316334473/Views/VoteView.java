@@ -1,7 +1,5 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.LocalDate;
-
 import ID318783479_ID316334473.Models.VoteModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

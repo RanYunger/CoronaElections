@@ -1,10 +1,7 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.Models.BallotsTabModel;
-import ID318783479_ID316334473.Models.MainModel;
-import ID318783479_ID316334473.Models.SetModel;
 import ID318783479_ID316334473.Views.BallotsTabView;
-import ID318783479_ID316334473.Views.MainView;
 
 public class BallotsTabController {
 	// Constants

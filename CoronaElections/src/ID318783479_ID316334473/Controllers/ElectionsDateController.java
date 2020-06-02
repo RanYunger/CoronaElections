@@ -4,12 +4,10 @@ import java.time.YearMonth;
 
 import ID318783479_ID316334473.Models.ElectionsDateModel;
 import ID318783479_ID316334473.Models.MainModel;
-import ID318783479_ID316334473.Models.SetModel;
 import ID318783479_ID316334473.Views.ElectionsDateView;
 import ID318783479_ID316334473.Views.MainView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 
 public class ElectionsDateController {

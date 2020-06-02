@@ -16,7 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
-public class ElectionsTabView extends Node {
+public class ElectionsTabView{
 	// Constants
 
 	// Fields
@@ -82,5 +82,9 @@ public class ElectionsTabView extends Node {
 		gridPane.add(hBox, 0, 0, 3, 1);
 		gridPane.add(finalResultsTableView, 0, 1, 1, 1);
 		gridPane.add(resultsByBallotBarChart, 1, 1, 2, 1);
+	}
+
+	public Node asNode() {
+		return (Node) gridPane;
 	}
 }

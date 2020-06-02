@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
-public class CitizensTabView extends Node {
+public class CitizensTabView{
 	// Constants
 
 	// Fields
@@ -74,5 +74,9 @@ public class CitizensTabView extends Node {
 
 		gridPane.add(hBox, 0, 0, 1, 1);
 		gridPane.add(citizensTableView, 0, 1, 1, 1);
+	}
+	
+	public Node asNode() {
+		return (Node) gridPane;
 	}
 }

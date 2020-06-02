@@ -8,23 +8,23 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class AboutTabView extends Node {
+public class AboutTabView {
 	// Constants
-	
+
 	// Fields
 	private Group root;
 	private VBox vBox;
 	private Label projectNameLabel, madeByLabel, dateLabel;
-	
+
 	// Properties (Getters and Setters)
-	
+
 	// Constructors
 	public AboutTabView() {
 		root = new Group();
-		
+
 		buildScene();
 	}
-	
+
 	// Methods
 //	public void refresh(PartiesTabModel model) {
 //		root.getChildren().clear(); // clean the previous view
@@ -42,8 +42,12 @@ public class AboutTabView extends Node {
 
 		vBox.setAlignment(Pos.CENTER);
 		vBox.getChildren().addAll(projectNameLabel, madeByLabel, dateLabel);
-		vBox.setMargin(projectNameLabel, new Insets(0, 10, 0, 0));
-		vBox.setMargin(madeByLabel, new Insets(0, 10, 0, 10));
-		vBox.setMargin(dateLabel, new Insets(0, 0, 0, 10));
+		VBox.setMargin(projectNameLabel, new Insets(0, 10, 0, 0));
+		VBox.setMargin(madeByLabel, new Insets(0, 10, 0, 10));
+		VBox.setMargin(dateLabel, new Insets(0, 0, 0, 10));
+	}
+
+	public Node asNode() {
+		return (Node) vBox;
 	}
 }
