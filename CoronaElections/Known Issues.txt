@@ -1,4 +1,4 @@
-MOST IMPORTANT - SET TABVIEWS AS CONTENTS FOR TABS IN MAINVIEW
-1. Limit DatePicker's range to Now and 14.5.1948 (a little hint ;)	
-2. Set Application's Icon and background
-3. Complete the design of MainView
+0. Add "sponsers" to AboutTab
+1. Build logic for each tab
+2. Limit DatePicker's range to Now and 14.5.1948 (a little hint ;)	
+3. Set Application's Icon and background

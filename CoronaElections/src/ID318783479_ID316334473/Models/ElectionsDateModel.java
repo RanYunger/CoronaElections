@@ -26,6 +26,6 @@ public class ElectionsDateModel {
 	
 	// Methods
 	public void show(Group root) {
-		//theBuilding.show(root);
+		// TODO: COMPLETE
 	}	
 }

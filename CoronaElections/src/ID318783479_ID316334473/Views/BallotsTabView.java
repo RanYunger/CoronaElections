@@ -1,11 +1,15 @@
 package ID318783479_ID316334473.Views;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.BallotsTabModel;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,31 +18,31 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
-public class BallotsTabView{
+public class BallotsTabView {
 	// Constants
-	
+
 	// Fields
 	private Group root;
 	private GridPane gridPane;
 	private Button addBallotButton, removeBallotButton;
 	private HBox hBox;
 	private TableView<String> ballotsTableView;
-	
+
 	// Properties (Getters and Setters)
-	
+
 	// Constructors
 	public BallotsTabView() {
 		root = new Group();
 
 		buildScene();
 	}
-	
+
 	// Methods
 	public void refresh(BallotsTabModel model) {
 		root.getChildren().clear(); // clean the previous view
 		model.show(root);
 	}
-	
+
 	private void buildScene() {
 		ObservableList<TableColumn<String, ?>> voterColumns;
 
@@ -84,9 +88,34 @@ public class BallotsTabView{
 
 		gridPane.add(hBox, 0, 0, 1, 1);
 		gridPane.add(ballotsTableView, 0, 1, 1, 1);
+		
+		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
+		GridPane.setMargin(ballotsTableView, new Insets(10, 0, 370, 0));
 	}
-	
+
 	public Node asNode() {
 		return (Node) gridPane;
+	}
+
+	public Node getNodeByName(String nodeName) {
+		try {
+			return (Node) getClass().getDeclaredField(nodeName).get(this);
+		} catch (Exception ex) {
+			UIHandler.alertUser("Error", "An unexpected error occured", ex.getMessage(), AlertType.ERROR);
+		}
+		
+		return null;
+	}
+
+	public Object getPropertyByName(String nodeName, String propertyName) {
+		Node node = getNodeByName(nodeName); 
+		
+		return node.getProperties().get(propertyName);
+	}
+
+	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
+		Button requiredButton = (Button) getNodeByName(buttonName);
+		
+		requiredButton.setOnAction(eventHandler);
 	}
 }

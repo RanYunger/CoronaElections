@@ -41,24 +41,26 @@ public class ElectionsDateController {
 
 		view.refresh(model);
 
-		EventHandler<ActionEvent> enterButtonListener = new EventHandler<ActionEvent>() {
+		EventHandler<ActionEvent> enterButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				YearMonth electionsDate = electionsDateView.getElectionsDate();
-				MainModel mainModel;
-				MainView mainView;
+				MainModel mainModel = new MainModel(electionsDate);
+				MainView mainView = new MainView(new Stage());
 				MainController mainController;
 
 				electionsDateModel.setElectionsDate(electionsDate);
 				electionsDateView.refresh(electionsDateModel);
 
+				mainController = new MainController(mainModel, mainView, mainModel.getElectionsTabModel(),
+						mainView.getElectionsTabView(), mainModel.getBallotsTabModel(), mainView.getBallotsTabView(),
+						mainModel.getCitizensTabModel(), mainView.getCitizensTabView(), mainModel.getPartiesTabModel(),
+						mainView.getPartiesTabView());
+				
 				electionsDateView.close();
-				mainModel = new MainModel(electionsDate);
-				mainView = new MainView(new Stage());
-				mainController = new MainController(mainModel, mainView);
 			}
 		};
-		electionsDateView.addListenerToEnterButton(enterButtonListener);
+		electionsDateView.addEventHandlerToEnterButton(enterButtonEventHandler);
 	}
 
 	// Methods

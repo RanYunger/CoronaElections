@@ -1,6 +1,9 @@
 package ID318783479_ID316334473.Views;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.ElectionsTabModel;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -11,12 +14,14 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 
-public class ElectionsTabView{
+public class ElectionsTabView {
 	// Constants
 
 	// Fields
@@ -82,9 +87,35 @@ public class ElectionsTabView{
 		gridPane.add(hBox, 0, 0, 3, 1);
 		gridPane.add(finalResultsTableView, 0, 1, 1, 1);
 		gridPane.add(resultsByBallotBarChart, 1, 1, 2, 1);
+
+		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
+		GridPane.setMargin(finalResultsTableView, new Insets(10, 0, 370, 0));
+		GridPane.setMargin(resultsByBallotBarChart, new Insets(10, 0, 350, 0));
 	}
 
 	public Node asNode() {
 		return (Node) gridPane;
+	}
+
+	public Node getNodeByName(String nodeName) {
+		try {
+			return (Node) getClass().getDeclaredField(nodeName).get(this);
+		} catch (Exception ex) {
+			UIHandler.alertUser("Error", "An unexpected error occured", ex.getMessage(), AlertType.ERROR);
+		}
+
+		return null;
+	}
+
+	public Object getPropertyByName(String nodeName, String propertyName) {
+		Node node = getNodeByName(nodeName);
+
+		return node.getProperties().get(propertyName);
+	}
+
+	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
+		Button requiredButton = (Button) getNodeByName(buttonName);
+
+		requiredButton.setOnAction(eventHandler);
 	}
 }

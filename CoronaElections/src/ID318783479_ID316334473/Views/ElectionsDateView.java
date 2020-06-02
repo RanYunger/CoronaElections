@@ -83,7 +83,7 @@ public class ElectionsDateView {
 		stage.show();
 	}
 
-	public void addListenerToEnterButton(EventHandler<ActionEvent> listener) {
+	public void addEventHandlerToEnterButton(EventHandler<ActionEvent> listener) {
 		enterButton.setOnAction(listener);
 	}
 

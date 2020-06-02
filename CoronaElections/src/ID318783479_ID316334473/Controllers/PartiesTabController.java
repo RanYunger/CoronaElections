@@ -2,6 +2,8 @@ package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.Models.PartiesTabModel;
 import ID318783479_ID316334473.Views.PartiesTabView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class PartiesTabController {
 	// Constants
@@ -33,6 +35,21 @@ public class PartiesTabController {
 		setPartiesTabView(view);
 		
 		view.refresh(model);
+		
+		EventHandler<ActionEvent> addPartyButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO: COMPLETE
+			}
+		};
+		EventHandler<ActionEvent> removePartyButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO: COMPLETE
+			}
+		};
+		view.addEventHandlerToButton("addPartyButton" ,addPartyButtonEventHandler);
+		view.addEventHandlerToButton("removePartyButton" ,removePartyButtonEventHandler);
 	}
 	
 	// Methods

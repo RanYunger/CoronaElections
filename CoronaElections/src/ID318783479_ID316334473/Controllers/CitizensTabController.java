@@ -2,6 +2,8 @@ package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.Models.CitizensTabModel;
 import ID318783479_ID316334473.Views.CitizensTabView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class CitizensTabController {
 	// Constants
@@ -33,6 +35,21 @@ public class CitizensTabController {
 		setCitizensTabView(view);
 		
 		view.refresh(model);
+		
+		EventHandler<ActionEvent> addCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO: COMPLETE
+			}
+		};
+		EventHandler<ActionEvent> removeCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO: COMPLETE
+			}
+		};
+		view.addEventHandlerToButton("addCitizenButton" ,addCitizenButtonEventHandler);
+		view.addEventHandlerToButton("removeCitizenButton" ,removeCitizenButtonEventHandler);
 	}
 	
 	// Methods

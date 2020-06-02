@@ -14,15 +14,15 @@ import javafx.stage.Stage;
 
 public class VoteView {
 	// Constants
-	
+
 	// Fields
 	private Group root;
 	private VBox vBox;
 	private Label messageLabel;
 	private TableView<String> partiesTableView;
-	
+
 	// Properties (Getters and Setters)
-	
+
 	// Constructors
 	public VoteView(Stage stage) {
 		root = new Group();
@@ -31,16 +31,6 @@ public class VoteView {
 	}
 
 	// Methods
-	public Node getControlByName(String controlName) {
-		return root.lookup(controlName);
-	}
-
-	public Object getPropertyByName(String controlName, String propertyName) {
-		Node control = getControlByName(controlName);
-
-		return control.getProperties().get(propertyName);
-	}
-
 	public void refresh(VoteModel model) {
 		root.getChildren().clear(); // clean the previous view
 		model.show(root);
@@ -50,18 +40,26 @@ public class VoteView {
 		vBox = new VBox();
 		messageLabel = new Label("Vote for your chosen party");
 		partiesTableView = new TableView<String>();
-		
+
 		messageLabel.setFont(new Font(30));
 
 		vBox.setAlignment(Pos.CENTER);
 		vBox.getChildren().addAll(messageLabel, partiesTableView);
 		VBox.setMargin(messageLabel, new Insets(20));
 		VBox.setMargin(partiesTableView, new Insets(20));
-		
+
 		stage.setTitle("Corona Elections");
 		stage.setResizable(false);
 		// TODO: Set icon + background image
 		stage.setScene(new Scene(vBox, 500, 400));
 		stage.show();
+	}
+
+	public Node getControlByName(String controlName) {
+		return root.lookup(controlName);
+	}
+
+	public Object getPropertyByName(String controlName, String propertyName) {
+		return getControlByName(controlName).getProperties().get(propertyName);
 	}
 }

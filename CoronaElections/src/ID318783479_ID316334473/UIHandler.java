@@ -16,6 +16,22 @@ import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
 import ID318783479_ID316334473.Models.SoldierModel;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+
 /*
  * Helper class which contains all UI methods, plus extra helpful
  * methods.
@@ -23,6 +39,60 @@ import ID318783479_ID316334473.Models.SoldierModel;
  * be no need to change anything in the main method.
  */
 public class UIHandler {
+	// Constants
+
+	// Fields
+
+	// Methods
+	public static void alertUser(String aleartTitle, String aleartHeader, String alertMessage,
+			Alert.AlertType alertType) {
+		Alert alert = new Alert(alertType);
+		TextArea textArea = new TextArea(alertMessage);
+
+		textArea.setEditable(false);
+		alert.setTitle(aleartTitle);
+		alert.setHeaderText(aleartHeader);
+		alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
+		alert.show();
+	}
+
+	public static ImageView buildImage(String imageName, double height, double width) {
+		Image image = new Image(imageName, height, width, false, false);
+
+		return new ImageView(image);
+	}
+
+	public static StackPane buildBackground(Node node, double width, double height) {
+		ImageView backgroundImage = buildImage("IsraelFlag.PNG", width, height);
+		Label topLabel = new Label("מדינה אנונימית במזרח התיכון");
+		Label bottomLabel = new Label("מערכת ניהול בחירות בתקופת קורונה");
+		StackPane stackPane = new StackPane();
+
+		topLabel.setFont(new Font(50));
+		topLabel.setTextFill(Color.WHITE);
+		bottomLabel.setFont(new Font(50));
+		bottomLabel.setTextFill(Color.WHITE);
+		stackPane.getChildren().addAll(backgroundImage, topLabel, bottomLabel, node);
+		StackPane.setMargin(topLabel, new Insets(700, 0, height * 1.8, 0));
+		StackPane.setMargin(bottomLabel, new Insets(height * 0.95, 0, height * 0.08, 0));
+
+		return stackPane;
+	}
+
+	public static HBox buildStatusHBox() {
+		HBox statusHBox = new HBox();
+		CheckBox isolatedCheckBox = new CheckBox("Isolated"), wearingSuitCheckBox = new CheckBox("Wearing suit"),
+				soldierCheckBox = new CheckBox("Soldier"), carryingWeaponCheckBox = new CheckBox("Carrying weapon");
+
+		statusHBox.getChildren().addAll(isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox, carryingWeaponCheckBox);
+		HBox.setMargin(isolatedCheckBox, new Insets(0, 10, 0, 0));
+		HBox.setMargin(wearingSuitCheckBox, new Insets(0, 10, 0, 10));
+		HBox.setMargin(soldierCheckBox, new Insets(0, 10, 0, 10));
+		HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 10));
+		statusHBox.setAlignment(Pos.CENTER);
+
+		return statusHBox;
+	}
 
 	public static int showMenu(boolean electionsOccurred) {
 		int selection;
@@ -82,14 +152,16 @@ public class UIHandler {
 				switch (Elections.scanner.nextInt()) {
 				case 1: {
 
-					if (Elections.citizenBallots.add(new BallotModel<CitizenModel>("CitizenModel", address, votingDate))) {
+					if (Elections.citizenBallots
+							.add(new BallotModel<CitizenModel>("CitizenModel", address, votingDate))) {
 						System.out.println("Regular BallotModel added to registry.");
 
 						return true;
 					}
 				}
 				case 2: {
-					if (Elections.soldierBallots.add(new BallotModel<SoldierModel>("SoldierModel", address, votingDate))) {
+					if (Elections.soldierBallots
+							.add(new BallotModel<SoldierModel>("SoldierModel", address, votingDate))) {
 						System.out.println("Military BallotModel added to registry.");
 
 						return true;
@@ -112,8 +184,8 @@ public class UIHandler {
 							}
 						}
 						case 2: {
-							if (Elections.sickCandidateBallots
-									.add(new BallotModel<SickCandidateModel>("Sick CandidateModel", address, votingDate))) {
+							if (Elections.sickCandidateBallots.add(
+									new BallotModel<SickCandidateModel>("Sick CandidateModel", address, votingDate))) {
 								System.out.println("Corona-Candidates BallotModel added to registry.");
 
 								return true;
@@ -211,9 +283,10 @@ public class UIHandler {
 				}
 			} else {
 				isIsolated = false;
-				citizen = new CitizenModel(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
-						isWearingSuit);
-				outputMessage = String.format("CitizenModel named '%s' added to BallotModel #%d.", fullName, associatedBallotID);
+				citizen = new CitizenModel(citizenID, fullName, yearOfBirth, daysOfSickness, associatedBallot,
+						isIsolated, isWearingSuit);
+				outputMessage = String.format("CitizenModel named '%s' added to BallotModel #%d.", fullName,
+						associatedBallotID);
 			}
 
 			System.out.println(outputMessage);
