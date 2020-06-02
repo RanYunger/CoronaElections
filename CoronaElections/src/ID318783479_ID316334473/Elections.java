@@ -20,8 +20,7 @@ public class Elections {
 	// Fields
 	public static final Scanner scanner = new Scanner(System.in);
 	public static final int INITIAL_CAPACITY = 10;
-	// All the fields bellow moved out of the main method to allow free access to
-	// them ~Ran
+
 	public static YearMonth votingDate = null;
 	public static SetModel<CitizenModel> voters = new SetModel<CitizenModel>();
 	public static ArrayList<PartyModel> parties = new ArrayList<PartyModel>();
