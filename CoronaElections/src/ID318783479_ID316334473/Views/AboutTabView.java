@@ -18,8 +18,8 @@ public class AboutTabView {
 	private Group root;
 	private HBox hBox;
 	private VBox vBox;
-	private Label projectNameLabel, madeByLabel, sponseredByLabel, dateLabel;
-	private ImageView dorAlonImageView, tnuvaImageView, ramiLeviImageView;
+	private Label madeByLabel, sponseredByLabel, dateLabel;
+	private ImageView projectLogoImage, dorAlonImageView, tnuvaImageView, ramiLeviImageView;
 
 	// Properties (Getters and Setters)
 
@@ -38,12 +38,11 @@ public class AboutTabView {
 	private void buildScene() {
 		hBox = new HBox();
 		vBox = new VBox();
+		projectLogoImage = UIHandler.buildImage("Elections.jpg", 160, 160);
 		dorAlonImageView = UIHandler.buildImage("DorAlonLogo.png", 160, 160);
 		tnuvaImageView = UIHandler.buildImage("TnuvaLogo.png", 160, 160);
 		ramiLeviImageView = UIHandler.buildImage("RamiLeviLogo.jpg", 160, 160);
 
-		projectNameLabel = new Label("Stupid Ass Project V-1");
-		projectNameLabel.setFont(new Font(50));
 		madeByLabel = new Label("Developed by: Ran Yunger, Shy Ohev Zion");
 		madeByLabel.setFont(new Font(30));
 		sponseredByLabel = new Label("Sponsered by: ");
@@ -58,10 +57,11 @@ public class AboutTabView {
 		HBox.setMargin(ramiLeviImageView, new Insets(0, 0, 0, 10));
 		
 		vBox.setAlignment(Pos.CENTER);
-		vBox.getChildren().addAll(projectNameLabel, madeByLabel, sponseredByLabel, hBox, dateLabel);
-		VBox.setMargin(projectNameLabel, new Insets(0, 10, 0, 0));
-		VBox.setMargin(madeByLabel, new Insets(0, 10, 0, 10));
-		VBox.setMargin(dateLabel, new Insets(0, 0, 0, 10));	
+		vBox.getChildren().addAll(madeByLabel, sponseredByLabel, hBox, dateLabel);
+		VBox.setMargin(madeByLabel, new Insets(0, 0, 0, 0));
+		VBox.setMargin(sponseredByLabel, new Insets(0, 0, 0, 0));
+		VBox.setMargin(hBox, new Insets(0, 0, 0, 0));
+		VBox.setMargin(dateLabel, new Insets(0, 0, 0, 0));	
 	}
 
 	public Node asNode() {

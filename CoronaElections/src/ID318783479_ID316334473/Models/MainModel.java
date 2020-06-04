@@ -57,10 +57,10 @@ public class MainModel {
 	// Constructors
 	public MainModel(YearMonth electionsDate) {
 		setElectionsDate(electionsDate);
-		setElectionsTabModel(new ElectionsTabModel());
-		setBallotsTabModel(new BallotsTabModel());
-		setCitizensTabModel(new CitizensTabModel());
-		setPartiesTabModel(new PartiesTabModel());
+		setElectionsTabModel(new ElectionsTabModel(electionsDate));
+		setBallotsTabModel(new BallotsTabModel(electionsDate));
+		setCitizensTabModel(new CitizensTabModel(electionsDate));
+		setPartiesTabModel(new PartiesTabModel(electionsDate));
 	}
 
 	public void show(Group root) {

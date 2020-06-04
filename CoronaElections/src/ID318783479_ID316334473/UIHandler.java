@@ -6,21 +6,24 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import ID318783479_ID316334473.Controllers.MainController;
 import ID318783479_ID316334473.Models.BallotModel;
 import ID318783479_ID316334473.Models.CandidateModel;
 import ID318783479_ID316334473.Models.CitizenModel;
+import ID318783479_ID316334473.Models.MainModel;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.SetModel;
 import ID318783479_ID316334473.Models.SickCandidateModel;
 import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
 import ID318783479_ID316334473.Models.SoldierModel;
-
+import ID318783479_ID316334473.Views.MainView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -42,16 +45,84 @@ public class UIHandler {
 	// Constants
 
 	// Fields
+	public static MainModel mainModel;
+	public static MainController mainController;
+	public static MainView mainView;
+
+	// Properties
+	public static void setMainModel(MainModel mainModel) {
+		UIHandler.mainModel = mainModel;
+	}
+
+	public static void setMainController(MainController mainController) {
+		UIHandler.mainController = mainController;
+	}
+
+	public static void setMainView(MainView mainView) {
+		UIHandler.mainView = mainView;
+	}
 
 	// Methods
-	public static void alertUser(String aleartTitle, String aleartHeader, String alertMessage,
-			Alert.AlertType alertType) {
-		Alert alert = new Alert(alertType);
-		TextArea textArea = new TextArea(alertMessage);
+	public static Object getModelByName(String modelName) {
+		try {
+			return mainModel.getClass().getDeclaredMethod(String.format("get%s", modelName)).invoke(mainModel);
+		} catch (Exception ex) {
+			UIHandler.showError("An unexpected error occured", ex.getMessage());
+		}
+
+		return null;
+	}
+
+	public static Object getControllerByName(String controllerName) {
+		try {
+			return mainController.getClass().getDeclaredMethod(String.format("get%s", controllerName))
+					.invoke(mainController);
+		} catch (Exception ex) {
+			UIHandler.showError("An unexpected error occured", ex.getMessage());
+		}
+
+		return null;
+	}
+
+	public static Object getViewByName(String viewName) {
+		try {
+			return mainView.getClass().getDeclaredMethod(String.format("get%s", viewName)).invoke(mainView);
+		} catch (Exception ex) {
+			UIHandler.showError("An unexpected error occured", ex.getMessage());
+		}
+
+		return null;
+	}
+
+	public static void showSucess(String header, String message) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		TextArea textArea = new TextArea(message);
 
 		textArea.setEditable(false);
-		alert.setTitle(aleartTitle);
-		alert.setHeaderText(aleartHeader);
+		alert.setTitle("Success");
+		alert.setHeaderText(header);
+		alert.getDialogPane().setContent(textArea);
+		alert.show();
+	}
+
+	public static void showWarning(String header, String message) {
+		Alert alert = new Alert(AlertType.WARNING);
+		TextArea textArea = new TextArea(header);
+
+		textArea.setEditable(false);
+		alert.setTitle("Warning");
+		alert.setHeaderText(header);
+		alert.getDialogPane().setContent(textArea);
+		alert.show();
+	}
+
+	public static void showError(String header, String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		TextArea textArea = new TextArea(message);
+
+		textArea.setEditable(false);
+		alert.setTitle("Error");
+		alert.setHeaderText(header);
 		alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
 		alert.show();
 	}

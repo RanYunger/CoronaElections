@@ -2,6 +2,7 @@ package ID318783479_ID316334473.Controllers;
 
 import java.time.YearMonth;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.ElectionsDateModel;
 import ID318783479_ID316334473.Models.MainModel;
 import ID318783479_ID316334473.Views.ElectionsDateView;
@@ -49,6 +50,7 @@ public class ElectionsDateController {
 				MainView mainView = new MainView(new Stage());
 				MainController mainController;
 
+				
 				electionsDateModel.setElectionsDate(electionsDate);
 				electionsDateView.refresh(electionsDateModel);
 
@@ -56,6 +58,11 @@ public class ElectionsDateController {
 						mainView.getElectionsTabView(), mainModel.getBallotsTabModel(), mainView.getBallotsTabView(),
 						mainModel.getCitizensTabModel(), mainView.getCitizensTabView(), mainModel.getPartiesTabModel(),
 						mainView.getPartiesTabView());
+				
+				// These bindings will help to retrieve generic Model/Controller/View in need
+				UIHandler.mainModel = mainModel;
+				UIHandler.mainController = mainController;
+				UIHandler.mainView = mainView;
 				
 				electionsDateView.close();
 			}

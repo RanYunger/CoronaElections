@@ -98,7 +98,7 @@ public class MainView {
 
 		stage.setTitle("Corona Elections");
 		stage.setResizable(false);
-		// TODO: Set icon + background image
+		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
 		stage.setScene(new Scene(UIHandler.buildBackground(tabPane, sceneWidth, sceneHeight), sceneWidth, sceneHeight));
 		stage.show();
 	}

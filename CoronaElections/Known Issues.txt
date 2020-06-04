@@ -1,3 +1,1 @@
 1. Build logic for each tab
-2. Limit DatePicker's range to Now and 14.5.1948 (a little hint ;)	
-3. Set Application's Icon and background

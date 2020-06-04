@@ -91,7 +91,7 @@ public class CitizensTabView {
 		try {
 			return (Node) getClass().getDeclaredField(nodeName).get(this);
 		} catch (Exception ex) {
-			UIHandler.alertUser("Error", "An unexpected error occured", ex.getMessage(), AlertType.ERROR);
+			UIHandler.showError("An unexpected error occured", ex.getMessage());
 		}
 		
 		return null;
