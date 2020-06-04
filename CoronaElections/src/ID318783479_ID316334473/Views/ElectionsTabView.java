@@ -14,12 +14,10 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 
 public class ElectionsTabView {
 	// Constants
@@ -77,20 +75,20 @@ public class ElectionsTabView {
 		finalResultsTableView.getColumns().get(0).setMinWidth(200);
 		finalResultsTableView.getColumns().add(new TableColumn<String, Number>("Votes"));
 		finalResultsTableView.getColumns().get(1).setMinWidth(100);
-		finalResultsTableView.setOpacity(10); // for the background image to be seen
-
+		finalResultsTableView.setOpacity(0.8);
+		
 		resultsByBallotBarChart.setTitle("Votes by Ballots");
-		resultsByBallotBarChart.getXAxis().setLabel("Ballot ID");
+		resultsByBallotBarChart.getXAxis().setLabel("Ballot IDs");
 		resultsByBallotBarChart.getYAxis().setLabel("Votes");
-		resultsByBallotBarChart.setOpacity(10); // for the background image to be seen
+		resultsByBallotBarChart.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 3, 1);
 		gridPane.add(finalResultsTableView, 0, 1, 1, 1);
 		gridPane.add(resultsByBallotBarChart, 1, 1, 2, 1);
 
 		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
-		GridPane.setMargin(finalResultsTableView, new Insets(10, 0, 370, 0));
-		GridPane.setMargin(resultsByBallotBarChart, new Insets(10, 0, 350, 0));
+		GridPane.setMargin(finalResultsTableView, new Insets(10, 0, 425, 0));
+		GridPane.setMargin(resultsByBallotBarChart, new Insets(10, 0, 425, 0));
 	}
 
 	public Node asNode() {

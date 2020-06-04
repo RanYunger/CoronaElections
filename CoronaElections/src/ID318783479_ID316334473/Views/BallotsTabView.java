@@ -9,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -73,7 +72,7 @@ public class BallotsTabView {
 		ballotsTableView.getColumns().get(2).setMinWidth(400);
 		ballotsTableView.getColumns().add(new TableColumn<String, String>("Voters"));
 		ballotsTableView.getColumns().get(3).setMinWidth(850);
-		ballotsTableView.setOpacity(10); // for the background image to be seen
+		ballotsTableView.setOpacity(0.8);
 
 		voterColumns = ballotsTableView.getColumns().get(3).getColumns();
 		voterColumns.add(new TableColumn<String, String>("ID"));
@@ -90,7 +89,7 @@ public class BallotsTabView {
 		gridPane.add(ballotsTableView, 0, 1, 1, 1);
 		
 		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
-		GridPane.setMargin(ballotsTableView, new Insets(10, 0, 370, 0));
+		GridPane.setMargin(ballotsTableView, new Insets(10, 0, 425, 0));
 	}
 
 	public Node asNode() {

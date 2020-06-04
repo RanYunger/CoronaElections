@@ -24,7 +24,7 @@ public class PartiesTabView {
 	// Fields
 	private Group root;
 	private GridPane gridPane;
-	private Button addPartyButton, removePartyButton;
+	private Button addPartyButton, removePartyButton, addCandidateToPartyButton;
 	private HBox hBox;
 	private TableView<String> partiesTableView;
 
@@ -49,6 +49,7 @@ public class PartiesTabView {
 		gridPane = new GridPane();
 		addPartyButton = new Button("Add Party");
 		removePartyButton = new Button("Remove Party");
+		addCandidateToPartyButton = new Button("Add Candidate to Party");
 		hBox = new HBox();
 		partiesTableView = new TableView<String>();
 
@@ -61,8 +62,9 @@ public class PartiesTabView {
 		gridPane.getColumnConstraints().get(0).setPercentWidth(100);
 
 		hBox.setAlignment(Pos.CENTER);
-		hBox.getChildren().addAll(addPartyButton, removePartyButton);
+		hBox.getChildren().addAll(addPartyButton, addCandidateToPartyButton, removePartyButton);
 		HBox.setMargin(addPartyButton, new Insets(0, 10, 0, 0));
+		HBox.setMargin(addCandidateToPartyButton, new Insets(0, 10, 0, 10));
 		HBox.setMargin(removePartyButton, new Insets(0, 0, 0, 10));
 
 		partiesTableView.getColumns().add(new TableColumn<String, String>("Name"));
@@ -73,7 +75,7 @@ public class PartiesTabView {
 		partiesTableView.getColumns().get(2).setMinWidth(100);
 		partiesTableView.getColumns().add(new TableColumn<String, String>("Candidates"));
 		partiesTableView.getColumns().get(3).setMinWidth(950);
-		partiesTableView.setOpacity(10); // for the background image to be seen
+		partiesTableView.setOpacity(0.8);
 
 		candidateColumns = partiesTableView.getColumns().get(3).getColumns();
 		candidateColumns.add(new TableColumn<String, String>("ID"));
@@ -90,7 +92,7 @@ public class PartiesTabView {
 		gridPane.add(partiesTableView, 0, 1, 1, 1);
 		
 		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
-		GridPane.setMargin(partiesTableView, new Insets(10, 0, 370, 0));
+		GridPane.setMargin(partiesTableView, new Insets(10, 0, 425, 0));
 	}
 
 	public Node asNode() {

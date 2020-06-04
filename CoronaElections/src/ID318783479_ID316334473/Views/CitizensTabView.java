@@ -74,13 +74,13 @@ public class CitizensTabView {
 		citizensTableView.getColumns().add(new TableColumn<String, String>("Status"));
 		// use setStatusHBox() as the column's content
 		citizensTableView.getColumns().get(4).setMinWidth(800);
-		citizensTableView.setOpacity(10); // for the background image to be seen
+		citizensTableView.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 1, 1);
 		gridPane.add(citizensTableView, 0, 1, 1, 1);
 		
 		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
-		GridPane.setMargin(citizensTableView, new Insets(10, 0, 370, 0));
+		GridPane.setMargin(citizensTableView, new Insets(10, 0, 425, 0));
 	}
 
 	public Node asNode() {

@@ -3,6 +3,8 @@ package ID318783479_ID316334473.Models;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
+import ID318783479_ID316334473.TBN;
+import ID318783479_ID316334473.UIHandler;
 import javafx.scene.Group;
 
 public class BallotsTabModel {
@@ -24,6 +26,18 @@ public class BallotsTabModel {
 
 	public void setElectionsDate(YearMonth electionsDate) {
 		this.electionsDate = electionsDate;
+	}
+
+	public ArrayList<BallotModel<? extends CitizenModel>> getAllBallots() {
+		ArrayList<BallotModel<? extends CitizenModel>> allBallots = new ArrayList<BallotModel<? extends CitizenModel>>();
+
+		allBallots.addAll(citizenBallots);
+		allBallots.addAll(soldierBallots);
+		allBallots.addAll(sickCitizenBallots);
+		allBallots.addAll(sickCandidateBallots);
+		allBallots.addAll(sickSoldierBallots);
+
+		return allBallots;
 	}
 
 	public ArrayList<BallotModel<CitizenModel>> getCitizenBallots() {
@@ -89,5 +103,29 @@ public class BallotsTabModel {
 		soldierBallots.add(new BallotModel<SoldierModel>("SoldierModel", "Area 51, Nevada", electionsDate));
 		sickCitizenBallots.add(new BallotModel<SickCitizenModel>("Sick CitizenModel", electionsDate));
 		sickCandidateBallots.add(new BallotModel<SickCandidateModel>("Sick CandidateModel", electionsDate));
+	}
+
+	public boolean addBallot() {
+		// TODO: COMPLETE
+
+		try {
+		} catch (Exception ex) {
+			UIHandler.showError("An unexpected error occured", ex.getMessage());
+		}
+		return false;
+	}
+
+	public boolean removeBallot() {
+		// TODO: COMPLETE
+
+		try {
+		} catch (Exception ex) {
+			UIHandler.showError("An unexpected error occured", ex.getMessage());
+		}
+		return false;
+	}
+
+	public BallotModel<? extends CitizenModel> getBallotByID(int ballotID) {
+		return TBN.binarySearch(getAllBallots(), ballotID);
 	}
 }

@@ -1,9 +1,14 @@
 package ID318783479_ID316334473.Controllers;
 
+import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.BallotModel;
 import ID318783479_ID316334473.Models.BallotsTabModel;
 import ID318783479_ID316334473.Views.BallotsTabView;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.TableView;
 
 public class BallotsTabController {
 	// Constants
@@ -33,23 +38,34 @@ public class BallotsTabController {
 	public BallotsTabController(BallotsTabModel model, BallotsTabView view) {
 		setBallotsTabModel(model);
 		setBallotsTabView(view);
-		
+
 		view.refresh(model);
-		
+
 		EventHandler<ActionEvent> addBallotButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				TableView<Node> ballotsTableView = (TableView<Node>) ballotsTabView.getNodeByName("ballotsTableView");
+
+				try {
+					// TODO: COMPLETE
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured", ex.getMessage());
+				}
 			}
 		};
 		EventHandler<ActionEvent> removeBallotButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				try {
+					// TODO: COMPLETE
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured", ex.getMessage());
+				}
 			}
 		};
-		view.addEventHandlerToButton("addBallotButton" ,addBallotButtonEventHandler);
-		view.addEventHandlerToButton("removeBallotButton" ,removeBallotButtonEventHandler);
+
+		view.addEventHandlerToButton("addBallotButton", addBallotButtonEventHandler);
+		view.addEventHandlerToButton("removeBallotButton", removeBallotButtonEventHandler);
 	}
 
 	// Methods

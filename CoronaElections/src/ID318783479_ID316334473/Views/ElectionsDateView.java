@@ -18,6 +18,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -79,8 +80,10 @@ public class ElectionsDateView {
 		                 super.updateItem(item, empty);
 
 		                 if(item.equals(minDate))
-		                	 setTooltip(new Tooltip("וירוס הקורונה מגיע לישראל"));
+		                	 setTooltip(new Tooltip("התפרצות נגיף הקורונה בישראל"));
 		                 if ((item.compareTo(minDate) < 0) || (item.compareTo(maxDate) > 0)) {
+		                     setStyle("-fx-background-color: #ff4444;");
+		                     setText("X");
 		                     setDisable(true);
 		                 }
 		             }

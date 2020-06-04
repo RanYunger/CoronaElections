@@ -48,6 +48,7 @@ public class CitizensTabController {
 				// TODO: COMPLETE
 			}
 		};
+		
 		view.addEventHandlerToButton("addCitizenButton" ,addCitizenButtonEventHandler);
 		view.addEventHandlerToButton("removeCitizenButton" ,removeCitizenButtonEventHandler);
 	}

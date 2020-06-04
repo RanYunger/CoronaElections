@@ -21,7 +21,6 @@ import ID318783479_ID316334473.Views.MainView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
@@ -94,28 +93,33 @@ public class UIHandler {
 		return null;
 	}
 
-	public static void showSucess(String header, String message) {
+	public static void showSucess(String message) {
 		Alert alert = new Alert(AlertType.INFORMATION);
-		TextArea textArea = new TextArea(message);
 
-		textArea.setEditable(false);
 		alert.setTitle("Success");
-		alert.setHeaderText(header);
-		alert.getDialogPane().setContent(textArea);
+		alert.setHeaderText(message);
+		
 		alert.show();
 	}
 
-	public static void showWarning(String header, String message) {
+	public static void showWarning(String message) {
 		Alert alert = new Alert(AlertType.WARNING);
-		TextArea textArea = new TextArea(header);
 
-		textArea.setEditable(false);
 		alert.setTitle("Warning");
-		alert.setHeaderText(header);
-		alert.getDialogPane().setContent(textArea);
+		alert.setHeaderText(message);
+		
 		alert.show();
 	}
 
+	public static void showError(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+
+		alert.setTitle("Error");
+		alert.setHeaderText(message);
+		
+		alert.show();
+	}
+	
 	public static void showError(String header, String message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		TextArea textArea = new TextArea(message);
@@ -123,7 +127,9 @@ public class UIHandler {
 		textArea.setEditable(false);
 		alert.setTitle("Error");
 		alert.setHeaderText(header);
-		alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
+		if (message.trim().length() != 0)
+			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
+		
 		alert.show();
 	}
 

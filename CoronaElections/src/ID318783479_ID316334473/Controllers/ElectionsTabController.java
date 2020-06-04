@@ -48,6 +48,7 @@ public class ElectionsTabController {
 				// TODO: COMPLETE
 			}
 		};
+		
 		view.addEventHandlerToButton("runElectionsButton" ,runElectionsButtonEventHandler);
 		view.addEventHandlerToButton("showResultsButton" ,showResultsButtonEventHandler);
 	}
