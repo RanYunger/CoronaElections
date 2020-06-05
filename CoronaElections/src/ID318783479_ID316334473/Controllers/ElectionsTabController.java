@@ -1,5 +1,6 @@
 package ID318783479_ID316334473.Controllers;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.ElectionsTabModel;
 import ID318783479_ID316334473.Views.ElectionsTabView;
 import javafx.event.ActionEvent;
@@ -7,7 +8,7 @@ import javafx.event.EventHandler;
 
 public class ElectionsTabController {
 	// Constants
-	
+
 	// Fields
 	private ElectionsTabModel electionsTabModel;
 	private ElectionsTabView electionsTabView;
@@ -33,25 +34,40 @@ public class ElectionsTabController {
 	public ElectionsTabController(ElectionsTabModel model, ElectionsTabView view) {
 		setElectionsTabModel(model);
 		setElectionsTabView(view);
-		
+
 		view.refresh(model);
-		
+
 		EventHandler<ActionEvent> runElectionsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				try {
+					electionsTabModel.runElections();
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured.", ex.getMessage());
+				}
 			}
 		};
 		EventHandler<ActionEvent> showResultsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				try {
+					// Validations
+					if (!electionsTabModel.getElectionsOccurred())
+						throw new IllegalStateException("The results will be visible once the process is complete.");
+					
+					electionsTabModel.showResults();
+
+				} catch (IllegalStateException ex) {
+					UIHandler.showError(ex.getMessage());
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured.", ex.getMessage());
+				}
 			}
 		};
-		
-		view.addEventHandlerToButton("runElectionsButton" ,runElectionsButtonEventHandler);
-		view.addEventHandlerToButton("showResultsButton" ,showResultsButtonEventHandler);
+
+		view.addEventHandlerToButton("runElectionsButton", runElectionsButtonEventHandler);
+		view.addEventHandlerToButton("showResultsButton", showResultsButtonEventHandler);
 	}
-	
+
 	// Methods
 }

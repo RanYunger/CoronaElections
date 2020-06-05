@@ -10,6 +10,7 @@ public class ElectionsTabModel {
 
 	// Fields
 	private YearMonth electionsDate;
+	private boolean electionsOccurred;
 
 	// Properties (Getters and Setters)
 	public YearMonth getElectionsDate() {
@@ -20,10 +21,19 @@ public class ElectionsTabModel {
 		this.electionsDate = electionsDate;
 	}
 
+	public boolean getElectionsOccurred() {
+		return electionsOccurred;
+	}
+
+	public void setElectionsOccurred(boolean electionsOccurred) {
+		this.electionsOccurred = electionsOccurred;
+	}
+
 	// Constructors
 	public ElectionsTabModel(YearMonth electionsDate) {
 		setElectionsDate(electionsDate);
-		
+		setElectionsOccurred(false);
+
 		init();
 	}
 
@@ -34,7 +44,7 @@ public class ElectionsTabModel {
 
 	private void init() {
 	}
-	
+
 	public boolean runElections() {
 		// TODO: COMPLETE
 

@@ -41,7 +41,11 @@ public class PartiesTabController {
 		EventHandler<ActionEvent> addPartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				try {
+					// TODO: COMPLETE
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured", ex.getMessage());
+				}
 			}
 		};
 		EventHandler<ActionEvent> removePartyButtonEventHandler = new EventHandler<ActionEvent>() {
@@ -53,12 +57,14 @@ public class PartiesTabController {
 				try {
 					// Validations
 					if (selectedIndex == -1)
-						throw new NullPointerException("Choose a party to remove.");
+						throw new IllegalStateException("Choose a party to remove.");
 
 					partiesTableView.getItems().remove(selectedIndex);
 
-				} catch (NullPointerException ex) {
+				} catch (IllegalStateException ex) {
 					UIHandler.showError(ex.getMessage());
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
 			}
 		};

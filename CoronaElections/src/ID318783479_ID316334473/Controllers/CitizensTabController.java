@@ -1,9 +1,11 @@
 package ID318783479_ID316334473.Controllers;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.CitizensTabModel;
 import ID318783479_ID316334473.Views.CitizensTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.TableView;
 
 public class CitizensTabController {
 	// Constants
@@ -39,13 +41,29 @@ public class CitizensTabController {
 		EventHandler<ActionEvent> addCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				try {
+					// TODO: COMPLETE
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured", ex.getMessage());
+				}
 			}
 		};
 		EventHandler<ActionEvent> removeCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				TableView<String> citizensTableView = (TableView<String>) citizensTabView.getNodeByName("citizensTableView");
+				int selectedIndex = citizensTableView.getSelectionModel().getSelectedIndex();
+				
+				try {
+					// Validations
+					if (selectedIndex == -1)
+						throw new IllegalStateException("Choose a citizen to remove.");
+					
+				} catch (IllegalStateException ex) {
+					UIHandler.showError(ex.getMessage());
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured.", ex.getMessage());
+				}
 			}
 		};
 		

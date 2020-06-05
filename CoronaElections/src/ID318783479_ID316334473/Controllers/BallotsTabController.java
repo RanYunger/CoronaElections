@@ -44,8 +44,6 @@ public class BallotsTabController {
 		EventHandler<ActionEvent> addBallotButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				TableView<Node> ballotsTableView = (TableView<Node>) ballotsTabView.getNodeByName("ballotsTableView");
-
 				try {
 					// TODO: COMPLETE
 				} catch (Exception ex) {
@@ -56,10 +54,18 @@ public class BallotsTabController {
 		EventHandler<ActionEvent> removeBallotButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				TableView<String> ballotsTableView = (TableView<String>) ballotsTabView.getNodeByName("ballotsTableView");
+				int selectedIndex = ballotsTableView.getSelectionModel().getSelectedIndex();
+				
 				try {
-					// TODO: COMPLETE
+					// Validations
+					if (selectedIndex == -1)
+						throw new IllegalStateException("Choose a ballot to remove.");
+					
+				} catch (IllegalStateException ex) {
+					UIHandler.showError(ex.getMessage());
 				} catch (Exception ex) {
-					UIHandler.showError("An unexpected error occured", ex.getMessage());
+					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
 			}
 		};

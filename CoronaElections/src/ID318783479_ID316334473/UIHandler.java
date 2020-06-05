@@ -23,6 +23,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -93,7 +94,19 @@ public class UIHandler {
 		return null;
 	}
 
-	public static void showSucess(String message) {
+	public static ButtonType showConfirmation(String message) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+
+		alert.setTitle("Confirmation");
+		alert.setHeaderText(message);
+		alert.getButtonTypes().clear();
+		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+		alert.show();
+		
+		return alert.getResult();
+	}
+	
+	public static void showSuccess(String message) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 
 		alert.setTitle("Success");
@@ -133,14 +146,8 @@ public class UIHandler {
 		alert.show();
 	}
 
-	public static ImageView buildImage(String imageName, double height, double width) {
-		Image image = new Image(imageName, height, width, false, false);
-
-		return new ImageView(image);
-	}
-
 	public static StackPane buildBackground(Node node, double width, double height) {
-		ImageView backgroundImage = buildImage("IsraelFlag.PNG", width, height);
+		ImageView backgroundImage = UIHandler.buildImage("IsraelFlag.PNG", width, height);
 		Label topLabel = new Label("מדינה אנונימית במזרח התיכון");
 		Label bottomLabel = new Label("מערכת ניהול בחירות בתקופת קורונה");
 		StackPane stackPane = new StackPane();
@@ -154,6 +161,12 @@ public class UIHandler {
 		StackPane.setMargin(bottomLabel, new Insets(height * 0.95, 0, height * 0.08, 0));
 
 		return stackPane;
+	}
+	
+	public static ImageView buildImage(String imageName, double height, double width) {
+		Image image = new Image(imageName, height, width, false, false);
+
+		return new ImageView(image);
 	}
 
 	public static HBox buildStatusHBox() {

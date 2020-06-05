@@ -1,1 +1,2 @@
 1. Build logic for each tab
+2. Make UIHandler.buildBackground() generic (not setting fixed margins)

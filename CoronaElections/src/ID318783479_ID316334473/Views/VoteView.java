@@ -1,5 +1,6 @@
 package ID318783479_ID316334473.Views;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.VoteModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -7,6 +8,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -42,15 +44,20 @@ public class VoteView {
 		partiesTableView = new TableView<String>();
 
 		messageLabel.setFont(new Font(30));
+		
+		partiesTableView.getColumns().add(new TableColumn<String, String>("PartyName"));
+		partiesTableView.getColumns().get(0).setMinWidth(200);
+		partiesTableView.getColumns().add(new TableColumn<String, String>(""));
+		partiesTableView.getColumns().get(1).setMinWidth(200);
 
 		vBox.setAlignment(Pos.CENTER);
 		vBox.getChildren().addAll(messageLabel, partiesTableView);
-		VBox.setMargin(messageLabel, new Insets(20));
-		VBox.setMargin(partiesTableView, new Insets(20));
+		VBox.setMargin(messageLabel, new Insets(0,0,0,0));
+		VBox.setMargin(partiesTableView, new Insets(0,0,0,0));
 
 		stage.setTitle("Corona Elections");
 		stage.setResizable(false);
-		// TODO: Set icon + background image
+		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
 		stage.setScene(new Scene(vBox, 500, 400));
 		stage.show();
 	}
