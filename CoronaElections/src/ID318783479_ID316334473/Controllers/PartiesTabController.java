@@ -1,11 +1,14 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.AddPartyModel;
 import ID318783479_ID316334473.Models.PartiesTabModel;
+import ID318783479_ID316334473.Views.AddPartyView;
 import ID318783479_ID316334473.Views.PartiesTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 public class PartiesTabController {
 	// Constants
@@ -42,7 +45,9 @@ public class PartiesTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					// TODO: COMPLETE
+					AddPartyModel model = new AddPartyModel();
+					AddPartyView view = new AddPartyView(new Stage());
+					AddPartyController controller = new AddPartyController(model, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
 				}

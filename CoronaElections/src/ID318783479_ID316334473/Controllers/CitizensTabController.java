@@ -1,11 +1,14 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.AddCitizenModel;
 import ID318783479_ID316334473.Models.CitizensTabModel;
+import ID318783479_ID316334473.Views.AddCitizenView;
 import ID318783479_ID316334473.Views.CitizensTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 public class CitizensTabController {
 	// Constants
@@ -42,7 +45,9 @@ public class CitizensTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					// TODO: COMPLETE
+					AddCitizenModel model = new AddCitizenModel();
+					AddCitizenView view = new AddCitizenView(new Stage());
+					AddCitizenController controller = new AddCitizenController(model, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
 				}

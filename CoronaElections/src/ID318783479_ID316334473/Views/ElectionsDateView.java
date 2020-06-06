@@ -66,7 +66,7 @@ public class ElectionsDateView {
 
 	public void buildScene(Stage stage) {
 		LocalDate minDate = LocalDate.of(2020, 2, 27), maxDate = LocalDate.now();
-		
+
 		vBox = new VBox();
 		electionsDateLabel = new Label("Elections Date");
 		electionsDateDatePicker = new DatePicker();
@@ -74,23 +74,24 @@ public class ElectionsDateView {
 
 		electionsDateLabel.setFont(new Font(30));
 		electionsDateDatePicker.setDayCellFactory(new Callback<DatePicker, DateCell>() {
-		     public DateCell call(final DatePicker datePicker) {
-		         return new DateCell() {
-		             @Override public void updateItem(LocalDate item, boolean empty) {
-		                 super.updateItem(item, empty);
+			public DateCell call(final DatePicker datePicker) {
+				return new DateCell() {
+					@Override
+					public void updateItem(LocalDate item, boolean empty) {
+						super.updateItem(item, empty);
 
-		                 if(item.equals(minDate))
-		                	 setTooltip(new Tooltip("התפרצות נגיף הקורונה בישראל"));
-		                 if ((item.compareTo(minDate) < 0) || (item.compareTo(maxDate) > 0)) {
-		                     setStyle("-fx-background-color: #ff4444;");
-		                     setText("X");
-		                     setDisable(true);
-		                 }
-		             }
-		         };
-		     }
-		 });
-		electionsDateDatePicker.setValue(LocalDate.now());
+						if (item.equals(minDate))
+							setTooltip(new Tooltip("התפרצות נגיף הקורונה בישראל"));
+						if ((item.compareTo(minDate) < 0) || (item.compareTo(maxDate) > 0)) {
+							setStyle("-fx-background-color: #ff4444;");
+							setText("X");
+							setDisable(true);
+						}
+					}
+				};
+			}
+		});
+		electionsDateDatePicker.setValue(maxDate);
 		enterButton.setFont(new Font(20));
 
 		vBox.setAlignment(Pos.CENTER);

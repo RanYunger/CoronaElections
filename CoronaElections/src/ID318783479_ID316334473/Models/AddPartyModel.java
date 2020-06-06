@@ -10,6 +10,9 @@ public class AddPartyModel {
 	// Properties (Getters and Setters)
 	
 	// Constructors
+	public AddPartyModel() {
+		
+	}
 	
 	// Methods
 	public void show(Group root) {

@@ -10,6 +10,9 @@ public class AddCitizenModel {
 	// Properties (Getters and Setters)
 	
 	// Constructors
+	public AddCitizenModel() {
+		
+	}
 	
 	// Methods
 	public void show(Group root) {

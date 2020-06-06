@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -22,8 +23,9 @@ public class AddBallotView {
 	// Fields
 	private Group root;
 	private VBox vBox;
-	private HBox row1HBox, row2HBox;
-	private Label headerLabel, ballotAdressLabel, ballotTypeLabel;
+	private HBox mainHBox, row1HBox, row2HBox;
+	private ImageView ballotImageView;
+	private Label headerLabel, ballotAddressLabel, ballotTypeLabel;
 	private TextField ballotAddressTextField;
 	private ComboBox<String> ballotTypeComboBox;
 	private Button submitButton;
@@ -44,44 +46,51 @@ public class AddBallotView {
 	}
 
 	private void buildScene(Stage stage) {
-		double sceneWidth = 400, sceneHeight = 400;
+		double sceneWidth = 600, sceneHeight = 250;
 		String[] ballotTypes = { "Regular (Citizens / Candidates)", "Military (Soldiers)", "Sick Citizens",
 				"Sick Candidates", "Sick Soldiers" };
 
 		vBox = new VBox();
+		mainHBox = new HBox();
 		row1HBox = new HBox();
 		row2HBox = new HBox();
+		ballotImageView = UIHandler.buildImage("Ballot.png", sceneHeight, sceneHeight);
 		headerLabel = new Label("Fill in the form");
-		ballotAdressLabel = new Label("Ballot Adress:");
-		ballotTypeLabel = new Label("Ballot Type:");
-		ballotAddressTextField = new TextField("");
+		ballotAddressLabel = new Label("Address:");
+		ballotTypeLabel = new Label("Type:");
+		ballotAddressTextField = new TextField();
 		ballotTypeComboBox = new ComboBox<String>(FXCollections.observableArrayList(ballotTypes));
 		submitButton = new Button("Submit");
 
 		headerLabel.setFont(new Font(30));
-		headerLabel.setAlignment(Pos.CENTER);
+		ballotAddressLabel.setFont(new Font(20));
+		ballotTypeLabel.setFont(new Font(20));
+		ballotAddressTextField.setMinWidth(210);
+		submitButton.setFont(new Font(20));
 
-		row1HBox.setAlignment(Pos.CENTER);
-		row1HBox.getChildren().addAll(ballotAdressLabel, ballotAddressTextField);
-		HBox.setMargin(ballotAdressLabel, new Insets(0, 10, 0, 0));
-		HBox.setMargin(ballotAddressTextField, new Insets(0, 0, 0, 10));
+		row1HBox.getChildren().addAll(ballotAddressLabel, ballotAddressTextField);
+		HBox.setMargin(ballotAddressLabel, new Insets(0, 10, 0, 10));
+		HBox.setMargin(ballotAddressTextField, new Insets(0, 10, 0, 10));
 
-		row2HBox.setAlignment(Pos.CENTER);
 		row2HBox.getChildren().addAll(ballotTypeLabel, ballotTypeComboBox);
-		HBox.setMargin(ballotTypeLabel, new Insets(0, 10, 0, 0));
-		HBox.setMargin(ballotTypeComboBox, new Insets(0, 0, 0, 10));
+		HBox.setMargin(ballotTypeLabel, new Insets(0, 10, 0, 10));
+		HBox.setMargin(ballotTypeComboBox, new Insets(0, 10, 0, 40));
 
-		vBox.setAlignment(Pos.CENTER);
 		vBox.getChildren().addAll(headerLabel, row1HBox, row2HBox, submitButton);
-		VBox.setMargin(headerLabel, new Insets(0, 0, sceneHeight * 0.3, 0));
-		VBox.setMargin(row1HBox, new Insets(30, 0, 30, 0));
-		VBox.setMargin(row2HBox, new Insets(30, 0, 30, 0));
+		vBox.setAlignment(Pos.TOP_CENTER);
+
+		mainHBox.getChildren().addAll(vBox, ballotImageView);
+
+		VBox.setMargin(headerLabel, new Insets(0, 0, sceneHeight * 0.1, 0));
+		VBox.setMargin(row1HBox, new Insets(10, 0, 10, 0));
+		VBox.setMargin(row2HBox, new Insets(10, 0, 10, 0));
+		VBox.setMargin(submitButton, new Insets(10, 0, 10, 0));
 
 		stage.setTitle("Corona Elections");
 		stage.setResizable(false);
 		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
-		stage.setScene(new Scene(/* UIHandler.buildBackground(gridPane, sceneWidth, sceneHeight) */ vBox, sceneWidth,
-				sceneHeight));
+		stage.setScene(new Scene(/* UIHandler.buildBackground(gridPane, sceneWidth, sceneHeight) */ mainHBox,
+				sceneWidth, sceneHeight));
 		stage.show();
 	}
 }

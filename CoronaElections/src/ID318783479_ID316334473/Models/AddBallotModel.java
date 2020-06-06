@@ -10,6 +10,9 @@ public class AddBallotModel {
 	// Properties (Getters and Setters)
 	
 	// Constructors
+	public AddBallotModel() {
+		
+	}
 	
 	// Methods
 	public void show(Group root) {

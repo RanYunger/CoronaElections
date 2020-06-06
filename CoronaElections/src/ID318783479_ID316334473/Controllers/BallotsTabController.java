@@ -1,14 +1,14 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.BallotModel;
+import ID318783479_ID316334473.Models.AddBallotModel;
 import ID318783479_ID316334473.Models.BallotsTabModel;
+import ID318783479_ID316334473.Views.AddBallotView;
 import ID318783479_ID316334473.Views.BallotsTabView;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 public class BallotsTabController {
 	// Constants
@@ -45,7 +45,9 @@ public class BallotsTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					// TODO: COMPLETE
+					AddBallotModel model = new AddBallotModel();
+					AddBallotView view = new AddBallotView(new Stage());
+					AddBallotController controller = new AddBallotController(model, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
 				}
