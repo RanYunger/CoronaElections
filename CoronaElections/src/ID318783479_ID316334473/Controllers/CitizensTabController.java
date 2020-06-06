@@ -46,7 +46,7 @@ public class CitizensTabController {
 			public void handle(ActionEvent event) {
 				try {
 					AddCitizenModel model = new AddCitizenModel();
-					AddCitizenView view = new AddCitizenView(new Stage());
+					AddCitizenView view = new AddCitizenView(new Stage(), citizensTabModel.getElectionsDate());
 					AddCitizenController controller = new AddCitizenController(model, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());

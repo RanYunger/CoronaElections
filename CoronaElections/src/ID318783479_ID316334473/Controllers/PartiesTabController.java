@@ -46,7 +46,7 @@ public class PartiesTabController {
 			public void handle(ActionEvent event) {
 				try {
 					AddPartyModel model = new AddPartyModel();
-					AddPartyView view = new AddPartyView(new Stage());
+					AddPartyView view = new AddPartyView(new Stage(), partiesTabModel.getElectionsDate());
 					AddPartyController controller = new AddPartyController(model, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());

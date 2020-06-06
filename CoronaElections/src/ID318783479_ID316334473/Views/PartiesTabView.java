@@ -54,9 +54,9 @@ public class PartiesTabView {
 		partiesTableView = new TableView<String>();
 
 		gridPane.getRowConstraints().add(new RowConstraints());
-		gridPane.getRowConstraints().get(0).setPercentHeight(10);
+		gridPane.getRowConstraints().get(0).setPercentHeight(20);
 		gridPane.getRowConstraints().add(new RowConstraints());
-		gridPane.getRowConstraints().get(1).setPercentHeight(90);
+		gridPane.getRowConstraints().get(1).setPercentHeight(80);
 
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
 		gridPane.getColumnConstraints().get(0).setPercentWidth(100);
@@ -91,8 +91,8 @@ public class PartiesTabView {
 		gridPane.add(hBox, 0, 0, 1, 1);
 		gridPane.add(partiesTableView, 0, 1, 1, 1);
 		
-		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
-		GridPane.setMargin(partiesTableView, new Insets(10, 0, 425, 0));
+		GridPane.setMargin(hBox, new Insets(110, 0, 0, 0));
+		GridPane.setMargin(partiesTableView, new Insets(10, 0, 145, 0));
 	}
 
 	public Node asNode() {

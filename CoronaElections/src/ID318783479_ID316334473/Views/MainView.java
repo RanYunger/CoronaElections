@@ -1,5 +1,7 @@
 package ID318783479_ID316334473.Views;
 
+import java.time.YearMonth;
+
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.MainModel;
 import javafx.scene.Group;
@@ -14,6 +16,7 @@ public class MainView {
 
 	// Fields
 	private Group root;
+	private Stage stage;
 	private TabPane tabPane;
 	private ElectionsTabView electionsTabView;
 	private BallotsTabView ballotsTabView;
@@ -22,6 +25,15 @@ public class MainView {
 	private AboutTabView aboutTabView;
 
 	// Properties (Getters and Setters)
+	
+	public Stage getStage() {
+		return stage;
+	}
+	
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
+
 	public ElectionsTabView getElectionsTabView() {
 		return electionsTabView;
 	}
@@ -63,16 +75,17 @@ public class MainView {
 	}
 
 	// Constructors
-	public MainView(Stage stage) {
+	public MainView(Stage stage, YearMonth electionsDate) {
 		root = new Group();
 
+		setStage(stage);
 		setElectionsTabView(new ElectionsTabView());
 		setBallotsTabView(new BallotsTabView());
 		setCitizensTabView(new CitizensTabView());
 		setPartiesTabView(new PartiesTabView());
 		setAboutTabView(new AboutTabView());
 
-		buildScene(stage);
+		buildScene(stage, electionsDate);
 	}
 
 	// Methods
@@ -81,7 +94,7 @@ public class MainView {
 		model.show(root);
 	}
 
-	private void buildScene(Stage stage) {
+	private void buildScene(Stage stage, YearMonth electionsDate) {
 		String[] tabNames = new String[] { "Elections", "Ballots", "Citizens", "Parties", "About" };
 		Node[] tabContents = { electionsTabView.asNode(), ballotsTabView.asNode(), citizensTabView.asNode(),
 				partiesTabView.asNode(), aboutTabView.asNode() };
@@ -95,7 +108,7 @@ public class MainView {
 			tabPane.getTabs().add(currentTab);
 		}
 
-		stage.setTitle("Corona Elections");
+		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
 		stage.setResizable(false);
 		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
 		stage.setScene(new Scene(UIHandler.buildBackground(tabPane, sceneWidth, sceneHeight), sceneWidth, sceneHeight));

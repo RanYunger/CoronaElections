@@ -2,6 +2,8 @@ package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.Models.AddBallotModel;
 import ID318783479_ID316334473.Views.AddBallotView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class AddBallotController {
 	// Constants
@@ -33,6 +35,15 @@ public class AddBallotController {
 		setAddBallotView(view);
 
 		addBallotView.refresh(addBallotModel);
+		
+		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO: COMPLETE
+			}
+		};
+
+		view.addEventHandlerToButton("submitButton", submitButtonEventHandler);
 	}
 
 	// Methods

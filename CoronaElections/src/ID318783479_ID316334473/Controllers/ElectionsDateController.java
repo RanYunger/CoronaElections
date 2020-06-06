@@ -47,7 +47,7 @@ public class ElectionsDateController {
 			public void handle(ActionEvent event) {
 				YearMonth electionsDate = electionsDateView.getElectionsDate();
 				MainModel mainModel = new MainModel(electionsDate);
-				MainView mainView = new MainView(new Stage());
+				MainView mainView = new MainView(new Stage(), electionsDate);
 				MainController mainController;
 
 				

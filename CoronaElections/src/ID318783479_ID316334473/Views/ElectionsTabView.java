@@ -55,9 +55,9 @@ public class ElectionsTabView {
 		resultsByBallotBarChart = new BarChart<String, Number>(new CategoryAxis(), new NumberAxis());
 
 		gridPane.getRowConstraints().add(new RowConstraints());
-		gridPane.getRowConstraints().get(0).setPercentHeight(10);
+		gridPane.getRowConstraints().get(0).setPercentHeight(20);
 		gridPane.getRowConstraints().add(new RowConstraints());
-		gridPane.getRowConstraints().get(1).setPercentHeight(90);
+		gridPane.getRowConstraints().get(1).setPercentHeight(80);
 
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
 		gridPane.getColumnConstraints().get(0).setPercentWidth(20);
@@ -86,9 +86,9 @@ public class ElectionsTabView {
 		gridPane.add(finalResultsTableView, 0, 1, 1, 1);
 		gridPane.add(resultsByBallotBarChart, 1, 1, 2, 1);
 
-		GridPane.setMargin(hBox, new Insets(70, 0, 0, 0));
-		GridPane.setMargin(finalResultsTableView, new Insets(10, 0, 425, 0));
-		GridPane.setMargin(resultsByBallotBarChart, new Insets(10, 0, 425, 0));
+		GridPane.setMargin(hBox, new Insets(110, 0, 0, 0));
+		GridPane.setMargin(finalResultsTableView, new Insets(10, 0, 145, 0));
+		GridPane.setMargin(resultsByBallotBarChart, new Insets(10, 0, 145, 0));
 	}
 
 	public Node asNode() {

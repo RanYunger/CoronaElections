@@ -46,7 +46,7 @@ public class BallotsTabController {
 			public void handle(ActionEvent event) {
 				try {
 					AddBallotModel model = new AddBallotModel();
-					AddBallotView view = new AddBallotView(new Stage());
+					AddBallotView view = new AddBallotView(new Stage(), ballotsTabModel.getElectionsDate());
 					AddBallotController controller = new AddBallotController(model, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());

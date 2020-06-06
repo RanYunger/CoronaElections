@@ -2,6 +2,8 @@ package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.Models.AddPartyModel;
 import ID318783479_ID316334473.Views.AddPartyView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class AddPartyController {
 	// Constants
@@ -33,6 +35,15 @@ public class AddPartyController {
 		setAddPartyView(view);
 
 		addPartyView.refresh(addPartyModel);
+		
+		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO: COMPLETE
+			}
+		};
+
+		view.addEventHandlerToButton("submitButton", submitButtonEventHandler);
 	}
 
 	// Methods
