@@ -1,10 +1,15 @@
 package ID318783479_ID316334473.Controllers;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Models.ElectionsDateModel;
 import ID318783479_ID316334473.Models.MainModel;
+import ID318783479_ID316334473.Models.PartyModel;
+import ID318783479_ID316334473.Models.PartyModel.PartyAssociation;
 import ID318783479_ID316334473.Views.ElectionsDateView;
 import ID318783479_ID316334473.Views.MainView;
 import javafx.event.ActionEvent;
@@ -50,21 +55,20 @@ public class ElectionsDateController {
 				MainView mainView = new MainView(new Stage(), electionsDate);
 				MainController mainController;
 
-				
 				electionsDateModel.setElectionsDate(electionsDate);
 				electionsDateView.refresh(electionsDateModel);
+				
+				electionsDateView.close();
 
 				mainController = new MainController(mainModel, mainView, mainModel.getElectionsTabModel(),
 						mainView.getElectionsTabView(), mainModel.getBallotsTabModel(), mainView.getBallotsTabView(),
 						mainModel.getCitizensTabModel(), mainView.getCitizensTabView(), mainModel.getPartiesTabModel(),
 						mainView.getPartiesTabView());
-				
+
 				// These bindings will help to retrieve generic Model/Controller/View in need
 				UIHandler.mainModel = mainModel;
 				UIHandler.mainController = mainController;
 				UIHandler.mainView = mainView;
-				
-				electionsDateView.close();
 			}
 		};
 		electionsDateView.addEventHandlerToEnterButton(enterButtonEventHandler);

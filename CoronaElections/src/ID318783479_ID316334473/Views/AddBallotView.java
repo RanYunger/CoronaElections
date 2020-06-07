@@ -51,15 +51,15 @@ public class AddBallotView {
 	}
 
 	private void buildScene(Stage stage, YearMonth electionsDate) {
-		double sceneWidth = 600, sceneHeight = 250;
 		String[] ballotTypes = { "Regular (Citizens / Candidates)", "Military (Soldiers)", "Sick Citizens",
 				"Sick Candidates", "Sick Soldiers" };
+		double sceneWidth = 600, sceneHeight = 260, fontSize = 30;
 
 		vBox = new VBox();
 		mainHBox = new HBox();
 		row1HBox = new HBox();
 		row2HBox = new HBox();
-		ballotImageView = UIHandler.buildImage("Ballot.png", sceneHeight, sceneHeight);
+		ballotImageView = UIHandler.buildImage("Ballot.png", sceneHeight * 0.6, sceneHeight * 0.6);
 		headerLabel = new Label("New Ballot");
 		addressLabel = new Label("Address:");
 		typeLabel = new Label("Type:");
@@ -83,19 +83,15 @@ public class AddBallotView {
 
 		vBox.getChildren().addAll(headerLabel, row1HBox, row2HBox, submitButton);
 		vBox.setAlignment(Pos.TOP_CENTER);
+		VBox.setMargin(headerLabel, new Insets(sceneHeight * 0.2, 0, 0, 0));
 
 		mainHBox.getChildren().addAll(vBox, ballotImageView);
-
-		VBox.setMargin(headerLabel, new Insets(0, 0, sceneHeight * 0.1, 0));
-		VBox.setMargin(row1HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row2HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(submitButton, new Insets(10, 0, 10, 0));
+		HBox.setMargin(ballotImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.3));
 
 		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
 		stage.setResizable(false);
-		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
-		stage.setScene(new Scene(/* UIHandler.buildBackground(gridPane, sceneWidth, sceneHeight) */ mainHBox,
-				sceneWidth, sceneHeight));
+		UIHandler.setIcon(stage);
+		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false), sceneWidth, sceneHeight));
 		stage.show();
 	}
 

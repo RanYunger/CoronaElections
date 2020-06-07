@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import ID318783479_ID316334473.Controllers.MainController;
@@ -18,15 +19,24 @@ import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
 import ID318783479_ID316334473.Models.SoldierModel;
 import ID318783479_ID316334473.Views.MainView;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,6 +44,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /*
  * Helper class which contains all UI methods, plus extra helpful
@@ -50,17 +62,6 @@ public class UIHandler {
 	public static MainView mainView;
 
 	// Properties
-	public static void setMainModel(MainModel mainModel) {
-		UIHandler.mainModel = mainModel;
-	}
-
-	public static void setMainController(MainController mainController) {
-		UIHandler.mainController = mainController;
-	}
-
-	public static void setMainView(MainView mainView) {
-		UIHandler.mainView = mainView;
-	}
 
 	// Methods
 	public static Object getModelByName(String modelName) {
@@ -94,75 +95,153 @@ public class UIHandler {
 		return null;
 	}
 
+	public static int Vote(CitizenModel voter, ArrayList<PartyModel> parties) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		ComboBox<String> partiesComboBox = new ComboBox<String>();
+
+		try {
+			// Validations
+			if ((voter.isIsolated()) && (voter.getAssociatedBallot().isCoronaBallot()) && (!voter.iswearingSuit()))
+				throw new IllegalStateException(
+						String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.",
+								voter.getFullName()));
+
+			for (PartyModel partyModel : parties)
+				partiesComboBox.getItems().add(partyModel.getName());
+
+			setIcon(stage);
+			alert.setTitle("Corona Elections");
+			alert.getDialogPane().setExpandableContent(null);
+			alert.getDialogPane().setExpanded(false);
+			alert.setHeaderText(String.format("Greetings, %s. Do you want to vote?", voter.getFullName()));
+			alert.getButtonTypes().clear();
+			alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+			EventHandler<DialogEvent> onCloseRequestEventHandler = new EventHandler<DialogEvent>() {
+				@Override
+				public void handle(DialogEvent arg0) {
+					ButtonType alertResult = alert.getResult();
+
+					if (alertResult == ButtonType.YES) {
+						arg0.consume();
+
+						stage.setOnCloseRequest(e -> e.consume());
+
+						alert.setAlertType(AlertType.NONE);
+						alert.setHeaderText("Vote for your chosen party");
+						alert.getButtonTypes().clear();
+						alert.getButtonTypes().add(ButtonType.FINISH);
+						alert.getDialogPane().setExpandableContent(partiesComboBox);
+						alert.getDialogPane().setExpanded(true);
+					} else if (alertResult == alert.getButtonTypes().get(0)) {
+						if (partiesComboBox.getSelectionModel().getSelectedIndex() == -1) {
+							arg0.consume();
+
+							showError("You've come this far. Just choose a party!");
+						}
+					} else
+						alert.close();
+				}
+			};
+
+			alert.setOnCloseRequest(onCloseRequestEventHandler);
+
+			alert.show();
+
+			return partiesComboBox.getSelectionModel().getSelectedIndex();
+		} catch (IllegalStateException ex) {
+			UIHandler.showError(ex.getMessage());
+		} catch (Exception ex) {
+			UIHandler.showError("An unexpected error occured.", ex.getMessage());
+		}
+
+		return -1;
+	}
+
 	public static ButtonType showConfirmation(String message) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
+		setIcon(stage);
 		alert.setTitle("Confirmation");
 		alert.setHeaderText(message);
 		alert.getButtonTypes().clear();
 		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 		alert.show();
-		
+
 		return alert.getResult();
 	}
-	
+
 	public static void showSuccess(String message) {
 		Alert alert = new Alert(AlertType.INFORMATION);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
+		setIcon(stage);
 		alert.setTitle("Success");
 		alert.setHeaderText(message);
-		
+
 		alert.show();
 	}
 
 	public static void showWarning(String message) {
 		Alert alert = new Alert(AlertType.WARNING);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
+		setIcon(stage);
 		alert.setTitle("Warning");
 		alert.setHeaderText(message);
-		
+
 		alert.show();
 	}
 
 	public static void showError(String message) {
 		Alert alert = new Alert(AlertType.ERROR);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
+		setIcon(stage);
 		alert.setTitle("Error");
 		alert.setHeaderText(message);
-		
+
 		alert.show();
 	}
-	
+
 	public static void showError(String header, String message) {
 		Alert alert = new Alert(AlertType.ERROR);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 		TextArea textArea = new TextArea(message);
 
+		setIcon(stage);
 		textArea.setEditable(false);
 		alert.setTitle("Error");
 		alert.setHeaderText(header);
 		if (message.trim().length() != 0)
 			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
-		
+
 		alert.show();
 	}
 
-	public static StackPane buildBackground(Node node, double width, double height) {
+	public static void setIcon(Stage stage) {
+		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
+	}
+
+	public static StackPane buildBackground(Node node, double width, double height, double fontSize, boolean hasTabs) {
 		ImageView backgroundImage = UIHandler.buildImage("IsraelFlag.PNG", width, height);
 		Label topLabel = new Label("מדינה אנונימית במזרח התיכון");
 		Label bottomLabel = new Label("מערכת ניהול בחירות בתקופת קורונה");
 		StackPane stackPane = new StackPane();
 
-		topLabel.setFont(new Font(50));
+		topLabel.setFont(new Font(fontSize));
 		topLabel.setTextFill(Color.WHITE);
-		bottomLabel.setFont(new Font(50));
+		bottomLabel.setFont(new Font(fontSize));
 		bottomLabel.setTextFill(Color.WHITE);
 		stackPane.getChildren().addAll(backgroundImage, topLabel, bottomLabel, node);
-		StackPane.setMargin(topLabel, new Insets(700, 0, height * 1.8, 0));
-		StackPane.setMargin(bottomLabel, new Insets(height * 0.95, 0, height * 0.08, 0));
+		StackPane.setMargin(topLabel, new Insets(hasTabs ? height : height * 0.92, 0, height * 1.8, 0));
+		StackPane.setMargin(bottomLabel, new Insets(hasTabs ? height * 0.95 : height * 0.92, 0, height * 0.08, 0));
 
 		return stackPane;
 	}
-	
+
 	public static ImageView buildImage(String imageName, double height, double width) {
 		Image image = new Image(imageName, height, width, false, false);
 

@@ -57,16 +57,16 @@ public class AddPartyView {
 	}
 
 	private void buildScene(Stage stage, YearMonth electionsDate) {
-		double sceneWidth = 700, sceneHeight = 350;
 		LocalDate minDate = LocalDate.of(1948, 5, 14), maxDate = LocalDate.now();
 		String[] wings = { "Left", "Center", "Right" };
+		double sceneWidth = 700, sceneHeight = 350, fontSize = 40;
 
 		vBox = new VBox();
 		mainHBox = new HBox();
 		row1HBox = new HBox();
 		row2HBox = new HBox();
 		row3HBox = new HBox();
-		partyImageView = UIHandler.buildImage("Party.png", sceneHeight, sceneHeight);
+		partyImageView = UIHandler.buildImage("Party.png", sceneHeight * 0.6, sceneHeight * 0.6);
 		headerLabel = new Label("New Party");
 		nameLabel = new Label("Name:");
 		wingLabel = new Label("Wing:");
@@ -117,20 +117,16 @@ public class AddPartyView {
 
 		vBox.getChildren().addAll(headerLabel, row1HBox, row2HBox, row3HBox, submitButton);
 		vBox.setAlignment(Pos.TOP_CENTER);
+		VBox.setMargin(headerLabel, new Insets(sceneHeight * 0.2, 0, 15, 0));
+		VBox.setMargin(row3HBox, new Insets(0, 0, 5, 0));
 
 		mainHBox.getChildren().addAll(vBox, partyImageView);
-
-		VBox.setMargin(headerLabel, new Insets(0, 0, sceneHeight * 0.1, 0));
-		VBox.setMargin(row1HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row2HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row3HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(submitButton, new Insets(10, 0, 10, 0));
+		HBox.setMargin(partyImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.4));
 
 		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
 		stage.setResizable(false);
-		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
-		stage.setScene(new Scene(/* UIHandler.buildBackground(gridPane, sceneWidth, sceneHeight) */ mainHBox,
-				sceneWidth, sceneHeight));
+		UIHandler.setIcon(stage);
+		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false), sceneWidth, sceneHeight));
 		stage.show();
 	}
 

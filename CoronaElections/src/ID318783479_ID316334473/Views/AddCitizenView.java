@@ -61,9 +61,9 @@ public class AddCitizenView {
 	}
 
 	private void buildScene(Stage stage, YearMonth electionsDate) {
-		double sceneWidth = 950, sceneHeight = 500;
 		int maxBorderYear = YearMonth.now().getYear() - 18, minBorderYear = maxBorderYear - 82;
 		ArrayList<Integer> years = new ArrayList<Integer>(), daysOfSickness = new ArrayList<Integer>();
+		double sceneWidth = 950, sceneHeight = 500, fontSize = 50;
 
 		for (int currentYear = maxBorderYear; currentYear >= minBorderYear; currentYear--)
 			years.add(currentYear);
@@ -78,7 +78,7 @@ public class AddCitizenView {
 		row4HBox = new HBox();
 		row5HBox = new HBox();
 		row6HBox = new HBox();
-		citizenImageView = UIHandler.buildImage("Citizen.png", sceneHeight, sceneHeight);
+		citizenImageView = UIHandler.buildImage("Citizen.png", sceneHeight * 0.6, sceneHeight * 0.6);
 		headerLabel = new Label("New Citizen");
 		IDLabel = new Label("ID:");
 		nameLabel = new Label("Full Name:");
@@ -98,7 +98,7 @@ public class AddCitizenView {
 		carryingWeaponCheckBox = new CheckBox("Carrrying Weapon");
 		submitButton = new Button("Submit");
 
-		refreshAssociatedBallotComboBox(false, false);
+//		refreshAssociatedBallotComboBox(false, false);
 		headerLabel.setFont(new Font(30));
 		IDLabel.setFont(new Font(20));
 		nameLabel.setFont(new Font(20));
@@ -113,6 +113,7 @@ public class AddCitizenView {
 		associatedBallotComboBox.setMinWidth(210);
 		daysOfSicknessComboBox.setDisable(true);
 		soldierCheckBox.setDisable(true);
+		wearingSuitCheckBox.setDisable(true);
 		carryingWeaponCheckBox.setDisable(true);
 		submitButton.setFont(new Font(20));
 
@@ -158,22 +159,17 @@ public class AddCitizenView {
 		vBox.getChildren().addAll(headerLabel, row1HBox, row2HBox, row3HBox, row4HBox, row5HBox, row6HBox,
 				submitButton);
 		vBox.setAlignment(Pos.TOP_CENTER);
+		VBox.setMargin(headerLabel, new Insets(sceneHeight * 0.2, 0, 15, 0));
+		VBox.setMargin(row6HBox, new Insets(0, 0, 5, 0));
 
 		mainHBox.getChildren().addAll(vBox, citizenImageView);
+		HBox.setMargin(citizenImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.35));
 
-		VBox.setMargin(headerLabel, new Insets(0, 0, sceneHeight * 0.1, 0));
-		VBox.setMargin(row1HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row2HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row3HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row4HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row5HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(row6HBox, new Insets(10, 0, 10, 0));
-		VBox.setMargin(submitButton, new Insets(10, 0, 10, 0));
-
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
+		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
+				electionsDate.getYear()));
 		stage.setResizable(false);
-		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
-		stage.setScene(new Scene(/* UIHandler.buildBackground(gridPane, sceneWidth, sceneHeight) */ mainHBox,
+		UIHandler.setIcon(stage);
+		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
 		stage.show();
 	}

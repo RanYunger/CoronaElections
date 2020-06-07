@@ -98,7 +98,7 @@ public class MainView {
 		String[] tabNames = new String[] { "Elections", "Ballots", "Citizens", "Parties", "About" };
 		Node[] tabContents = { electionsTabView.asNode(), ballotsTabView.asNode(), citizensTabView.asNode(),
 				partiesTabView.asNode(), aboutTabView.asNode() };
-		double sceneWidth = 1500, sceneHeight = 700;
+		double sceneWidth = 1500, sceneHeight = 700, fontSize = 50;
 		Tab currentTab;
 
 		tabPane = new TabPane();
@@ -110,8 +110,8 @@ public class MainView {
 
 		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
 		stage.setResizable(false);
-		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
-		stage.setScene(new Scene(UIHandler.buildBackground(tabPane, sceneWidth, sceneHeight), sceneWidth, sceneHeight));
+		UIHandler.setIcon(stage);
+		stage.setScene(new Scene(UIHandler.buildBackground(tabPane, sceneWidth, sceneHeight, fontSize, true), sceneWidth, sceneHeight));
 		stage.show();
 	}
 }
