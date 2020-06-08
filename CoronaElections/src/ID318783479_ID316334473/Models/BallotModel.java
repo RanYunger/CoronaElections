@@ -12,7 +12,7 @@ public class BallotModel<E extends CitizenModel> {
 	private int ID;
 	private String ballotType;
 	private String address;
-	private SetModel<E> voterRegistry;
+	private ArrayList<CitizenModel> voterRegistry;
 	private YearMonth votingDate;
 	private double votersPercentage;
 	private ArrayList<Integer> results;
@@ -40,11 +40,11 @@ public class BallotModel<E extends CitizenModel> {
 		this.address = address;
 	}
 
-	public SetModel<E> getVoterRegistry() {
+	public ArrayList<CitizenModel> getVoterRegistry() {
 		return voterRegistry;
 	}
 
-	private void setVoterRegistry(SetModel<E> voterRegistry) {
+	private void setVoterRegistry(ArrayList<CitizenModel> voterRegistry) {
 		this.voterRegistry = voterRegistry;
 	}
 
@@ -84,7 +84,7 @@ public class BallotModel<E extends CitizenModel> {
 			setID(IDGenerator++);
 			setBallotType(ballotType);
 			setAddress(address);
-			setVoterRegistry(new SetModel<E>());
+			setVoterRegistry(new ArrayList<CitizenModel>());
 			setVotingDate(votingDate);
 			setVotersPercentage(0);
 			setResults(null);
@@ -94,9 +94,9 @@ public class BallotModel<E extends CitizenModel> {
 	}
 
 	// Methods
-	public CitizenModel getCitizenByID(int citizenID) {
+	public CitizenModel getCitizenModelByID(int CitizenModelID) {
 		for (int i = 0; i < voterRegistry.size(); i++) {
-			if (voterRegistry.get(i).getID() == citizenID)
+			if (voterRegistry.get(i).getID() == CitizenModelID)
 				return voterRegistry.get(i);
 		}
 

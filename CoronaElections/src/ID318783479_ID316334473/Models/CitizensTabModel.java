@@ -13,7 +13,7 @@ public class CitizensTabModel {
 
 	// Fields
 	private YearMonth electionsDate;
-	public SetModel<CitizenModel> citizens;
+	public ArrayList<CitizenModel> citizens;
 
 	// Properties (Getters and Setters)
 	public YearMonth getElectionsDate() {
@@ -24,18 +24,18 @@ public class CitizensTabModel {
 		this.electionsDate = electionsDate;
 	}
 
-	public SetModel<CitizenModel> getCitizens() {
+	public ArrayList<CitizenModel> getCitizens() {
 		return citizens;
 	}
 
-	public void setCitizens(SetModel<CitizenModel> citizens) {
+	public void setCitizens(ArrayList<CitizenModel> citizens) {
 		this.citizens = citizens;
 	}
 
 	// Constructors
 	public CitizensTabModel(YearMonth electionsDate) {
 		setElectionsDate(electionsDate);
-		setCitizens(new SetModel<CitizenModel>());
+		setCitizens(new ArrayList<CitizenModel>());
 
 //		init();
 	}
@@ -95,7 +95,7 @@ public class CitizensTabModel {
 	}
 
 	public CitizenModel getCitizenByID(int citizenID) {
-		ArrayList<CitizenModel> sortedVoters = (ArrayList<CitizenModel>) citizens.getElements().clone();
+		ArrayList<CitizenModel> sortedVoters = (ArrayList<CitizenModel>) citizens.clone();
 		Collections.sort(sortedVoters);
 		return TBN.binarySearch(sortedVoters, citizenID);
 	}

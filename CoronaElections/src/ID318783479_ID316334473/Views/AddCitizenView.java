@@ -20,6 +20,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -99,6 +100,7 @@ public class AddCitizenView {
 		submitButton = new Button("Submit");
 
 //		refreshAssociatedBallotComboBox(false, false);
+		Tooltip.install(citizenImageView, new Tooltip("THAT'S A TOILET"));
 		headerLabel.setFont(new Font(30));
 		IDLabel.setFont(new Font(20));
 		nameLabel.setFont(new Font(20));

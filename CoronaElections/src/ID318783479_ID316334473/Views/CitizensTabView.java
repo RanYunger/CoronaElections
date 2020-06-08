@@ -11,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -44,6 +43,9 @@ public class CitizensTabView {
 	}
 
 	private void buildScene() {
+		TableColumn<String, String> citizenIDTableColumn, citizenNameTableColumn, citizenYearOfBirthTableColumn,
+				citizenAssociatedBallotTableColumn, citizenStatusTableColumn;
+
 		gridPane = new GridPane();
 		addCitizenButton = new Button("Add Citizen");
 		removeCitizenButton = new Button("Remove Citizen");
@@ -63,22 +65,38 @@ public class CitizensTabView {
 		HBox.setMargin(addCitizenButton, new Insets(0, 10, 0, 0));
 		HBox.setMargin(removeCitizenButton, new Insets(0, 0, 0, 10));
 
-		citizensTableView.getColumns().add(new TableColumn<String, String>("ID"));
-		citizensTableView.getColumns().get(0).setMinWidth(200);
-		citizensTableView.getColumns().add(new TableColumn<String, String>("Full Name"));
-		citizensTableView.getColumns().get(1).setMinWidth(300);
-		citizensTableView.getColumns().add(new TableColumn<String, Number>("Birth"));
-		citizensTableView.getColumns().get(2).setMinWidth(100);
-		citizensTableView.getColumns().add(new TableColumn<String, Number>("Associated Ballot"));
-		citizensTableView.getColumns().get(3).setMinWidth(150);
-		citizensTableView.getColumns().add(new TableColumn<String, String>("Status"));
-		// use setStatusHBox() as the column's content
-		citizensTableView.getColumns().get(4).setMinWidth(800);
+		citizenIDTableColumn = new TableColumn<String, String>("ID");
+		citizenIDTableColumn.setMinWidth(200);
+		citizenIDTableColumn.setReorderable(false);
+		citizenIDTableColumn.setResizable(false);
+
+		citizenNameTableColumn = new TableColumn<String, String>("Full Name");
+		citizenNameTableColumn.setMinWidth(300);
+		citizenNameTableColumn.setReorderable(false);
+		citizenNameTableColumn.setResizable(false);
+
+		citizenYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
+		citizenYearOfBirthTableColumn.setMinWidth(100);
+		citizenYearOfBirthTableColumn.setReorderable(false);
+		citizenYearOfBirthTableColumn.setResizable(false);
+
+		citizenAssociatedBallotTableColumn = new TableColumn<String, String>("Associated Ballot");
+		citizenAssociatedBallotTableColumn.setMinWidth(150);
+		citizenAssociatedBallotTableColumn.setReorderable(false);
+		citizenAssociatedBallotTableColumn.setResizable(false);
+
+		citizenStatusTableColumn = new TableColumn<String, String>("Status");
+		citizenStatusTableColumn.setMinWidth(750);
+		citizenStatusTableColumn.setReorderable(false);
+		citizenStatusTableColumn.setResizable(false);
+
+		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn,
+				citizenYearOfBirthTableColumn, citizenAssociatedBallotTableColumn, citizenStatusTableColumn);
 		citizensTableView.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 1, 1);
 		gridPane.add(citizensTableView, 0, 1, 1, 1);
-		
+
 		GridPane.setMargin(hBox, new Insets(110, 0, 0, 0));
 		GridPane.setMargin(citizensTableView, new Insets(10, 0, 145, 0));
 	}
@@ -93,19 +111,19 @@ public class CitizensTabView {
 		} catch (Exception ex) {
 			UIHandler.showError("An unexpected error occured", ex.getMessage());
 		}
-		
+
 		return null;
 	}
 
 	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName); 
-		
+		Node node = getNodeByName(nodeName);
+
 		return node.getProperties().get(propertyName);
 	}
 
 	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
 		Button requiredButton = (Button) getNodeByName(buttonName);
-		
+
 		requiredButton.setOnAction(eventHandler);
 	}
 }

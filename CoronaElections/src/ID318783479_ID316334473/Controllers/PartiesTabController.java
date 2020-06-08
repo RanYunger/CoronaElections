@@ -1,8 +1,10 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.AddCandidateToPartyModel;
 import ID318783479_ID316334473.Models.AddPartyModel;
 import ID318783479_ID316334473.Models.PartiesTabModel;
+import ID318783479_ID316334473.Views.AddCandidateToPartyView;
 import ID318783479_ID316334473.Views.AddPartyView;
 import ID318783479_ID316334473.Views.PartiesTabView;
 import javafx.event.ActionEvent;
@@ -53,6 +55,18 @@ public class PartiesTabController {
 				}
 			}
 		};
+		EventHandler<ActionEvent> addCandidateToPartyButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					AddCandidateToPartyModel model = new AddCandidateToPartyModel();
+					AddCandidateToPartyView view = new AddCandidateToPartyView(new Stage(), partiesTabModel.getElectionsDate());
+					AddCandidateToPartyController controller = new AddCandidateToPartyController(model, view);
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured", ex.getMessage());
+				}
+			}
+		};
 		EventHandler<ActionEvent> removePartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -71,12 +85,6 @@ public class PartiesTabController {
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
-			}
-		};
-		EventHandler<ActionEvent> addCandidateToPartyButtonEventHandler = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
 			}
 		};
 

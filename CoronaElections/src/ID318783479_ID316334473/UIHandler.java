@@ -13,7 +13,6 @@ import ID318783479_ID316334473.Models.CandidateModel;
 import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Models.MainModel;
 import ID318783479_ID316334473.Models.PartyModel;
-import ID318783479_ID316334473.Models.SetModel;
 import ID318783479_ID316334473.Models.SickCandidateModel;
 import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
@@ -254,10 +253,10 @@ public class UIHandler {
 				soldierCheckBox = new CheckBox("Soldier"), carryingWeaponCheckBox = new CheckBox("Carrying weapon");
 
 		statusHBox.getChildren().addAll(isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox, carryingWeaponCheckBox);
-		HBox.setMargin(isolatedCheckBox, new Insets(0, 10, 0, 0));
-		HBox.setMargin(wearingSuitCheckBox, new Insets(0, 10, 0, 10));
-		HBox.setMargin(soldierCheckBox, new Insets(0, 10, 0, 10));
-		HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 10));
+		HBox.setMargin(isolatedCheckBox, new Insets(0, 5, 0, 0));
+		HBox.setMargin(wearingSuitCheckBox, new Insets(0, 5, 0, 5));
+		HBox.setMargin(soldierCheckBox, new Insets(0, 5, 0, 5));
+		HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 5));
 		statusHBox.setAlignment(Pos.CENTER);
 
 		return statusHBox;
@@ -387,7 +386,7 @@ public class UIHandler {
 	}
 
 	// When entering 2
-	public static boolean addNewCitizen(SetModel<CitizenModel> voterRegistry, YearMonth votingDate) {
+	public static boolean addNewCitizen(ArrayList<CitizenModel> voterRegistry, YearMonth votingDate) {
 		CitizenModel citizen;
 		BallotModel<? extends CitizenModel> associatedBallot;
 		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID, voterAge;
@@ -509,7 +508,7 @@ public class UIHandler {
 	}
 
 	// When entering 4
-	public static boolean addCandidateToAParty(SetModel<CitizenModel> voterRegistry, ArrayList<PartyModel> parties) {
+	public static boolean addCandidateToAParty(ArrayList<CitizenModel> voterRegistry, ArrayList<PartyModel> parties) {
 		CitizenModel citizen;
 		CandidateModel candidate;
 		PartyModel party;
@@ -566,7 +565,7 @@ public class UIHandler {
 	}
 
 	// When entering 6
-	public static String showVoterRegistry(SetModel<? extends CitizenModel> voterRegistry, YearMonth votingDate) {
+	public static String showVoterRegistry(ArrayList<? extends CitizenModel> voterRegistry, YearMonth votingDate) {
 		if (voterRegistry.size() == 0)
 			return "Nothing to See here..";
 

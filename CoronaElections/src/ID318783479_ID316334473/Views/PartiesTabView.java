@@ -44,7 +44,9 @@ public class PartiesTabView {
 	}
 
 	private void buildScene() {
-		ObservableList<TableColumn<String, ?>> candidateColumns;
+		TableColumn<String, String> partyNameTableColumn, partyWingTableColumn, partyYearOfFoundationTableColumn, partyCandidatesTableColumn;
+		TableColumn<String, String> candidateIDTableColumn, candidateNameTableColumn, candidateRankTableColumn, candidateStatusTableColumn;
+		ObservableList<TableColumn<String, ?>> candidateNestedTableColumns;
 
 		gridPane = new GridPane();
 		addPartyButton = new Button("Add Party");
@@ -67,27 +69,52 @@ public class PartiesTabView {
 		HBox.setMargin(addCandidateToPartyButton, new Insets(0, 10, 0, 10));
 		HBox.setMargin(removePartyButton, new Insets(0, 0, 0, 10));
 
-		partiesTableView.getColumns().add(new TableColumn<String, String>("Name"));
-		partiesTableView.getColumns().get(0).setMinWidth(300);
-		partiesTableView.getColumns().add(new TableColumn<String, String>("Wing"));
-		partiesTableView.getColumns().get(1).setMinWidth(200);
-		partiesTableView.getColumns().add(new TableColumn<String, Number>("Foundation"));
-		partiesTableView.getColumns().get(2).setMinWidth(100);
-		partiesTableView.getColumns().add(new TableColumn<String, String>("Candidates"));
-		partiesTableView.getColumns().get(3).setMinWidth(950);
+		partyNameTableColumn = new TableColumn<String, String>("Name");
+		partyNameTableColumn.setMinWidth(300);
+		partyNameTableColumn.setReorderable(false);
+		partyNameTableColumn.setResizable(false);
+		
+		partyWingTableColumn = new TableColumn<String, String>("Wing");
+		partyWingTableColumn.setMinWidth(200);
+		partyWingTableColumn.setReorderable(false);
+		partyWingTableColumn.setResizable(false);
+		
+		partyYearOfFoundationTableColumn = new TableColumn<String, String>("Foundation");
+		partyYearOfFoundationTableColumn.setMinWidth(100);
+		partyYearOfFoundationTableColumn.setReorderable(false);
+		partyYearOfFoundationTableColumn.setResizable(false);
+		
+		partyCandidatesTableColumn = new TableColumn<String, String>("Candidates");
+		partyCandidatesTableColumn.setMinWidth(950);
+		partyCandidatesTableColumn.setReorderable(false);
+		partyCandidatesTableColumn.setResizable(false);
+
+		candidateNestedTableColumns = partyCandidatesTableColumn.getColumns();
+		candidateIDTableColumn = new TableColumn<String, String>("ID");
+		candidateIDTableColumn.setMinWidth(150);
+		candidateIDTableColumn.setReorderable(false);
+		candidateIDTableColumn.setResizable(false);
+		
+		candidateNameTableColumn = new TableColumn<String, String>("Full Name");
+		candidateNameTableColumn.setMinWidth(200);
+		candidateNameTableColumn.setReorderable(false);
+		candidateNameTableColumn.setResizable(false);
+		
+		candidateRankTableColumn = new TableColumn<String, String>("Rank");
+		candidateRankTableColumn.setMinWidth(50);
+		candidateRankTableColumn.setReorderable(false);
+		candidateRankTableColumn.setResizable(false);
+		
+		candidateStatusTableColumn = new TableColumn<String, String>("Status");
+		candidateStatusTableColumn.setMinWidth(470);
+		candidateStatusTableColumn.setReorderable(false);
+		candidateStatusTableColumn.setResizable(false);
+		
+		candidateNestedTableColumns.addAll(candidateIDTableColumn, candidateNameTableColumn, candidateRankTableColumn, candidateStatusTableColumn);
+
+		partiesTableView.getColumns().addAll(partyNameTableColumn, partyWingTableColumn, partyYearOfFoundationTableColumn, partyCandidatesTableColumn);
 		partiesTableView.setOpacity(0.8);
-
-		candidateColumns = partiesTableView.getColumns().get(3).getColumns();
-		candidateColumns.add(new TableColumn<String, String>("ID"));
-		candidateColumns.get(0).setMinWidth(150);
-		candidateColumns.add(new TableColumn<String, String>("Full Name"));
-		candidateColumns.get(1).setMinWidth(200);
-		candidateColumns.add(new TableColumn<String, String>("Rank"));
-		candidateColumns.get(2).setMinWidth(50);
-		candidateColumns.add(new TableColumn<String, Boolean>("Status"));
-		// use setStatusHBox() as the column's content
-		candidateColumns.get(3).setMinWidth(550);
-
+		
 		gridPane.add(hBox, 0, 0, 1, 1);
 		gridPane.add(partiesTableView, 0, 1, 1, 1);
 		

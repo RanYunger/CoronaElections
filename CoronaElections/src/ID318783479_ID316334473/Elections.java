@@ -10,7 +10,6 @@ import ID318783479_ID316334473.Models.BallotModel;
 import ID318783479_ID316334473.Models.CandidateModel;
 import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Models.PartyModel;
-import ID318783479_ID316334473.Models.SetModel;
 import ID318783479_ID316334473.Models.SickCandidateModel;
 import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
@@ -22,7 +21,7 @@ public class Elections {
 	public static final int INITIAL_CAPACITY = 10;
 
 	public static YearMonth votingDate = null;
-	public static SetModel<CitizenModel> voters = new SetModel<CitizenModel>();
+	public static ArrayList<CitizenModel> voters = new ArrayList<CitizenModel>();
 	public static ArrayList<PartyModel> parties = new ArrayList<PartyModel>();
 	public static ArrayList<BallotModel<CitizenModel>> citizenBallots = new ArrayList<BallotModel<CitizenModel>>();
 	public static ArrayList<BallotModel<SoldierModel>> soldierBallots = new ArrayList<BallotModel<SoldierModel>>();
@@ -110,7 +109,7 @@ public class Elections {
 	private static void init(YearMonth votingDate, ArrayList<BallotModel<CitizenModel>> citizenBallots,
 			ArrayList<BallotModel<SoldierModel>> soldierBallots, ArrayList<BallotModel<SickCitizenModel>> sickCitizenBallots,
 			ArrayList<BallotModel<SickCandidateModel>> sickCandidatesBallots, ArrayList<BallotModel<SickSoldierModel>> sickSoldierBallots,
-			ArrayList<PartyModel> parties, SetModel<CitizenModel> voters) {
+			ArrayList<PartyModel> parties, ArrayList<CitizenModel> voters) {
 		// Initiates 4 ballots
 		citizenBallots.add(new BallotModel<CitizenModel>("CitizenModel", "21st Road Street, Town City", votingDate));
 		soldierBallots.add(new BallotModel<SoldierModel>("SoldierModel", "Area 51, Nevada", votingDate));
@@ -164,8 +163,8 @@ public class Elections {
 		return allBallots;
 	}
 
-	public static CitizenModel getCitizenByID(SetModel<CitizenModel> voters, int citizenID) {
-		ArrayList<CitizenModel> sortedVoters = (ArrayList<CitizenModel>) voters.getElements().clone();
+	public static CitizenModel getCitizenByID(ArrayList<CitizenModel> voters, int citizenID) {
+		ArrayList<CitizenModel> sortedVoters = (ArrayList<CitizenModel>) voters.clone();
 		Collections.sort(sortedVoters);
 		return binarySearch(sortedVoters, citizenID);
 	}
@@ -181,7 +180,7 @@ public class Elections {
 		return binarySearch(ballots, ballotID);
 	}
 
-	public static boolean updateCitizenToCandidate(SetModel<CitizenModel> voters, CitizenModel citizen) {
+	public static boolean updateCitizenToCandidate(ArrayList<CitizenModel> voters, CitizenModel citizen) {
 		int index = voters.indexOf(getCitizenByID(voters, citizen.getID()));
 
 		if (index != -1) {

@@ -43,7 +43,9 @@ public class BallotsTabView {
 	}
 
 	private void buildScene() {
-		ObservableList<TableColumn<String, ?>> voterColumns;
+		TableColumn<String, String> ballotIDTableColumn, ballotTypeTableColumn, ballotAddressTableColumn, ballotVotersTableColumn;
+		TableColumn<String, String> voterIDTableColumn, voterNameTableColumn, voterYearOfBirthTableColumn, voterStatusTableColumn;
+		ObservableList<TableColumn<String, ?>> voterNestedTableColumns;
 
 		gridPane = new GridPane();
 		addBallotButton = new Button("Add Ballot");
@@ -64,30 +66,56 @@ public class BallotsTabView {
 		HBox.setMargin(addBallotButton, new Insets(0, 10, 0, 0));
 		HBox.setMargin(removeBallotButton, new Insets(0, 0, 0, 10));
 
-		ballotsTableView.getColumns().add(new TableColumn<String, String>("ID"));
-		ballotsTableView.getColumns().get(0).setMinWidth(100);
-		ballotsTableView.getColumns().add(new TableColumn<String, String>("Type"));
-		ballotsTableView.getColumns().get(1).setMinWidth(200);
-		ballotsTableView.getColumns().add(new TableColumn<String, Number>("Address"));
-		ballotsTableView.getColumns().get(2).setMinWidth(400);
-		ballotsTableView.getColumns().add(new TableColumn<String, String>("Voters"));
-		ballotsTableView.getColumns().get(3).setMinWidth(850);
-		ballotsTableView.setOpacity(0.8);
+		ballotIDTableColumn = new TableColumn<String, String>("ID");
+		ballotIDTableColumn.setMinWidth(100);
+		ballotIDTableColumn.setReorderable(false);
+		ballotIDTableColumn.setResizable(false);
 
-		voterColumns = ballotsTableView.getColumns().get(3).getColumns();
-		voterColumns.add(new TableColumn<String, String>("ID"));
-		voterColumns.get(0).setMinWidth(150);
-		voterColumns.add(new TableColumn<String, String>("Full Name"));
-		voterColumns.get(1).setMinWidth(200);
-		voterColumns.add(new TableColumn<String, String>("Birth"));
-		voterColumns.get(2).setMinWidth(50);
-		voterColumns.add(new TableColumn<String, Boolean>("Status"));
+		ballotTypeTableColumn = new TableColumn<String, String>("Type");
+		ballotTypeTableColumn.setMinWidth(200);
+		ballotTypeTableColumn.setReorderable(false);
+		ballotTypeTableColumn.setResizable(false);
+
+		ballotAddressTableColumn = new TableColumn<String, String>("Address");
+		ballotAddressTableColumn.setMinWidth(400);
+		ballotAddressTableColumn.setReorderable(false);
+		ballotAddressTableColumn.setResizable(false);
+
+		ballotVotersTableColumn = new TableColumn<String, String>("Voters");
+		ballotVotersTableColumn.setMinWidth(850);
+		ballotVotersTableColumn.setReorderable(false);
+		ballotVotersTableColumn.setResizable(false);
+
+		voterNestedTableColumns = ballotVotersTableColumn.getColumns();		
+		voterIDTableColumn = new TableColumn<String, String>("ID");
+		voterIDTableColumn.setMinWidth(150);
+		voterIDTableColumn.setReorderable(false);
+		voterIDTableColumn.setResizable(false);
+		
+		voterNameTableColumn = new TableColumn<String, String>("Full Name");
+		voterNameTableColumn.setMinWidth(200);
+		voterNameTableColumn.setReorderable(false);
+		voterNameTableColumn.setResizable(false);
+		
+		voterYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
+		voterYearOfBirthTableColumn.setMinWidth(50);
+		voterYearOfBirthTableColumn.setReorderable(false);
+		voterYearOfBirthTableColumn.setResizable(false);
+		
+		voterStatusTableColumn = new TableColumn<String, String>("Status");
 		// use setStatusHBox() as the column's content
-		voterColumns.get(3).setMinWidth(450);
+		voterStatusTableColumn.setMinWidth(370);
+		voterStatusTableColumn.setReorderable(false);
+		voterStatusTableColumn.setResizable(false);
+		
+		voterNestedTableColumns.addAll(voterIDTableColumn, voterNameTableColumn, voterYearOfBirthTableColumn, voterStatusTableColumn);
+
+		ballotsTableView.getColumns().addAll(ballotIDTableColumn, ballotTypeTableColumn, ballotAddressTableColumn, ballotVotersTableColumn);
+		ballotsTableView.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 1, 1);
 		gridPane.add(ballotsTableView, 0, 1, 1, 1);
-		
+
 		GridPane.setMargin(hBox, new Insets(110, 0, 0, 0));
 		GridPane.setMargin(ballotsTableView, new Insets(10, 0, 145, 0));
 	}
@@ -102,19 +130,19 @@ public class BallotsTabView {
 		} catch (Exception ex) {
 			UIHandler.showError("An unexpected error occured", ex.getMessage());
 		}
-		
+
 		return null;
 	}
 
 	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName); 
-		
+		Node node = getNodeByName(nodeName);
+
 		return node.getProperties().get(propertyName);
 	}
 
 	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
 		Button requiredButton = (Button) getNodeByName(buttonName);
-		
+
 		requiredButton.setOnAction(eventHandler);
 	}
 }

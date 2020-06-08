@@ -1,2 +1,4 @@
-1. Build logic for each tab
-2. Complete submit button functionality in each "Add" view
+1. Build logic for each view
+2. Call buildScene of each view after initializing its controller
+4. Implement logic when text change in AddCandidateToPartyView
+3. Find better images for the views

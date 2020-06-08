@@ -44,7 +44,7 @@ public class ElectionsDateController {
 	public ElectionsDateController(ElectionsDateModel model, ElectionsDateView view) {
 		setElectionsDateModel(model);
 		setElectionsDateView(view);
-
+		
 		view.refresh(model);
 
 		EventHandler<ActionEvent> enterButtonEventHandler = new EventHandler<ActionEvent>() {
