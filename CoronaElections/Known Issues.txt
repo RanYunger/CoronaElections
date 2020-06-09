@@ -1,4 +1,5 @@
 1. Build logic for each view
 2. Call buildScene of each view after initializing its controller
-4. Implement logic when text change in AddCandidateToPartyView
-3. Find better images for the views
+3. Implement logic when text change in AddCandidateToPartyView
+4. Find better images for the views
+5. Add EasterEggHandler to hide Bugs image in each view (shows when mouse enter, disappears when mouse exit) 

@@ -61,14 +61,14 @@ public class AddCitizenController {
 				CheckBox isolatedCheckBox = (CheckBox) addCitizenView.getNodeByName("isolatedCheckBox");
 				CheckBox wearingSuitCheckBox = (CheckBox) addCitizenView.getNodeByName("wearingSuitCheckBox");
 				CheckBox soldierCheckBox = (CheckBox) addCitizenView.getNodeByName("soldierCheckBox");
-				ComboBox<Integer> daysOfSicknessComboBox = (ComboBox<Integer>) addCitizenView.getNodeByName("daysOfSicknessComboBox");
+				ComboBox<Integer> daysOfSicknessComboBox = (ComboBox<Integer>) addCitizenView
+						.getNodeByName("daysOfSicknessComboBox");
 
 				if (isolatedCheckBox.isSelected()) {
 					wearingSuitCheckBox.setDisable(false);
 					daysOfSicknessComboBox.setDisable(false);
 					view.refreshAssociatedBallotComboBox(true, soldierCheckBox.isSelected());
-				}
-				else {
+				} else {
 					wearingSuitCheckBox.setDisable(true);
 					daysOfSicknessComboBox.setDisable(true);
 					daysOfSicknessComboBox.getSelectionModel().clearSelection();

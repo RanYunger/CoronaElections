@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="ID318783479_ID316334473/Resources/" kind="src" path="src"/>
-	<classpathentry kind="src" path="src/ID318783479_ID316334473/Resources"/>
+	<classpathentry excluding="ID318783479_ID316334473/Resources/|ID318783479_ID316334473/Resources/Images/|ID318783479_ID316334473/Resources/Sounds/|ID318783479_ID316334473/Resources/Images/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/ID318783479_ID316334473/Resources/Sounds"/>
+	<classpathentry kind="src" path="src/ID318783479_ID316334473/Resources/Images"/>
+	<classpathentry excluding="Sounds/|Images/" kind="src" path="src/ID318783479_ID316334473/Resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>

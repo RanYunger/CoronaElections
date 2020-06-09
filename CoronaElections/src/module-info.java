@@ -7,4 +7,5 @@ module CoronaElections {
 	requires transitive javafx.controls;
 	requires transitive javafx.graphics;
 	requires javafx.base;
+	requires javafx.media;
 }

@@ -86,6 +86,8 @@ public class MainView {
 		setAboutTabView(new AboutTabView());
 
 		buildScene(stage, electionsDate);
+		
+		aboutTabView.addAudio(stage);
 	}
 
 	// Methods

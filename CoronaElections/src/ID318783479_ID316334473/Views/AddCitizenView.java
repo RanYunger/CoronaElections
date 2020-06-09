@@ -53,6 +53,8 @@ public class AddCitizenView {
 		root = new Group();
 
 		buildScene(stage, electionsDate);
+		
+		UIHandler.addAudioToImageView(stage.getScene(), citizenImageView, "ToiletFlush.mp3");
 	}
 
 	// Methods
@@ -100,7 +102,6 @@ public class AddCitizenView {
 		submitButton = new Button("Submit");
 
 //		refreshAssociatedBallotComboBox(false, false);
-		Tooltip.install(citizenImageView, new Tooltip("THAT'S A TOILET"));
 		headerLabel.setFont(new Font(30));
 		IDLabel.setFont(new Font(20));
 		nameLabel.setFont(new Font(20));

@@ -18,7 +18,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -99,11 +98,12 @@ public class ElectionsDateView {
 		VBox.setMargin(electionsDateLabel, new Insets(20));
 		VBox.setMargin(electionsDateDatePicker, new Insets(20));
 		VBox.setMargin(enterButton, new Insets(20));
-
+		
 		stage.setTitle("Welcome to our system!");
 		stage.setResizable(false);
 		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
 		stage.setScene(new Scene(vBox, 400, 300));
+		UIHandler.hideEasterEgg(stage);
 		stage.show();
 	}
 

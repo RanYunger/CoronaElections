@@ -1,10 +1,11 @@
 package ID318783479_ID316334473;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Random;
 import java.util.TreeMap;
 
 import ID318783479_ID316334473.Controllers.MainController;
@@ -18,33 +19,32 @@ import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
 import ID318783479_ID316334473.Models.SoldierModel;
 import ID318783479_ID316334473.Views.MainView;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /*
  * Helper class which contains all UI methods, plus extra helpful
@@ -59,6 +59,11 @@ public class UIHandler {
 	public static MainModel mainModel;
 	public static MainController mainController;
 	public static MainView mainView;
+
+	@SuppressWarnings("exports")
+	public static MediaPlayer mediaPlayer;
+	@SuppressWarnings("exports")
+	public static Media media;
 
 	// Properties
 
@@ -158,6 +163,80 @@ public class UIHandler {
 		return -1;
 	}
 
+	public static void addAudioToImageView(Scene scene, ImageView imageView, String audioFileName) {
+		EventHandler<MouseEvent> imageViewMouseEnteredEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				scene.setCursor(javafx.scene.Cursor.HAND);
+			}
+		};
+		EventHandler<MouseEvent> imageViewMouseExitedEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				scene.setCursor(javafx.scene.Cursor.DEFAULT);
+			}
+		};
+		EventHandler<MouseEvent> imageViewMouseClickedEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				try {
+					String path = String.format("%s\\bin\\%s", System.getProperty("user.dir"), audioFileName);
+
+					// Validations
+					if (mediaPlayer != null)
+						mediaPlayer.stop();
+
+					media = new Media(new File(path).toURI().toString());
+					mediaPlayer = new MediaPlayer(media);
+
+					mediaPlayer.play();
+				} catch (Exception ex) {
+					showError(ex.getMessage());
+				}
+			}
+		};
+
+		imageView.setOnMouseEntered(imageViewMouseEnteredEventHandler);
+		imageView.setOnMouseExited(imageViewMouseExitedEventHandler);
+		imageView.setOnMouseClicked(imageViewMouseClickedEventHandler);
+	}
+
+	public static void hideEasterEgg(Stage stage) {
+		// TODO: COMPLETE
+		
+		Random rnd = new Random();
+		double stageHeight = stage.getHeight(), stageWidth = stage.getWidth(),
+				randomX = 10 + (stageWidth - 10) * rnd.nextDouble(), randomY = 10 + (stageHeight - 10) * rnd.nextDouble();
+		ImageView bugsImageView = buildImage("Bugs.png", 200, 200);
+		Rectangle eventArea = new Rectangle(randomX, randomY, 200, 200);
+
+		bugsImageView.setY(eventArea.getY());
+		bugsImageView.setVisible(false);
+
+		EventHandler<MouseEvent> sceneMouseMovedEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				bugsImageView.setVisible(TBN.isInRectangle(eventArea, mouseEvent.getX(), mouseEvent.getY()));
+			}
+		};
+		EventHandler<MouseEvent> imageViewMouseEnteredEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				bugsImageView.setVisible(true);
+			}
+		};
+		EventHandler<MouseEvent> imageViewMouseExitedEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				bugsImageView.setVisible(false);
+			}
+		};
+
+		stage.getScene().setOnMouseMoved(sceneMouseMovedEventHandler);
+		bugsImageView.setOnMouseEntered(imageViewMouseEnteredEventHandler);
+		bugsImageView.setOnMouseExited(imageViewMouseExitedEventHandler);
+	}
+
 	public static ButtonType showConfirmation(String message) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
@@ -225,7 +304,7 @@ public class UIHandler {
 	}
 
 	public static StackPane buildBackground(Node node, double width, double height, double fontSize, boolean hasTabs) {
-		ImageView backgroundImage = UIHandler.buildImage("IsraelFlag.PNG", width, height);
+		ImageView backgroundImage = buildImage("IsraelFlag.PNG", width, height);
 		Label topLabel = new Label("מדינה אנונימית במזרח התיכון");
 		Label bottomLabel = new Label("מערכת ניהול בחירות בתקופת קורונה");
 		StackPane stackPane = new StackPane();
