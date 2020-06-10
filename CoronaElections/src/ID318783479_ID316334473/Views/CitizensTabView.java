@@ -27,11 +27,14 @@ public class CitizensTabView {
 	private TableView<String> citizensTableView;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
 
 	// Constructors
 	public CitizensTabView() {
-		root = new Group();
-
+		setRoot(new Group());
+		
 		buildScene();
 	}
 
@@ -67,31 +70,25 @@ public class CitizensTabView {
 
 		citizenIDTableColumn = new TableColumn<String, String>("ID");
 		citizenIDTableColumn.setMinWidth(200);
-		citizenIDTableColumn.setReorderable(false);
-		citizenIDTableColumn.setResizable(false);
 
 		citizenNameTableColumn = new TableColumn<String, String>("Full Name");
 		citizenNameTableColumn.setMinWidth(300);
-		citizenNameTableColumn.setReorderable(false);
-		citizenNameTableColumn.setResizable(false);
 
 		citizenYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
 		citizenYearOfBirthTableColumn.setMinWidth(100);
-		citizenYearOfBirthTableColumn.setReorderable(false);
-		citizenYearOfBirthTableColumn.setResizable(false);
 
 		citizenAssociatedBallotTableColumn = new TableColumn<String, String>("Associated Ballot");
 		citizenAssociatedBallotTableColumn.setMinWidth(150);
-		citizenAssociatedBallotTableColumn.setReorderable(false);
-		citizenAssociatedBallotTableColumn.setResizable(false);
 
 		citizenStatusTableColumn = new TableColumn<String, String>("Status");
 		citizenStatusTableColumn.setMinWidth(750);
-		citizenStatusTableColumn.setReorderable(false);
-		citizenStatusTableColumn.setResizable(false);
 
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn,
 				citizenYearOfBirthTableColumn, citizenAssociatedBallotTableColumn, citizenStatusTableColumn);
+		for (TableColumn<?, ?> tableColumn : citizensTableView.getColumns()) {
+			tableColumn.setReorderable(false);
+			tableColumn.setResizable(false);
+		}
 		citizensTableView.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 1, 1);

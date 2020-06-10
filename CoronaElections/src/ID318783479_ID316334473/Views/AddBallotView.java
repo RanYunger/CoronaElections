@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.AddBallotModel;
@@ -27,6 +27,7 @@ public class AddBallotView {
 
 	// Fields
 	private Group root;
+	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox;
 	private ImageView ballotImageView;
@@ -36,12 +37,20 @@ public class AddBallotView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
 	// Constructors
-	public AddBallotView(Stage stage, YearMonth electionsDate) {
-		root = new Group();
-
-		buildScene(stage, electionsDate);
+	public AddBallotView(Stage stage, LocalDate electionsDate) {
+		setRoot(new Group());
+		setStage(stage);
+		
+		buildScene(electionsDate);
 	}
 
 	// Methods
@@ -50,7 +59,7 @@ public class AddBallotView {
 		model.show(root);
 	}
 
-	private void buildScene(Stage stage, YearMonth electionsDate) {
+	private void buildScene(LocalDate electionsDate) {
 		String[] ballotTypes = { "Regular (Citizens / Candidates)", "Military (Soldiers)", "Sick Citizens",
 				"Sick Candidates", "Sick Soldiers" };
 		double sceneWidth = 600, sceneHeight = 260, fontSize = 30;

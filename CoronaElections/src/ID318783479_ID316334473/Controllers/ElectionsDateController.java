@@ -1,15 +1,10 @@
 package ID318783479_ID316334473.Controllers;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.ArrayList;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Models.ElectionsDateModel;
 import ID318783479_ID316334473.Models.MainModel;
-import ID318783479_ID316334473.Models.PartyModel;
-import ID318783479_ID316334473.Models.PartyModel.PartyAssociation;
 import ID318783479_ID316334473.Views.ElectionsDateView;
 import ID318783479_ID316334473.Views.MainView;
 import javafx.event.ActionEvent;
@@ -44,13 +39,13 @@ public class ElectionsDateController {
 	public ElectionsDateController(ElectionsDateModel model, ElectionsDateView view) {
 		setElectionsDateModel(model);
 		setElectionsDateView(view);
-		
-		view.refresh(model);
+
+		electionsDateView.refresh(model);
 
 		EventHandler<ActionEvent> enterButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				YearMonth electionsDate = electionsDateView.getElectionsDate();
+				LocalDate electionsDate = electionsDateView.getElectionsDate();
 				MainModel mainModel = new MainModel(electionsDate);
 				MainView mainView = new MainView(new Stage(), electionsDate);
 				MainController mainController;

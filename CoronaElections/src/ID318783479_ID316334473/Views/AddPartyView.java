@@ -1,7 +1,7 @@
 package ID318783479_ID316334473.Views;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.AddPartyModel;
@@ -32,6 +32,7 @@ public class AddPartyView {
 
 	// Fields
 	private Group root;
+	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox;
 	private ImageView partyImageView;
@@ -42,12 +43,20 @@ public class AddPartyView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
 	// Constructors
-	public AddPartyView(Stage stage, YearMonth electionsDate) {
-		root = new Group();
+	public AddPartyView(Stage stage, LocalDate electionsDate) {
+		setRoot(new Group());
+		setStage(stage);
 
-		buildScene(stage, electionsDate);
+		buildScene(electionsDate);
 	}
 
 	// Methods
@@ -56,8 +65,9 @@ public class AddPartyView {
 		model.show(root);
 	}
 
-	private void buildScene(Stage stage, YearMonth electionsDate) {
-		LocalDate minDate = LocalDate.of(1948, 5, 14), maxDate = LocalDate.now();
+	private void buildScene(LocalDate electionsDate) {
+		LocalDate minDate = LocalDate.of(1948, 5, 14),
+				maxDate = LocalDate.of(electionsDate.getYear(), electionsDate.getMonthValue(), 1);
 		String[] wings = { "Left", "Center", "Right" };
 		double sceneWidth = 700, sceneHeight = 350, fontSize = 40;
 
@@ -123,10 +133,12 @@ public class AddPartyView {
 		mainHBox.getChildren().addAll(vBox, partyImageView);
 		HBox.setMargin(partyImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.4));
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
+		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
+				electionsDate.getYear()));
 		stage.setResizable(false);
 		UIHandler.setIcon(stage);
-		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false), sceneWidth, sceneHeight));
+		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
+				sceneWidth, sceneHeight));
 		stage.show();
 	}
 

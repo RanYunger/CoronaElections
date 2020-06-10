@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Models;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import javafx.scene.Group;
@@ -9,15 +9,15 @@ public class ElectionsTabModel {
 	// Constants
 
 	// Fields
-	private YearMonth electionsDate;
+	private LocalDate electionsDate;
 	private boolean electionsOccurred;
 
 	// Properties (Getters and Setters)
-	public YearMonth getElectionsDate() {
+	public LocalDate getElectionsDate() {
 		return electionsDate;
 	}
 
-	public void setElectionsDate(YearMonth electionsDate) {
+	public void setElectionsDate(LocalDate electionsDate) {
 		this.electionsDate = electionsDate;
 	}
 
@@ -30,7 +30,7 @@ public class ElectionsTabModel {
 	}
 
 	// Constructors
-	public ElectionsTabModel(YearMonth electionsDate) {
+	public ElectionsTabModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setElectionsOccurred(false);
 

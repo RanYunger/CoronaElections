@@ -1,5 +1,9 @@
+TODO Shy:
 1. Build logic for each view
-2. Call buildScene of each view after initializing its controller
-3. Implement logic when text change in AddCandidateToPartyView
-4. Find better images for the views
-5. Add EasterEggHandler to hide Bugs image in each view (shows when mouse enter, disappears when mouse exit) 
+2. Make data displayable in the view
+3. Implement regex for textual data (Address, Name...) + set in all suitable nodes
+
+TODOs Ran:
+1. Make sure UIHandler.getModel/ControllerByName works! (check on CitizensTabModel)
+2. Think of a funny thing to do with Bugs image
+3. Implement some kind of EE

@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.MainModel;
@@ -75,7 +75,7 @@ public class MainView {
 	}
 
 	// Constructors
-	public MainView(Stage stage, YearMonth electionsDate) {
+	public MainView(Stage stage, LocalDate electionsDate) {
 		root = new Group();
 
 		setStage(stage);
@@ -84,9 +84,8 @@ public class MainView {
 		setCitizensTabView(new CitizensTabView());
 		setPartiesTabView(new PartiesTabView());
 		setAboutTabView(new AboutTabView());
-
-		buildScene(stage, electionsDate);
 		
+		buildScene(electionsDate);
 		aboutTabView.addAudio(stage);
 	}
 
@@ -96,7 +95,7 @@ public class MainView {
 		model.show(root);
 	}
 
-	private void buildScene(Stage stage, YearMonth electionsDate) {
+	private void buildScene(LocalDate electionsDate) {
 		String[] tabNames = new String[] { "Elections", "Ballots", "Citizens", "Parties", "About" };
 		Node[] tabContents = { electionsTabView.asNode(), ballotsTabView.asNode(), citizensTabView.asNode(),
 				partiesTabView.asNode(), aboutTabView.asNode() };

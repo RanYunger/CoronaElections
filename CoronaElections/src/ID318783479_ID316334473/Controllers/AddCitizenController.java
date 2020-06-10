@@ -51,6 +51,7 @@ public class AddCitizenController {
 					carryingWeaponCheckBox.setDisable(false);
 				} else {
 					soldierCheckBox.setSelected(false);
+					carryingWeaponCheckBox.setSelected(false);
 					carryingWeaponCheckBox.setDisable(true);
 				}
 			}
@@ -70,6 +71,7 @@ public class AddCitizenController {
 					view.refreshAssociatedBallotComboBox(true, soldierCheckBox.isSelected());
 				} else {
 					wearingSuitCheckBox.setDisable(true);
+					wearingSuitCheckBox.setSelected(false);
 					daysOfSicknessComboBox.setDisable(true);
 					daysOfSicknessComboBox.getSelectionModel().clearSelection();
 				}

@@ -3,6 +3,7 @@ package ID318783479_ID316334473.Controllers;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.AddCandidateToPartyModel;
 import ID318783479_ID316334473.Models.AddPartyModel;
+import ID318783479_ID316334473.Models.CitizensTabModel;
 import ID318783479_ID316334473.Models.PartiesTabModel;
 import ID318783479_ID316334473.Views.AddCandidateToPartyView;
 import ID318783479_ID316334473.Views.AddPartyView;
@@ -41,7 +42,7 @@ public class PartiesTabController {
 		setPartiesTabModel(model);
 		setPartiesTabView(view);
 
-		view.refresh(model);
+		partiesTabView.refresh(model);
 
 		EventHandler<ActionEvent> addPartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -59,7 +60,8 @@ public class PartiesTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					AddCandidateToPartyModel model = new AddCandidateToPartyModel();
+					CitizensTabModel citizensTabModel = (CitizensTabModel)UIHandler.getModelByName("CitizensTabModel");
+					AddCandidateToPartyModel model = new AddCandidateToPartyModel(citizensTabModel.getCitizens());
 					AddCandidateToPartyView view = new AddCandidateToPartyView(new Stage(), partiesTabModel.getElectionsDate());
 					AddCandidateToPartyController controller = new AddCandidateToPartyController(model, view);
 				} catch (Exception ex) {

@@ -39,7 +39,7 @@ public class BallotsTabController {
 		setBallotsTabModel(model);
 		setBallotsTabView(view);
 
-		view.refresh(model);
+		ballotsTabView.refresh(ballotsTabModel);
 
 		EventHandler<ActionEvent> addBallotButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override

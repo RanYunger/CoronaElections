@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import ID318783479_ID316334473.UIHandler;
@@ -20,7 +20,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -35,6 +34,7 @@ public class AddCitizenView {
 
 	// Fields
 	private Group root;
+	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox, row4HBox, row5HBox, row6HBox;
 	private ImageView citizenImageView;
@@ -47,12 +47,20 @@ public class AddCitizenView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
 	// Constructors
-	public AddCitizenView(Stage stage, YearMonth electionsDate) {
-		root = new Group();
-
-		buildScene(stage, electionsDate);
+	public AddCitizenView(Stage stage, LocalDate electionsDate) {
+		setRoot(new Group());
+		setStage(stage);
+		
+		buildScene(electionsDate);
 		
 		UIHandler.addAudioToImageView(stage.getScene(), citizenImageView, "ToiletFlush.mp3");
 	}
@@ -63,8 +71,8 @@ public class AddCitizenView {
 		model.show(root);
 	}
 
-	private void buildScene(Stage stage, YearMonth electionsDate) {
-		int maxBorderYear = YearMonth.now().getYear() - 18, minBorderYear = maxBorderYear - 82;
+	private void buildScene(LocalDate electionsDate) {
+		int maxBorderYear = LocalDate.now().getYear() - 18, minBorderYear = maxBorderYear - 82;
 		ArrayList<Integer> years = new ArrayList<Integer>(), daysOfSickness = new ArrayList<Integer>();
 		double sceneWidth = 950, sceneHeight = 500, fontSize = 50;
 

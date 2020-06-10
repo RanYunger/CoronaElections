@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Models;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 public class CitizenModel implements Comparable<CitizenModel> {
 	// Constants
@@ -42,7 +42,7 @@ public class CitizenModel implements Comparable<CitizenModel> {
 	}
 
 	private void setYearOfBirth(int yearOfBirth) throws Exception {
-		if (yearOfBirth > YearMonth.now().getYear())
+		if (yearOfBirth > LocalDate.now().getYear())
 			throw new Exception("Time paradox prevented - I mean, come on");
 		this.yearOfBirth = yearOfBirth;
 	}
@@ -110,7 +110,7 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		}
 	}
 
-	public void calculateAge(YearMonth votingDate) {
+	public void calculateAge(LocalDate votingDate) {
 		try {
 			setAge(votingDate.getYear() - yearOfBirth);
 		} catch (Exception ex) {

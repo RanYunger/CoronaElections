@@ -38,8 +38,8 @@ public class CitizensTabController {
 	public CitizensTabController(CitizensTabModel model, CitizensTabView view) {
 		setCitizensTabModel(model);
 		setCitizensTabView(view);
-		
-		view.refresh(model);
+
+		citizensTabView.refresh(model);
 		
 		EventHandler<ActionEvent> addCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override

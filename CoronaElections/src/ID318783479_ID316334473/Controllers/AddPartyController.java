@@ -34,7 +34,7 @@ public class AddPartyController {
 		setAddPartyModel(model);
 		setAddPartyView(view);
 
-		addPartyView.refresh(addPartyModel);
+		addPartyView.refresh(model);
 		
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override

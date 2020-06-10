@@ -1,11 +1,10 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.AddCandidateToPartyModel;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,14 +13,11 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -32,6 +28,7 @@ public class AddCandidateToPartyView {
 
 	// Fields
 	private Group root;
+	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox;
 	private ImageView candidateImageView;
@@ -41,12 +38,20 @@ public class AddCandidateToPartyView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
 	// Constructors
-	public AddCandidateToPartyView(Stage stage, YearMonth electionsDate) {
-		root = new Group();
+	public AddCandidateToPartyView(Stage stage, LocalDate electionsDate) {
+		setRoot(new Group());
+		setStage(stage);
 
-		buildScene(stage, electionsDate);
+		buildScene(electionsDate);
 	}
 
 	// Methods
@@ -55,7 +60,7 @@ public class AddCandidateToPartyView {
 		model.show(root);
 	}
 
-	private void buildScene(Stage stage, YearMonth electionsDate) {
+	private void buildScene(LocalDate electionsDate) {
 		TableColumn<String, String> citizenIDTableColumn, citizenNameTableColumn, citizenYearOfBirthTableColumn;
 		double sceneWidth = 850, sceneHeight = 500, fontSize = 40;
 
@@ -79,29 +84,23 @@ public class AddCandidateToPartyView {
 		submitButton.setFont(new Font(20));
 
 		citizenIDTableColumn = new TableColumn<String, String>("ID");
-		citizenIDTableColumn.setMinWidth(100);
-		citizenIDTableColumn.setReorderable(false);
-		citizenIDTableColumn.setResizable(false);
+		citizenIDTableColumn.setMinWidth(225);
 
 		citizenNameTableColumn = new TableColumn<String, String>("Full Name");
-		citizenNameTableColumn.setMinWidth(200);
-		citizenNameTableColumn.setReorderable(false);
-		citizenNameTableColumn.setResizable(false);
+		citizenNameTableColumn.setMinWidth(225);
 
-		citizenYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
-		citizenYearOfBirthTableColumn.setMinWidth(100);
-		citizenYearOfBirthTableColumn.setReorderable(false);
-		citizenYearOfBirthTableColumn.setResizable(false);
-
-		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn,
-				citizenYearOfBirthTableColumn);
+		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn);
+		for (TableColumn<?, ?> tableColumn : citizensTableView.getColumns()) {
+			tableColumn.setReorderable(false);
+			tableColumn.setResizable(false);
+		}
 		citizensTableView.setOpacity(0.8);
 
 		row1HBox.getChildren().addAll(candidateIDLabel, candidateIDTextField, candidateNameLabel,
 				candidateNameTextField);
 		HBox.setMargin(candidateIDLabel, new Insets(0, 5, 0, 5));
 		HBox.setMargin(candidateIDTextField, new Insets(0, 5, 0, 5));
-		HBox.setMargin(candidateNameLabel, new Insets(0, 5, 0, 5));
+		HBox.setMargin(candidateNameLabel, new Insets(0, 5, 0, 15));
 		HBox.setMargin(candidateNameTextField, new Insets(0, 5, 0, 5));
 
 		vBox.getChildren().addAll(headerLabel, row1HBox, citizensTableView, submitButton);

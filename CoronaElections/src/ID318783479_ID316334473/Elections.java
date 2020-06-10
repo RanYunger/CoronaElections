@@ -1,7 +1,7 @@
 package ID318783479_ID316334473;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -20,7 +20,7 @@ public class Elections {
 	public static final Scanner scanner = new Scanner(System.in);
 	public static final int INITIAL_CAPACITY = 10;
 
-	public static YearMonth votingDate = null;
+	public static LocalDate votingDate = null;
 	public static ArrayList<CitizenModel> voters = new ArrayList<CitizenModel>();
 	public static ArrayList<PartyModel> parties = new ArrayList<PartyModel>();
 	public static ArrayList<BallotModel<CitizenModel>> citizenBallots = new ArrayList<BallotModel<CitizenModel>>();
@@ -40,11 +40,11 @@ public class Elections {
 //
 //		System.out.println("Welcome to our voting system.");
 //		System.out.println("Please enter the year and month of the elections, in that order:");
-//		boolean validYearMonth = false;
-//		while (!validYearMonth) {
+//		boolean validLocalDate = false;
+//		while (!validLocalDate) {
 //			try {
-//				votingDate = YearMonth.of(scanner.nextInt(), scanner.nextInt());
-//				validYearMonth = true;
+//				votingDate = LocalDate.of(scanner.nextInt(), scanner.nextInt());
+//				validLocalDate = true;
 //			} catch (DateTimeException e) {
 //				System.out.println("Please enter a valid year-month pair");
 //			}
@@ -106,7 +106,7 @@ public class Elections {
 //	}
 
 	// Methods
-	private static void init(YearMonth votingDate, ArrayList<BallotModel<CitizenModel>> citizenBallots,
+	private static void init(LocalDate votingDate, ArrayList<BallotModel<CitizenModel>> citizenBallots,
 			ArrayList<BallotModel<SoldierModel>> soldierBallots, ArrayList<BallotModel<SickCitizenModel>> sickCitizenBallots,
 			ArrayList<BallotModel<SickCandidateModel>> sickCandidatesBallots, ArrayList<BallotModel<SickSoldierModel>> sickSoldierBallots,
 			ArrayList<PartyModel> parties, ArrayList<CitizenModel> voters) {

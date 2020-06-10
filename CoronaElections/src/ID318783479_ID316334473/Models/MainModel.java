@@ -1,24 +1,24 @@
 package ID318783479_ID316334473.Models;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 import javafx.scene.Group;
 
 public class MainModel {
 	// Constants
 
 	// Fields
-	private YearMonth electionsDate;
+	private LocalDate electionsDate;
 	private ElectionsTabModel electionsTabModel;
 	private BallotsTabModel ballotsTabModel;
 	private CitizensTabModel citizensTabModel;
 	private PartiesTabModel partiesTabModel;
 
 	// Properties (Getters and Setters)
-	public YearMonth getElectionsDate() {
+	public LocalDate getElectionsDate() {
 		return electionsDate;
 	}
 
-	private void setElectionsDate(YearMonth electionsDate) {
+	private void setElectionsDate(LocalDate electionsDate) {
 		this.electionsDate = electionsDate;
 	}
 
@@ -55,7 +55,7 @@ public class MainModel {
 	}
 
 	// Constructors
-	public MainModel(YearMonth electionsDate) {
+	public MainModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setElectionsTabModel(new ElectionsTabModel(electionsDate));
 		setBallotsTabModel(new BallotsTabModel(electionsDate));

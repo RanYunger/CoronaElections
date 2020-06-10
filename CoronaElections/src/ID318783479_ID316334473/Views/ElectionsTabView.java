@@ -11,9 +11,8 @@ import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,15 +26,18 @@ public class ElectionsTabView {
 	private GridPane gridPane;
 	private Button runElectionsButton, showResultsButton;
 	private HBox hBox;
-	private TableView<String> finalResultsTableView;
+	private PieChart finalResultsPieChart;
 	private BarChart<String, Number> resultsByBallotBarChart;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
 
 	// Constructors
 	public ElectionsTabView() {
-		root = new Group();
-
+		setRoot(new Group());
+		
 		buildScene();
 	}
 
@@ -51,7 +53,7 @@ public class ElectionsTabView {
 		runElectionsButton = new Button("Run Elections");
 		showResultsButton = new Button("Show Results");
 		hBox = new HBox();
-		finalResultsTableView = new TableView<String>();
+		finalResultsPieChart = new PieChart();
 		resultsByBallotBarChart = new BarChart<String, Number>(new CategoryAxis(), new NumberAxis());
 
 		gridPane.getRowConstraints().add(new RowConstraints());
@@ -60,34 +62,32 @@ public class ElectionsTabView {
 		gridPane.getRowConstraints().get(1).setPercentHeight(80);
 
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
-		gridPane.getColumnConstraints().get(0).setPercentWidth(20);
+		gridPane.getColumnConstraints().get(0).setPercentWidth(30);
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
-		gridPane.getColumnConstraints().get(1).setPercentWidth(40);
+		gridPane.getColumnConstraints().get(1).setPercentWidth(35);
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
-		gridPane.getColumnConstraints().get(2).setPercentWidth(40);
+		gridPane.getColumnConstraints().get(2).setPercentWidth(35);
 
 		hBox.setAlignment(Pos.CENTER);
 		hBox.getChildren().addAll(runElectionsButton, showResultsButton);
 		HBox.setMargin(runElectionsButton, new Insets(0, 10, 0, 0));
 		HBox.setMargin(showResultsButton, new Insets(0, 0, 0, 10));
 
-		finalResultsTableView.getColumns().add(new TableColumn<String, String>("Party"));
-		finalResultsTableView.getColumns().get(0).setMinWidth(200);
-		finalResultsTableView.getColumns().add(new TableColumn<String, Number>("Votes"));
-		finalResultsTableView.getColumns().get(1).setMinWidth(100);
-		finalResultsTableView.setOpacity(0.8);
-		
+		finalResultsPieChart.setTitle("Final Results");
+		finalResultsPieChart.setOpacity(0.8);
+		finalResultsPieChart.setOpacity(0.8);
+
 		resultsByBallotBarChart.setTitle("Votes by Ballots");
 		resultsByBallotBarChart.getXAxis().setLabel("Ballot IDs");
 		resultsByBallotBarChart.getYAxis().setLabel("Votes");
 		resultsByBallotBarChart.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 3, 1);
-		gridPane.add(finalResultsTableView, 0, 1, 1, 1);
+		gridPane.add(finalResultsPieChart, 0, 1, 1, 1);
 		gridPane.add(resultsByBallotBarChart, 1, 1, 2, 1);
 
 		GridPane.setMargin(hBox, new Insets(110, 0, 0, 0));
-		GridPane.setMargin(finalResultsTableView, new Insets(10, 0, 145, 0));
+		GridPane.setMargin(finalResultsPieChart, new Insets(10, 0, 145, 0));
 		GridPane.setMargin(resultsByBallotBarChart, new Insets(10, 0, 145, 0));
 	}
 

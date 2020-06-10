@@ -1,7 +1,7 @@
 package ID318783479_ID316334473.Views;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.ElectionsDateModel;
@@ -34,13 +34,20 @@ public class ElectionsDateView {
 	private Button enterButton;
 
 	// Properties
+	public void setRoot(Group root) {
+		this.root = root;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
 	// Constructors
 	public ElectionsDateView(Stage stage) {
-		root = new Group();
-		this.stage = stage;
-
-		buildScene(stage);
+		setRoot(new Group());
+		setStage(stage);
+		
+		buildScene();
 	}
 
 	// Methods
@@ -54,8 +61,8 @@ public class ElectionsDateView {
 		return control.getProperties().get(propertyName);
 	}
 
-	public YearMonth getElectionsDate() {
-		return YearMonth.from(electionsDateDatePicker.getValue());
+	public LocalDate getElectionsDate() {
+		return LocalDate.from(electionsDateDatePicker.getValue());
 	}
 
 	public void refresh(ElectionsDateModel model) {
@@ -63,7 +70,7 @@ public class ElectionsDateView {
 		model.show(root);
 	}
 
-	public void buildScene(Stage stage) {
+	private void buildScene() {
 		LocalDate minDate = LocalDate.of(2020, 2, 27), maxDate = LocalDate.now();
 
 		vBox = new VBox();
@@ -98,12 +105,11 @@ public class ElectionsDateView {
 		VBox.setMargin(electionsDateLabel, new Insets(20));
 		VBox.setMargin(electionsDateDatePicker, new Insets(20));
 		VBox.setMargin(enterButton, new Insets(20));
-		
+
 		stage.setTitle("Welcome to our system!");
 		stage.setResizable(false);
 		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
 		stage.setScene(new Scene(vBox, 400, 300));
-		UIHandler.hideEasterEgg(stage);
 		stage.show();
 	}
 

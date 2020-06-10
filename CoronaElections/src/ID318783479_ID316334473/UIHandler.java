@@ -2,10 +2,8 @@ package ID318783479_ID316334473;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 import java.util.TreeMap;
 
 import ID318783479_ID316334473.Controllers.MainController;
@@ -42,7 +40,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -68,6 +65,7 @@ public class UIHandler {
 	// Properties
 
 	// Methods
+	// Capital letter!
 	public static Object getModelByName(String modelName) {
 		try {
 			return mainModel.getClass().getDeclaredMethod(String.format("get%s", modelName)).invoke(mainModel);
@@ -78,6 +76,7 @@ public class UIHandler {
 		return null;
 	}
 
+	// Capital letter!
 	public static Object getControllerByName(String controllerName) {
 		try {
 			return mainController.getClass().getDeclaredMethod(String.format("get%s", controllerName))
@@ -199,42 +198,6 @@ public class UIHandler {
 		imageView.setOnMouseEntered(imageViewMouseEnteredEventHandler);
 		imageView.setOnMouseExited(imageViewMouseExitedEventHandler);
 		imageView.setOnMouseClicked(imageViewMouseClickedEventHandler);
-	}
-
-	public static void hideEasterEgg(Stage stage) {
-		// TODO: COMPLETE
-		
-		Random rnd = new Random();
-		double stageHeight = stage.getHeight(), stageWidth = stage.getWidth(),
-				randomX = 10 + (stageWidth - 10) * rnd.nextDouble(), randomY = 10 + (stageHeight - 10) * rnd.nextDouble();
-		ImageView bugsImageView = buildImage("Bugs.png", 200, 200);
-		Rectangle eventArea = new Rectangle(randomX, randomY, 200, 200);
-
-		bugsImageView.setY(eventArea.getY());
-		bugsImageView.setVisible(false);
-
-		EventHandler<MouseEvent> sceneMouseMovedEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				bugsImageView.setVisible(TBN.isInRectangle(eventArea, mouseEvent.getX(), mouseEvent.getY()));
-			}
-		};
-		EventHandler<MouseEvent> imageViewMouseEnteredEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				bugsImageView.setVisible(true);
-			}
-		};
-		EventHandler<MouseEvent> imageViewMouseExitedEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				bugsImageView.setVisible(false);
-			}
-		};
-
-		stage.getScene().setOnMouseMoved(sceneMouseMovedEventHandler);
-		bugsImageView.setOnMouseEntered(imageViewMouseEnteredEventHandler);
-		bugsImageView.setOnMouseExited(imageViewMouseExitedEventHandler);
 	}
 
 	public static ButtonType showConfirmation(String message) {
@@ -380,7 +343,7 @@ public class UIHandler {
 	}
 
 	// When entering 1
-	public static boolean addNewBallot(YearMonth votingDate) {
+	public static boolean addNewBallot(LocalDate votingDate) {
 		String address;
 		boolean validInput = false;
 
@@ -465,7 +428,7 @@ public class UIHandler {
 	}
 
 	// When entering 2
-	public static boolean addNewCitizen(ArrayList<CitizenModel> voterRegistry, YearMonth votingDate) {
+	public static boolean addNewCitizen(ArrayList<CitizenModel> voterRegistry, LocalDate votingDate) {
 		CitizenModel citizen;
 		BallotModel<? extends CitizenModel> associatedBallot;
 		int citizenID, yearOfBirth, daysOfSickness = 0, associatedBallotID, voterAge;
@@ -644,7 +607,7 @@ public class UIHandler {
 	}
 
 	// When entering 6
-	public static String showVoterRegistry(ArrayList<? extends CitizenModel> voterRegistry, YearMonth votingDate) {
+	public static String showVoterRegistry(ArrayList<? extends CitizenModel> voterRegistry, LocalDate votingDate) {
 		if (voterRegistry.size() == 0)
 			return "Nothing to See here..";
 

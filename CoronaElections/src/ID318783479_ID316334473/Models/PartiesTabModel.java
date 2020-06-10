@@ -1,7 +1,7 @@
 package ID318783479_ID316334473.Models;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,15 +13,15 @@ public class PartiesTabModel {
 	// Constants
 
 	// Fields
-	private YearMonth electionsDate;
+	private LocalDate electionsDate;
 	private ArrayList<PartyModel> parties;
 
 	// Properties (Getters and Setters)
-	public YearMonth getElectionsDate() {
+	public LocalDate getElectionsDate() {
 		return electionsDate;
 	}
 
-	public void setElectionsDate(YearMonth electionsDate) {
+	public void setElectionsDate(LocalDate electionsDate) {
 		this.electionsDate = electionsDate;
 	}
 
@@ -34,7 +34,7 @@ public class PartiesTabModel {
 	}
 
 	// Constructors
-	public PartiesTabModel(YearMonth electionsDate) {
+	public PartiesTabModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setParties(new ArrayList<PartyModel>());
 

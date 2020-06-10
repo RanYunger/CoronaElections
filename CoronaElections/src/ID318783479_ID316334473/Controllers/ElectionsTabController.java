@@ -35,7 +35,7 @@ public class ElectionsTabController {
 		setElectionsTabModel(model);
 		setElectionsTabView(view);
 
-		view.refresh(model);
+		electionsTabView.refresh(model);
 
 		EventHandler<ActionEvent> runElectionsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override

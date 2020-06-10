@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Models;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import ID318783479_ID316334473.TBN;
@@ -12,7 +12,7 @@ public class BallotsTabModel {
 	// Constants
 
 	// Fields
-	private YearMonth electionsDate;
+	private LocalDate electionsDate;
 	private ArrayList<BallotModel<CitizenModel>> citizenBallots;
 	private ArrayList<BallotModel<SoldierModel>> soldierBallots;
 	private ArrayList<BallotModel<SickCitizenModel>> sickCitizenBallots;
@@ -20,11 +20,11 @@ public class BallotsTabModel {
 	private ArrayList<BallotModel<SickSoldierModel>> sickSoldierBallots;
 
 	// Properties (Getters and Setters)
-	public YearMonth getElectionsDate() {
+	public LocalDate getElectionsDate() {
 		return electionsDate;
 	}
 
-	public void setElectionsDate(YearMonth electionsDate) {
+	public void setElectionsDate(LocalDate electionsDate) {
 		this.electionsDate = electionsDate;
 	}
 
@@ -81,7 +81,7 @@ public class BallotsTabModel {
 	}
 
 	// Constructors
-	public BallotsTabModel(YearMonth electionsDate) {
+	public BallotsTabModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setCitizenBallots(new ArrayList<BallotModel<CitizenModel>>());
 		setSoldierBallots(new ArrayList<BallotModel<SoldierModel>>());
@@ -97,7 +97,7 @@ public class BallotsTabModel {
 		// TODO Auto-generated method stub
 	}
 
-	private void init(YearMonth electionsDate) {
+	private void init(LocalDate electionsDate) {
 		// Initiates 4 ballots
 		citizenBallots.add(new BallotModel<CitizenModel>("CitizenModel", "21st Road Street, Town City", electionsDate));
 		soldierBallots.add(new BallotModel<SoldierModel>("SoldierModel", "Area 51, Nevada", electionsDate));

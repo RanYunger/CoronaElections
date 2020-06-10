@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Models;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,15 +12,15 @@ public class CitizensTabModel {
 	// Constants
 
 	// Fields
-	private YearMonth electionsDate;
+	private LocalDate electionsDate;
 	public ArrayList<CitizenModel> citizens;
 
 	// Properties (Getters and Setters)
-	public YearMonth getElectionsDate() {
+	public LocalDate getElectionsDate() {
 		return electionsDate;
 	}
 
-	public void setElectionsDate(YearMonth electionsDate) {
+	public void setElectionsDate(LocalDate electionsDate) {
 		this.electionsDate = electionsDate;
 	}
 
@@ -33,11 +33,11 @@ public class CitizensTabModel {
 	}
 
 	// Constructors
-	public CitizensTabModel(YearMonth electionsDate) {
+	public CitizensTabModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setCitizens(new ArrayList<CitizenModel>());
 
-//		init();
+		init();
 	}
 
 	// Methods
@@ -46,7 +46,7 @@ public class CitizensTabModel {
 	}
 
 	private void init() {
-		BallotsTabModel ballotsTabModel = (BallotsTabModel) UIHandler.getModelByName("ballotsTabModel");
+		BallotsTabModel ballotsTabModel = (BallotsTabModel) UIHandler.getModelByName("BallotsTabModel");
 		ArrayList<BallotModel<CitizenModel>> citizenBallots = ballotsTabModel.getCitizenBallots();
 		ArrayList<BallotModel<SoldierModel>> soldierBallots = ballotsTabModel.getSoldierBallots();
 		ArrayList<BallotModel<SickCitizenModel>> sickCitizenBallots = ballotsTabModel.getSickCitizenBallots();

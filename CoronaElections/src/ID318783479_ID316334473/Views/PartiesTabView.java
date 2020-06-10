@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -29,11 +28,14 @@ public class PartiesTabView {
 	private TableView<String> partiesTableView;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
 
 	// Constructors
 	public PartiesTabView() {
-		root = new Group();
-
+		setRoot(new Group());
+		
 		buildScene();
 	}
 
@@ -71,48 +73,39 @@ public class PartiesTabView {
 
 		partyNameTableColumn = new TableColumn<String, String>("Name");
 		partyNameTableColumn.setMinWidth(300);
-		partyNameTableColumn.setReorderable(false);
-		partyNameTableColumn.setResizable(false);
 		
 		partyWingTableColumn = new TableColumn<String, String>("Wing");
 		partyWingTableColumn.setMinWidth(200);
-		partyWingTableColumn.setReorderable(false);
-		partyWingTableColumn.setResizable(false);
 		
 		partyYearOfFoundationTableColumn = new TableColumn<String, String>("Foundation");
 		partyYearOfFoundationTableColumn.setMinWidth(100);
-		partyYearOfFoundationTableColumn.setReorderable(false);
-		partyYearOfFoundationTableColumn.setResizable(false);
 		
 		partyCandidatesTableColumn = new TableColumn<String, String>("Candidates");
 		partyCandidatesTableColumn.setMinWidth(950);
-		partyCandidatesTableColumn.setReorderable(false);
-		partyCandidatesTableColumn.setResizable(false);
 
 		candidateNestedTableColumns = partyCandidatesTableColumn.getColumns();
 		candidateIDTableColumn = new TableColumn<String, String>("ID");
 		candidateIDTableColumn.setMinWidth(150);
-		candidateIDTableColumn.setReorderable(false);
-		candidateIDTableColumn.setResizable(false);
 		
 		candidateNameTableColumn = new TableColumn<String, String>("Full Name");
 		candidateNameTableColumn.setMinWidth(200);
-		candidateNameTableColumn.setReorderable(false);
-		candidateNameTableColumn.setResizable(false);
 		
 		candidateRankTableColumn = new TableColumn<String, String>("Rank");
 		candidateRankTableColumn.setMinWidth(50);
-		candidateRankTableColumn.setReorderable(false);
-		candidateRankTableColumn.setResizable(false);
 		
 		candidateStatusTableColumn = new TableColumn<String, String>("Status");
 		candidateStatusTableColumn.setMinWidth(470);
-		candidateStatusTableColumn.setReorderable(false);
-		candidateStatusTableColumn.setResizable(false);
 		
 		candidateNestedTableColumns.addAll(candidateIDTableColumn, candidateNameTableColumn, candidateRankTableColumn, candidateStatusTableColumn);
-
+		for (TableColumn<?, ?> tableColumn : candidateNestedTableColumns) {
+			tableColumn.setReorderable(false);
+			tableColumn.setResizable(false);
+		}
 		partiesTableView.getColumns().addAll(partyNameTableColumn, partyWingTableColumn, partyYearOfFoundationTableColumn, partyCandidatesTableColumn);
+		for (TableColumn<?, ?> tableColumn : partiesTableView.getColumns()) {
+			tableColumn.setReorderable(false);
+			tableColumn.setResizable(false);
+		}
 		partiesTableView.setOpacity(0.8);
 		
 		gridPane.add(hBox, 0, 0, 1, 1);

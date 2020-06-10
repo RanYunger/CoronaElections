@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Models;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import ID318783479_ID316334473.UIHandler;
@@ -13,7 +13,7 @@ public class BallotModel<E extends CitizenModel> {
 	private String ballotType;
 	private String address;
 	private ArrayList<CitizenModel> voterRegistry;
-	private YearMonth votingDate;
+	private LocalDate votingDate;
 	private double votersPercentage;
 	private ArrayList<Integer> results;
 
@@ -48,12 +48,12 @@ public class BallotModel<E extends CitizenModel> {
 		this.voterRegistry = voterRegistry;
 	}
 
-	public YearMonth getVotingDate() {
+	public LocalDate getVotingDate() {
 		return votingDate;
 	}
 
-	private void setVotingDate(YearMonth votingDate) throws Exception {
-		if (votingDate.compareTo(YearMonth.now()) > 0)
+	private void setVotingDate(LocalDate votingDate) throws Exception {
+		if (votingDate.compareTo(LocalDate.now()) > 0)
 			throw new Exception("Time paradox prevented.");
 		this.votingDate = votingDate;
 	}
@@ -75,11 +75,11 @@ public class BallotModel<E extends CitizenModel> {
 	}
 
 	// Constructors
-	public BallotModel(String ballotType, YearMonth votingDate) {
+	public BallotModel(String ballotType, LocalDate votingDate) {
 		this(ballotType, "<UNKNOWN>", votingDate);
 	}
 
-	public BallotModel(String ballotType, String address, YearMonth votingDate) {
+	public BallotModel(String ballotType, String address, LocalDate votingDate) {
 		try {
 			setID(IDGenerator++);
 			setBallotType(ballotType);

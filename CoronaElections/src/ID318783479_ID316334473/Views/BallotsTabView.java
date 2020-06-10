@@ -28,11 +28,14 @@ public class BallotsTabView {
 	private TableView<String> ballotsTableView;
 
 	// Properties (Getters and Setters)
+	public void setRoot(Group root) {
+		this.root = root;
+	}
 
 	// Constructors
 	public BallotsTabView() {
-		root = new Group();
-
+		setRoot(new Group());
+		
 		buildScene();
 	}
 
@@ -68,49 +71,41 @@ public class BallotsTabView {
 
 		ballotIDTableColumn = new TableColumn<String, String>("ID");
 		ballotIDTableColumn.setMinWidth(100);
-		ballotIDTableColumn.setReorderable(false);
-		ballotIDTableColumn.setResizable(false);
 
 		ballotTypeTableColumn = new TableColumn<String, String>("Type");
 		ballotTypeTableColumn.setMinWidth(200);
-		ballotTypeTableColumn.setReorderable(false);
-		ballotTypeTableColumn.setResizable(false);
 
 		ballotAddressTableColumn = new TableColumn<String, String>("Address");
 		ballotAddressTableColumn.setMinWidth(400);
-		ballotAddressTableColumn.setReorderable(false);
-		ballotAddressTableColumn.setResizable(false);
 
 		ballotVotersTableColumn = new TableColumn<String, String>("Voters");
 		ballotVotersTableColumn.setMinWidth(850);
-		ballotVotersTableColumn.setReorderable(false);
-		ballotVotersTableColumn.setResizable(false);
 
 		voterNestedTableColumns = ballotVotersTableColumn.getColumns();		
 		voterIDTableColumn = new TableColumn<String, String>("ID");
 		voterIDTableColumn.setMinWidth(150);
-		voterIDTableColumn.setReorderable(false);
-		voterIDTableColumn.setResizable(false);
 		
 		voterNameTableColumn = new TableColumn<String, String>("Full Name");
 		voterNameTableColumn.setMinWidth(200);
-		voterNameTableColumn.setReorderable(false);
-		voterNameTableColumn.setResizable(false);
 		
 		voterYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
 		voterYearOfBirthTableColumn.setMinWidth(50);
-		voterYearOfBirthTableColumn.setReorderable(false);
-		voterYearOfBirthTableColumn.setResizable(false);
 		
 		voterStatusTableColumn = new TableColumn<String, String>("Status");
 		// use setStatusHBox() as the column's content
 		voterStatusTableColumn.setMinWidth(370);
-		voterStatusTableColumn.setReorderable(false);
-		voterStatusTableColumn.setResizable(false);
 		
 		voterNestedTableColumns.addAll(voterIDTableColumn, voterNameTableColumn, voterYearOfBirthTableColumn, voterStatusTableColumn);
+		for (TableColumn<?, ?> tableColumn : voterNestedTableColumns) {
+			tableColumn.setReorderable(false);
+			tableColumn.setResizable(false);
+		}
 
 		ballotsTableView.getColumns().addAll(ballotIDTableColumn, ballotTypeTableColumn, ballotAddressTableColumn, ballotVotersTableColumn);
+		for (TableColumn<?, ?> tableColumn : ballotsTableView.getColumns()) {
+			tableColumn.setReorderable(false);
+			tableColumn.setResizable(false);
+		}
 		ballotsTableView.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 1, 1);

@@ -5,26 +5,16 @@ import java.util.ArrayList;
 import ID318783479_ID316334473.Models.BallotModel;
 import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Models.PartyModel;
-import javafx.scene.shape.Rectangle;
 
 // This class will contain methods which aren't necessarily related to UI
 public class TBN {
 	// Constants
-
+	
 	// Fields
 	
 	// Properties
 	
 	// Methods
-	public static boolean isInRectangle(Rectangle rect, double mouseX, double mouseY) {
-		// Validations
-		if((mouseX < rect.getX()) || (mouseX > rect.getWidth()))
-			return false;
-		if((mouseY < rect.getY()) || (mouseY > rect.getHeight()))
-			return false;
-		
-		return true;
-	}
 	
 	public static <T, U> T binarySearch(ArrayList<T> array, U key) {
 		return binarySearch(array, key, 0, array.size() - 1);
