@@ -8,4 +8,5 @@ module CoronaElections {
 	requires transitive javafx.graphics;
 	requires javafx.base;
 	requires javafx.media;
+	requires java.base;
 }

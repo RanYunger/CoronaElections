@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -70,12 +71,15 @@ public class BallotsTabView {
 		HBox.setMargin(removeBallotButton, new Insets(0, 0, 0, 10));
 
 		ballotIDTableColumn = new TableColumn<String, String>("ID");
+		ballotIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 		ballotIDTableColumn.setMinWidth(100);
 
 		ballotTypeTableColumn = new TableColumn<String, String>("Type");
+		ballotTypeTableColumn.setCellValueFactory(new PropertyValueFactory<>("Type"));
 		ballotTypeTableColumn.setMinWidth(200);
 
 		ballotAddressTableColumn = new TableColumn<String, String>("Address");
+		ballotAddressTableColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
 		ballotAddressTableColumn.setMinWidth(400);
 
 		ballotVotersTableColumn = new TableColumn<String, String>("Voters");
@@ -83,15 +87,19 @@ public class BallotsTabView {
 
 		voterNestedTableColumns = ballotVotersTableColumn.getColumns();		
 		voterIDTableColumn = new TableColumn<String, String>("ID");
+		voterIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 		voterIDTableColumn.setMinWidth(150);
 		
 		voterNameTableColumn = new TableColumn<String, String>("Full Name");
+		voterNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
 		voterNameTableColumn.setMinWidth(200);
 		
 		voterYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
+		voterYearOfBirthTableColumn.setCellValueFactory(new PropertyValueFactory<>("YearOfBirth"));
 		voterYearOfBirthTableColumn.setMinWidth(50);
 		
 		voterStatusTableColumn = new TableColumn<String, String>("Status");
+		voterStatusTableColumn.setCellValueFactory(new PropertyValueFactory<>("Status"));
 		// use setStatusHBox() as the column's content
 		voterStatusTableColumn.setMinWidth(370);
 		

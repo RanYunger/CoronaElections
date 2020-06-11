@@ -1,9 +1,10 @@
 TODO Shy:
 1. Build logic for each view
 2. Make data displayable in each view
-3. Implement regex for textual data (ID, Address, Name...) + set in all suitable nodes
+3. Implement Regex for textual data (ID, Address, Name...) + set in all suitable nodes
 
 TODOs Ran:
-0. Make sure all unique behaviour in AddX views work!
+0. Create an encapsolation to "Status" cell in table views (using CheckBoxTableCell maybe?)
+1. Make sure all unique behavior in AddX views work!
 2. Think of a funny thing to do with Bugs image
 3. Implement some kind of EE

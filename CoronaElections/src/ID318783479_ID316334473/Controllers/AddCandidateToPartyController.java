@@ -1,5 +1,7 @@
 package ID318783479_ID316334473.Controllers;
 
+import java.util.ArrayList;
+
 import ID318783479_ID316334473.Models.AddCandidateToPartyModel;
 import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Views.AddCandidateToPartyView;
@@ -80,11 +82,11 @@ public class AddCandidateToPartyController {
 		TableView<String> citizensTableView = (TableView<String>) addCandidateToPartyView
 				.getNodeByName("citizensTableView");
 		ObservableList<CitizenModel> citizens = addCandidateToPartyModel.getCitizens();
-		ObservableList<String> citizensObservableList = FXCollections.emptyObservableList();
-
+		ArrayList<String> citizensStringDetails = new ArrayList<String>();
+		
 		for (CitizenModel citizen : citizens)
-			citizensObservableList.add(String.format("%d|%s", citizen.getID(), citizen.getFullName()));
-
-		citizensTableView.setItems(citizensObservableList);
+			citizensStringDetails.add(String.format("%d|%s", citizen.getID(), citizen.getFullName()));
+		
+		citizensTableView.setItems(FXCollections.observableList(citizensStringDetails));
 	}
 }

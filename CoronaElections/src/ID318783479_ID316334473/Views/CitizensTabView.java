@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -69,18 +70,23 @@ public class CitizensTabView {
 		HBox.setMargin(removeCitizenButton, new Insets(0, 0, 0, 10));
 
 		citizenIDTableColumn = new TableColumn<String, String>("ID");
+		citizenIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 		citizenIDTableColumn.setMinWidth(200);
 
 		citizenNameTableColumn = new TableColumn<String, String>("Full Name");
+		citizenNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
 		citizenNameTableColumn.setMinWidth(300);
 
 		citizenYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
+		citizenYearOfBirthTableColumn.setCellValueFactory(new PropertyValueFactory<>("YearOfBirth"));
 		citizenYearOfBirthTableColumn.setMinWidth(100);
 
 		citizenAssociatedBallotTableColumn = new TableColumn<String, String>("Associated Ballot");
+		citizenAssociatedBallotTableColumn.setCellValueFactory(new PropertyValueFactory<>("Associated"));
 		citizenAssociatedBallotTableColumn.setMinWidth(150);
 
 		citizenStatusTableColumn = new TableColumn<String, String>("Status");
+		// TODO: use setStatusHBox() as the column's content
 		citizenStatusTableColumn.setMinWidth(750);
 
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn,

@@ -1,7 +1,6 @@
 package ID318783479_ID316334473.Views;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.ElectionsDateModel;

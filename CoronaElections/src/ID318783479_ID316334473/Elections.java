@@ -1,7 +1,6 @@
 package ID318783479_ID316334473;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;

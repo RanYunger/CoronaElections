@@ -17,7 +17,7 @@ import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
 import ID318783479_ID316334473.Models.SoldierModel;
 import ID318783479_ID316334473.Views.MainView;
-
+import javafx.beans.property.ObjectProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,6 +31,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -288,20 +289,113 @@ public class UIHandler {
 		return new ImageView(image);
 	}
 
-	public static HBox buildStatusHBox() {
-		HBox statusHBox = new HBox();
-		CheckBox isolatedCheckBox = new CheckBox("Isolated"), wearingSuitCheckBox = new CheckBox("Wearing suit"),
-				soldierCheckBox = new CheckBox("Soldier"), carryingWeaponCheckBox = new CheckBox("Carrying weapon");
+	// An inner class meant to envelop the The "Status" cell in TableViews
+	public class StatusCell<T> extends TableCell<T, HBox> {
+		// Fields
+		private HBox statusHBox;
+		private CheckBox isolatedCheckBox;
+		private CheckBox wearingSuitCheckBox;
+		private CheckBox soldierCheckBox;
+		private CheckBox carryingWeaponCheckBox;
 
-		statusHBox.getChildren().addAll(isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox, carryingWeaponCheckBox);
-		HBox.setMargin(isolatedCheckBox, new Insets(0, 5, 0, 0));
-		HBox.setMargin(wearingSuitCheckBox, new Insets(0, 5, 0, 5));
-		HBox.setMargin(soldierCheckBox, new Insets(0, 5, 0, 5));
-		HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 5));
-		statusHBox.setAlignment(Pos.CENTER);
+		// Properties
+		public HBox getStatusHBox() {
+			return statusHBox;
+		}
 
-		return statusHBox;
+		private void setStatusHBox(HBox statusHBox) {
+			this.statusHBox = statusHBox;
+		}
+
+		public CheckBox getIsolatedCheckBox() {
+			return isolatedCheckBox;
+		}
+
+		private void setIsolatedCheckBox(CheckBox isolatedCheckBox) {
+			this.isolatedCheckBox = isolatedCheckBox;
+		}
+
+		public CheckBox getWearingSuitCheckBox() {
+			return wearingSuitCheckBox;
+		}
+
+		private void setWearingSuitCheckBox(CheckBox wearingSuitCheckBox) {
+			this.wearingSuitCheckBox = wearingSuitCheckBox;
+		}
+
+		public CheckBox getSoldierCheckBox() {
+			return soldierCheckBox;
+		}
+
+		private void setSoldierCheckBox(CheckBox soldierCheckBox) {
+			this.soldierCheckBox = soldierCheckBox;
+		}
+
+		public CheckBox getCarryingWeaponCheckBox() {
+			return carryingWeaponCheckBox;
+		}
+
+		private void setCarryingWeaponCheckBox(CheckBox carryingWeaponCheckBox) {
+			this.carryingWeaponCheckBox = carryingWeaponCheckBox;
+		}
+
+		// Constructors
+		public StatusCell() {
+			setStatusHBox(new HBox());
+			setIsolatedCheckBox(new CheckBox("Isolated"));
+			setWearingSuitCheckBox(new CheckBox("Wearing suit"));
+			setSoldierCheckBox(new CheckBox("Soldier"));
+			setCarryingWeaponCheckBox(new CheckBox("Carrying weapon"));
+
+			statusHBox.getChildren().addAll(isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox,
+					carryingWeaponCheckBox);
+			for (Node checkBox : statusHBox.getChildren())
+				checkBox.setDisable(true);
+			HBox.setMargin(isolatedCheckBox, new Insets(0, 5, 0, 0));
+			HBox.setMargin(wearingSuitCheckBox, new Insets(0, 5, 0, 5));
+			HBox.setMargin(soldierCheckBox, new Insets(0, 5, 0, 5));
+			HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 5));
+			statusHBox.setAlignment(Pos.CENTER);
+		}
+
+		// Methods	
+		protected void updateItem(HBox hBox, boolean empty) {
+			super.updateItem(hBox, empty);
+			
+			if ((!empty) || (hBox != null)) {			
+				isolatedCheckBox.setSelected(((CheckBox)hBox.getChildren().get(0)).isSelected());
+				wearingSuitCheckBox.setSelected(((CheckBox)hBox.getChildren().get(1)).isSelected());
+				soldierCheckBox.setSelected(((CheckBox)hBox.getChildren().get(2)).isSelected());
+				carryingWeaponCheckBox.setSelected(((CheckBox)hBox.getChildren().get(3)).isSelected());
+			}
+		}
 	}
+
+	// An inner class meant to envelop the "Status" property type
+	public static class StatusItem {
+		// Fields
+		private ObjectProperty<HBox> statusHBox;
+
+		// Properties
+		public HBox getStatusHBox() {
+			return statusHBox.get();
+		}
+
+		private void setStatusHBox(HBox hBox) {
+			statusHBox.set(hBox);
+		}
+
+		public ObjectProperty<HBox> StatusHBoxProperty() {
+			return statusHBox;
+		}
+
+		// Constructors
+		public StatusItem(HBox hBox) {
+			setStatusHBox(hBox);
+		}
+	}
+
+//==================== STARTING HERE ARE THE CONSOLE METHODS (TO BE DELETED LATER) ===================
 
 	public static int showMenu(boolean electionsOccurred) {
 		int selection;

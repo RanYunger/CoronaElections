@@ -59,9 +59,9 @@ public class AddCitizenView {
 	public AddCitizenView(Stage stage, LocalDate electionsDate) {
 		setRoot(new Group());
 		setStage(stage);
-		
+
 		buildScene(electionsDate);
-		
+
 		UIHandler.addAudioToImageView(stage.getScene(), citizenImageView, "ToiletFlush.mp3");
 	}
 
@@ -227,12 +227,9 @@ public class AddCitizenView {
 
 		for (BallotModel<?> ballotModel : allBallots) {
 			currentBallotID = ballotModel.getID();
-			if (!ballotIDs.contains(currentBallotID)) {
-				if ((isIsolated) && (ballotModel.isCoronaBallot()))
+			if (!ballotIDs.contains(currentBallotID))
+				if ((ballotModel.isCoronaBallot() == isIsolated) && (ballotModel.isMilitaryBallot() == isSoldier))
 					ballotIDs.add(currentBallotID);
-				if ((isSoldier) && (ballotModel.isMilitaryBallot()))
-					ballotIDs.add(currentBallotID);
-			}
 		}
 
 		associatedBallotComboBox.getSelectionModel().clearSelection();

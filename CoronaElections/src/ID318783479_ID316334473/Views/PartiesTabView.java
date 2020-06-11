@@ -1,6 +1,7 @@
 package ID318783479_ID316334473.Views;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.CandidateModel;
 import ID318783479_ID316334473.Models.PartiesTabModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,8 +11,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -68,16 +71,19 @@ public class PartiesTabView {
 		hBox.setAlignment(Pos.CENTER);
 		hBox.getChildren().addAll(addPartyButton, addCandidateToPartyButton, removePartyButton);
 		HBox.setMargin(addPartyButton, new Insets(0, 10, 0, 0));
-		HBox.setMargin(addCandidateToPartyButton, new Insets(0, 10, 0, 10));
+		HBox.setMargin(addCandidateToPartyButton, new Insets(0, 0, 0, 0));
 		HBox.setMargin(removePartyButton, new Insets(0, 0, 0, 10));
 
 		partyNameTableColumn = new TableColumn<String, String>("Name");
+		partyNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
 		partyNameTableColumn.setMinWidth(300);
 		
 		partyWingTableColumn = new TableColumn<String, String>("Wing");
+		partyWingTableColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
 		partyWingTableColumn.setMinWidth(200);
 		
 		partyYearOfFoundationTableColumn = new TableColumn<String, String>("Foundation");
+		partyYearOfFoundationTableColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
 		partyYearOfFoundationTableColumn.setMinWidth(100);
 		
 		partyCandidatesTableColumn = new TableColumn<String, String>("Candidates");
@@ -85,15 +91,19 @@ public class PartiesTabView {
 
 		candidateNestedTableColumns = partyCandidatesTableColumn.getColumns();
 		candidateIDTableColumn = new TableColumn<String, String>("ID");
+		candidateIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 		candidateIDTableColumn.setMinWidth(150);
 		
 		candidateNameTableColumn = new TableColumn<String, String>("Full Name");
+		candidateNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
 		candidateNameTableColumn.setMinWidth(200);
 		
 		candidateRankTableColumn = new TableColumn<String, String>("Rank");
+		candidateRankTableColumn.setCellValueFactory(new PropertyValueFactory<>("Rank"));
 		candidateRankTableColumn.setMinWidth(50);
 		
 		candidateStatusTableColumn = new TableColumn<String, String>("Status");
+		// TODO: use setStatusHBox() as the column's content
 		candidateStatusTableColumn.setMinWidth(470);
 		
 		candidateNestedTableColumns.addAll(candidateIDTableColumn, candidateNameTableColumn, candidateRankTableColumn, candidateStatusTableColumn);

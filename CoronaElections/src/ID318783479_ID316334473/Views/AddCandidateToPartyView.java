@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.AddCandidateToPartyModel;
+import ID318783479_ID316334473.Models.CitizenModel;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -34,7 +36,7 @@ public class AddCandidateToPartyView {
 	private ImageView candidateImageView;
 	private Label headerLabel, candidateIDLabel, candidateNameLabel;
 	private TextField candidateIDTextField, candidateNameTextField;
-	private TableView<String> citizensTableView;
+	private TableView<CitizenModel> citizensTableView;
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
@@ -61,7 +63,7 @@ public class AddCandidateToPartyView {
 	}
 
 	private void buildScene(LocalDate electionsDate) {
-		TableColumn<String, String> citizenIDTableColumn, citizenNameTableColumn, citizenYearOfBirthTableColumn;
+		TableColumn<CitizenModel, ?> citizenIDTableColumn, citizenNameTableColumn;
 		double sceneWidth = 850, sceneHeight = 500, fontSize = 40;
 
 		vBox = new VBox();
@@ -73,7 +75,7 @@ public class AddCandidateToPartyView {
 		candidateNameLabel = new Label("Full Name:");
 		candidateIDTextField = new TextField();
 		candidateNameTextField = new TextField();
-		citizensTableView = new TableView<String>();
+		citizensTableView = new TableView<CitizenModel>();
 		submitButton = new Button("Submit");
 
 		headerLabel.setFont(new Font(20));
@@ -83,10 +85,12 @@ public class AddCandidateToPartyView {
 		candidateNameTextField.setMinWidth(150);
 		submitButton.setFont(new Font(20));
 
-		citizenIDTableColumn = new TableColumn<String, String>("ID");
+		citizenIDTableColumn = new TableColumn<CitizenModel, Number>("ID");
+		citizenIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 		citizenIDTableColumn.setMinWidth(225);
 
-		citizenNameTableColumn = new TableColumn<String, String>("Full Name");
+		citizenNameTableColumn = new TableColumn<CitizenModel, String>("Full Name");
+		citizenIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
 		citizenNameTableColumn.setMinWidth(225);
 
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn);
