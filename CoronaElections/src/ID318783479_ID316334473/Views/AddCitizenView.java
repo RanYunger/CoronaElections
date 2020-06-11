@@ -109,7 +109,7 @@ public class AddCitizenView {
 		carryingWeaponCheckBox = new CheckBox("Carrrying Weapon");
 		submitButton = new Button("Submit");
 
-//		refreshAssociatedBallotComboBox(false, false);
+		refreshAssociatedBallotComboBox(false, false);
 		headerLabel.setFont(new Font(30));
 		IDLabel.setFont(new Font(20));
 		nameLabel.setFont(new Font(20));

@@ -35,7 +35,7 @@ public class ElectionsTabController {
 		setElectionsTabModel(model);
 		setElectionsTabView(view);
 
-		electionsTabView.refresh(model);
+		electionsTabView.refresh(electionsTabModel);
 
 		EventHandler<ActionEvent> runElectionsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -65,8 +65,8 @@ public class ElectionsTabController {
 			}
 		};
 
-		view.addEventHandlerToButton("runElectionsButton", runElectionsButtonEventHandler);
-		view.addEventHandlerToButton("showResultsButton", showResultsButtonEventHandler);
+		electionsTabView.addEventHandlerToButton("runElectionsButton", runElectionsButtonEventHandler);
+		electionsTabView.addEventHandlerToButton("showResultsButton", showResultsButtonEventHandler);
 	}
 
 	// Methods

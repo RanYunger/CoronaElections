@@ -65,10 +65,10 @@ public class UIHandler {
 	// Properties
 
 	// Methods
-	// Capital letter!
+	// First Letter in modelName must be capital!
 	public static Object getModelByName(String modelName) {
 		try {
-			return mainModel.getClass().getDeclaredMethod(String.format("get%s", modelName)).invoke(mainModel);
+			return mainModel.getClass().getMethod(String.format("get%s", modelName)).invoke(mainModel);
 		} catch (Exception ex) {
 			UIHandler.showError("An unexpected error occured", ex.getMessage());
 		}
@@ -76,11 +76,10 @@ public class UIHandler {
 		return null;
 	}
 
-	// Capital letter!
+	// First Letter in controllerName must be capital!
 	public static Object getControllerByName(String controllerName) {
 		try {
-			return mainController.getClass().getDeclaredMethod(String.format("get%s", controllerName))
-					.invoke(mainController);
+			return mainController.getClass().getMethod(String.format("get%s", controllerName)).invoke(mainController);
 		} catch (Exception ex) {
 			UIHandler.showError("An unexpected error occured", ex.getMessage());
 		}

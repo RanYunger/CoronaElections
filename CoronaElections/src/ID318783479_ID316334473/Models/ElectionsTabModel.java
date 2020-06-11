@@ -33,16 +33,15 @@ public class ElectionsTabModel {
 	public ElectionsTabModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setElectionsOccurred(false);
-
-		init();
 	}
 
 	// Methods
 	public void show(Group root) {
-		// TODO Auto-generated method stub
+		// TODO: Complete
 	}
 
-	private void init() {
+	public void init() {
+		// TODO: Complete
 	}
 
 	public boolean runElections() {

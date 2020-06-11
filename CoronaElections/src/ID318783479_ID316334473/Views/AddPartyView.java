@@ -1,7 +1,6 @@
 package ID318783479_ID316334473.Views;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.AddPartyModel;
@@ -66,8 +65,7 @@ public class AddPartyView {
 	}
 
 	private void buildScene(LocalDate electionsDate) {
-		LocalDate minDate = LocalDate.of(1948, 5, 14),
-				maxDate = LocalDate.of(electionsDate.getYear(), electionsDate.getMonthValue(), 1);
+		LocalDate minDate = LocalDate.of(1948, 5, 14), maxDate = electionsDate;
 		String[] wings = { "Left", "Center", "Right" };
 		double sceneWidth = 700, sceneHeight = 350, fontSize = 40;
 

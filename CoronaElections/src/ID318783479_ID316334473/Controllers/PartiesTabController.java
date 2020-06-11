@@ -42,7 +42,7 @@ public class PartiesTabController {
 		setPartiesTabModel(model);
 		setPartiesTabView(view);
 
-		partiesTabView.refresh(model);
+		partiesTabView.refresh(partiesTabModel);
 
 		EventHandler<ActionEvent> addPartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -90,9 +90,9 @@ public class PartiesTabController {
 			}
 		};
 
-		view.addEventHandlerToButton("addPartyButton", addPartyButtonEventHandler);
-		view.addEventHandlerToButton("removePartyButton", removePartyButtonEventHandler);
-		view.addEventHandlerToButton("addCandidateToPartyButton", addCandidateToPartyButtonEventHandler);
+		partiesTabView.addEventHandlerToButton("addPartyButton", addPartyButtonEventHandler);
+		partiesTabView.addEventHandlerToButton("removePartyButton", removePartyButtonEventHandler);
+		partiesTabView.addEventHandlerToButton("addCandidateToPartyButton", addCandidateToPartyButtonEventHandler);
 	}
 
 	// Methods

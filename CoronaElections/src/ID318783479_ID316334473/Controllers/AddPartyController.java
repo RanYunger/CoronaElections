@@ -34,7 +34,7 @@ public class AddPartyController {
 		setAddPartyModel(model);
 		setAddPartyView(view);
 
-		addPartyView.refresh(model);
+		addPartyView.refresh(addPartyModel);
 		
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -43,7 +43,7 @@ public class AddPartyController {
 			}
 		};
 
-		view.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+		addPartyView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
 	}
 
 	// Methods

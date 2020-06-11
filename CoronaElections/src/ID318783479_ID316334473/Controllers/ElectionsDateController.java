@@ -40,7 +40,7 @@ public class ElectionsDateController {
 		setElectionsDateModel(model);
 		setElectionsDateView(view);
 
-		electionsDateView.refresh(model);
+		electionsDateView.refresh(electionsDateModel);
 
 		EventHandler<ActionEvent> enterButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -50,6 +50,8 @@ public class ElectionsDateController {
 				MainView mainView = new MainView(new Stage(), electionsDate);
 				MainController mainController;
 
+				mainModel.init();
+				
 				electionsDateModel.setElectionsDate(electionsDate);
 				electionsDateView.refresh(electionsDateModel);
 				

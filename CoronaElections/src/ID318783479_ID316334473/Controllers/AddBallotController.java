@@ -43,7 +43,7 @@ public class AddBallotController {
 			}
 		};
 
-		view.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+		addBallotView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
 	}
 
 	// Methods

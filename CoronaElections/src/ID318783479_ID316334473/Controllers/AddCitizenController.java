@@ -44,6 +44,7 @@ public class AddCitizenController {
 				ComboBox<Integer> yearOfBirthComboBox = (ComboBox<Integer>) addCitizenView
 						.getNodeByName("yearOfBirthComboBox");
 				CheckBox soldierCheckBox = (CheckBox) addCitizenView.getNodeByName("soldierCheckBox"),
+						isolatedCheckBox = (CheckBox) addCitizenView.getNodeByName("isolatedCheckBox"),
 						carryingWeaponCheckBox = (CheckBox) addCitizenView.getNodeByName("carryingWeaponCheckBox");
 
 				if (yearOfBirthComboBox.getSelectionModel().getSelectedIndex() <= 3) { // Citizen is soldier
@@ -54,6 +55,9 @@ public class AddCitizenController {
 					carryingWeaponCheckBox.setSelected(false);
 					carryingWeaponCheckBox.setDisable(true);
 				}
+
+				addCitizenView.refreshAssociatedBallotComboBox(isolatedCheckBox.isSelected(),
+						soldierCheckBox.isSelected());
 			}
 		};
 		EventHandler<ActionEvent> isolatedCheckBoxEventHandler = new EventHandler<ActionEvent>() {
@@ -68,13 +72,15 @@ public class AddCitizenController {
 				if (isolatedCheckBox.isSelected()) {
 					wearingSuitCheckBox.setDisable(false);
 					daysOfSicknessComboBox.setDisable(false);
-					view.refreshAssociatedBallotComboBox(true, soldierCheckBox.isSelected());
 				} else {
-					wearingSuitCheckBox.setDisable(true);
 					wearingSuitCheckBox.setSelected(false);
-					daysOfSicknessComboBox.setDisable(true);
+					wearingSuitCheckBox.setDisable(true);
 					daysOfSicknessComboBox.getSelectionModel().clearSelection();
+					daysOfSicknessComboBox.setDisable(true);
 				}
+
+				addCitizenView.refreshAssociatedBallotComboBox(isolatedCheckBox.isSelected(),
+						soldierCheckBox.isSelected());
 			}
 		};
 		EventHandler<ActionEvent> soldierCheckBoxEventHandler = new EventHandler<ActionEvent>() {
@@ -83,8 +89,8 @@ public class AddCitizenController {
 				CheckBox isolatedCheckBox = (CheckBox) addCitizenView.getNodeByName("isolatedCheckBox");
 				CheckBox soldierCheckBox = (CheckBox) addCitizenView.getNodeByName("soldierCheckBox");
 
-				if (soldierCheckBox.isSelected())
-					view.refreshAssociatedBallotComboBox(isolatedCheckBox.isSelected(), true);
+				addCitizenView.refreshAssociatedBallotComboBox(isolatedCheckBox.isSelected(),
+						soldierCheckBox.isSelected());
 			}
 		};
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
@@ -94,10 +100,10 @@ public class AddCitizenController {
 			}
 		};
 
-		view.addEventHandlerToComboBox("yearOfBirthComboBox", yearOfBirthComboBoxEventHandler);
-		view.addEventHandlerToCheckBox("isolatedCheckBox", isolatedCheckBoxEventHandler);
-		view.addEventHandlerToCheckBox("soldierCheckBox", soldierCheckBoxEventHandler);
-		view.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+		addCitizenView.addEventHandlerToComboBox("yearOfBirthComboBox", yearOfBirthComboBoxEventHandler);
+		addCitizenView.addEventHandlerToCheckBox("isolatedCheckBox", isolatedCheckBoxEventHandler);
+		addCitizenView.addEventHandlerToCheckBox("soldierCheckBox", soldierCheckBoxEventHandler);
+		addCitizenView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
 	}
 
 	// Methods

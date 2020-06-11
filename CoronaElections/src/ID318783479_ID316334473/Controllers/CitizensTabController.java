@@ -39,7 +39,7 @@ public class CitizensTabController {
 		setCitizensTabModel(model);
 		setCitizensTabView(view);
 
-		citizensTabView.refresh(model);
+		citizensTabView.refresh(citizensTabModel);
 		
 		EventHandler<ActionEvent> addCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -72,8 +72,8 @@ public class CitizensTabController {
 			}
 		};
 		
-		view.addEventHandlerToButton("addCitizenButton" ,addCitizenButtonEventHandler);
-		view.addEventHandlerToButton("removeCitizenButton" ,removeCitizenButtonEventHandler);
+		citizensTabView.addEventHandlerToButton("addCitizenButton" ,addCitizenButtonEventHandler);
+		citizensTabView.addEventHandlerToButton("removeCitizenButton" ,removeCitizenButtonEventHandler);
 	}
 	
 	// Methods

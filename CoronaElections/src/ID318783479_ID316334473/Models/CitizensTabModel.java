@@ -36,8 +36,6 @@ public class CitizensTabModel {
 	public CitizensTabModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setCitizens(new ArrayList<CitizenModel>());
-
-		init();
 	}
 
 	// Methods
@@ -45,8 +43,7 @@ public class CitizensTabModel {
 		// TODO Auto-generated method stub
 	}
 
-	private void init() {
-		BallotsTabModel ballotsTabModel = (BallotsTabModel) UIHandler.getModelByName("BallotsTabModel");
+	public void init(BallotsTabModel ballotsTabModel) {
 		ArrayList<BallotModel<CitizenModel>> citizenBallots = ballotsTabModel.getCitizenBallots();
 		ArrayList<BallotModel<SoldierModel>> soldierBallots = ballotsTabModel.getSoldierBallots();
 		ArrayList<BallotModel<SickCitizenModel>> sickCitizenBallots = ballotsTabModel.getSickCitizenBallots();

@@ -48,7 +48,7 @@ public class AddCandidateToPartyController {
 			public void changed(ObservableValue<? extends String> observable, String oldText, String newText) {
 				TextField candidateNameTextField = (TextField) view.getNodeByName("candidateNameTextField");
 
-				model.refreshFilter(newText, candidateNameTextField.getText());
+				addCandidateToPartyModel.refreshFilter(newText, candidateNameTextField.getText());
 
 				refreshCitizensTableView();
 			}
@@ -58,7 +58,7 @@ public class AddCandidateToPartyController {
 			public void changed(ObservableValue<? extends String> observable, String oldText, String newText) {
 				TextField candidateIDTextField = (TextField) view.getNodeByName("candidateIDTextField");
 
-				model.refreshFilter(candidateIDTextField.getText(), newText);
+				addCandidateToPartyModel.refreshFilter(candidateIDTextField.getText(), newText);
 
 				refreshCitizensTableView();
 			}
@@ -70,9 +70,9 @@ public class AddCandidateToPartyController {
 			}
 		};
 
-		view.addChangeListenerToTextField("candidateIDTextField", candidateIDTextFieldChangeListener);
-		view.addChangeListenerToTextField("candidateNameTextField", candidateNameTextFieldChangeListener);
-		view.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+		addCandidateToPartyView.addChangeListenerToTextField("candidateIDTextField", candidateIDTextFieldChangeListener);
+		addCandidateToPartyView.addChangeListenerToTextField("candidateNameTextField", candidateNameTextFieldChangeListener);
+		addCandidateToPartyView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
 	}
 
 	// Methods

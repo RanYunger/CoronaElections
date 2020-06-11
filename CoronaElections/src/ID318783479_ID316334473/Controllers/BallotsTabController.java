@@ -72,8 +72,8 @@ public class BallotsTabController {
 			}
 		};
 
-		view.addEventHandlerToButton("addBallotButton", addBallotButtonEventHandler);
-		view.addEventHandlerToButton("removeBallotButton", removeBallotButtonEventHandler);
+		ballotsTabView.addEventHandlerToButton("addBallotButton", addBallotButtonEventHandler);
+		ballotsTabView.addEventHandlerToButton("removeBallotButton", removeBallotButtonEventHandler);
 	}
 
 	// Methods

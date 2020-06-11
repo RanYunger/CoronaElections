@@ -88,8 +88,6 @@ public class BallotsTabModel {
 		setSickCitizenBallots(new ArrayList<BallotModel<SickCitizenModel>>());
 		setSickCandidateBallots(new ArrayList<BallotModel<SickCandidateModel>>());
 		setSickSoldierBallots(new ArrayList<BallotModel<SickSoldierModel>>());
-
-		init(electionsDate);
 	}
 
 	// Methods
@@ -97,7 +95,7 @@ public class BallotsTabModel {
 		// TODO Auto-generated method stub
 	}
 
-	private void init(LocalDate electionsDate) {
+	public void init(LocalDate electionsDate) {
 		// Initiates 4 ballots
 		citizenBallots.add(new BallotModel<CitizenModel>("CitizenModel", "21st Road Street, Town City", electionsDate));
 		soldierBallots.add(new BallotModel<SoldierModel>("SoldierModel", "Area 51, Nevada", electionsDate));

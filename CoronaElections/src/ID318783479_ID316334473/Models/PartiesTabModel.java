@@ -1,7 +1,6 @@
 package ID318783479_ID316334473.Models;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -37,8 +36,6 @@ public class PartiesTabModel {
 	public PartiesTabModel(LocalDate electionsDate) {
 		setElectionsDate(electionsDate);
 		setParties(new ArrayList<PartyModel>());
-
-		init();
 	}
 
 	// Methods
@@ -46,7 +43,7 @@ public class PartiesTabModel {
 		// TODO Auto-generated method stub
 	}
 
-	private void init() {
+	public void init() {
 		// Initiates 4 parties
 		parties.add(new PartyModel("Halikud", PartyModel.PartyAssociation.Right, LocalDate.of(1973, 9, 13)));
 		parties.add(new PartyModel("Blue and White", PartyModel.PartyAssociation.Center, LocalDate.of(2019, 2, 21)));

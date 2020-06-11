@@ -63,9 +63,15 @@ public class MainModel {
 		setPartiesTabModel(new PartiesTabModel(electionsDate));
 	}
 
+	// Methods
 	public void show(Group root) {
 		// TODO: COMPLETE
 	}
 
-	// Methods
+	public void init() {
+		electionsTabModel.init();
+		ballotsTabModel.init(electionsDate);
+		citizensTabModel.init(ballotsTabModel);
+		partiesTabModel.init();
+	}
 }
