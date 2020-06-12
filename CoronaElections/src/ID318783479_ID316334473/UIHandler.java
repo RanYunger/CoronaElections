@@ -17,10 +17,9 @@ import ID318783479_ID316334473.Models.SickCitizenModel;
 import ID318783479_ID316334473.Models.SickSoldierModel;
 import ID318783479_ID316334473.Models.SoldierModel;
 import ID318783479_ID316334473.Views.MainView;
-import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -31,12 +30,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -266,6 +265,38 @@ public class UIHandler {
 		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
 	}
 
+	public static <S extends CitizenModel> TableColumn<S, CheckBox> buildStatusTableColumn(double statusColumnWidth) {
+		TableColumn<S, CheckBox> statusTableColumn;
+		TableColumn<S, CheckBox> isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
+				carryingWeaponTableColumn;
+		ObservableList<TableColumn<S, ?>> nestedStatusTableColumns;
+
+		statusTableColumn = new TableColumn<S, CheckBox>("Status");
+		
+		nestedStatusTableColumns = statusTableColumn.getColumns();
+		isolatedTableColumn = new TableColumn<S, CheckBox>("Isolated");	
+		isolatedTableColumn.setCellValueFactory(new PropertyValueFactory<>("isIsolated"));
+		
+		wearingSuitTableColumn = new TableColumn<S, CheckBox>("Wearing Suit");
+		wearingSuitTableColumn.setCellValueFactory(new PropertyValueFactory<>("isWearingSuit"));
+		
+		soldierTableColumn = new TableColumn<S, CheckBox>("Soldier");
+		soldierTableColumn.setCellValueFactory(new PropertyValueFactory<>("isSoldier"));
+		
+		carryingWeaponTableColumn = new TableColumn<S, CheckBox>("Armed");
+		carryingWeaponTableColumn.setCellValueFactory(new PropertyValueFactory<>("isCarryingWeapon"));
+		
+		nestedStatusTableColumns.addAll(isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn, carryingWeaponTableColumn);
+		for (TableColumn<S, ?> tableColumn : nestedStatusTableColumns) {
+			tableColumn.setEditable(false);
+			tableColumn.setReorderable(false);
+			tableColumn.setResizable(false);
+			tableColumn.setMinWidth(statusColumnWidth / nestedStatusTableColumns.size());
+		}
+		
+		return statusTableColumn;
+	}
+
 	public static StackPane buildBackground(Node node, double width, double height, double fontSize, boolean hasTabs) {
 		ImageView backgroundImage = buildImage("IsraelFlag.PNG", width, height);
 		Label topLabel = new Label("מדינה אנונימית במזרח התיכון");
@@ -287,112 +318,6 @@ public class UIHandler {
 		Image image = new Image(imageName, height, width, false, false);
 
 		return new ImageView(image);
-	}
-
-	// An inner class meant to envelop the The "Status" cell in TableViews
-	public class StatusCell<T> extends TableCell<T, HBox> {
-		// Fields
-		private HBox statusHBox;
-		private CheckBox isolatedCheckBox;
-		private CheckBox wearingSuitCheckBox;
-		private CheckBox soldierCheckBox;
-		private CheckBox carryingWeaponCheckBox;
-
-		// Properties
-		public HBox getStatusHBox() {
-			return statusHBox;
-		}
-
-		private void setStatusHBox(HBox statusHBox) {
-			this.statusHBox = statusHBox;
-		}
-
-		public CheckBox getIsolatedCheckBox() {
-			return isolatedCheckBox;
-		}
-
-		private void setIsolatedCheckBox(CheckBox isolatedCheckBox) {
-			this.isolatedCheckBox = isolatedCheckBox;
-		}
-
-		public CheckBox getWearingSuitCheckBox() {
-			return wearingSuitCheckBox;
-		}
-
-		private void setWearingSuitCheckBox(CheckBox wearingSuitCheckBox) {
-			this.wearingSuitCheckBox = wearingSuitCheckBox;
-		}
-
-		public CheckBox getSoldierCheckBox() {
-			return soldierCheckBox;
-		}
-
-		private void setSoldierCheckBox(CheckBox soldierCheckBox) {
-			this.soldierCheckBox = soldierCheckBox;
-		}
-
-		public CheckBox getCarryingWeaponCheckBox() {
-			return carryingWeaponCheckBox;
-		}
-
-		private void setCarryingWeaponCheckBox(CheckBox carryingWeaponCheckBox) {
-			this.carryingWeaponCheckBox = carryingWeaponCheckBox;
-		}
-
-		// Constructors
-		public StatusCell() {
-			setStatusHBox(new HBox());
-			setIsolatedCheckBox(new CheckBox("Isolated"));
-			setWearingSuitCheckBox(new CheckBox("Wearing suit"));
-			setSoldierCheckBox(new CheckBox("Soldier"));
-			setCarryingWeaponCheckBox(new CheckBox("Carrying weapon"));
-
-			statusHBox.getChildren().addAll(isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox,
-					carryingWeaponCheckBox);
-			for (Node checkBox : statusHBox.getChildren())
-				checkBox.setDisable(true);
-			HBox.setMargin(isolatedCheckBox, new Insets(0, 5, 0, 0));
-			HBox.setMargin(wearingSuitCheckBox, new Insets(0, 5, 0, 5));
-			HBox.setMargin(soldierCheckBox, new Insets(0, 5, 0, 5));
-			HBox.setMargin(carryingWeaponCheckBox, new Insets(0, 0, 0, 5));
-			statusHBox.setAlignment(Pos.CENTER);
-		}
-
-		// Methods	
-		protected void updateItem(HBox hBox, boolean empty) {
-			super.updateItem(hBox, empty);
-			
-			if ((!empty) || (hBox != null)) {			
-				isolatedCheckBox.setSelected(((CheckBox)hBox.getChildren().get(0)).isSelected());
-				wearingSuitCheckBox.setSelected(((CheckBox)hBox.getChildren().get(1)).isSelected());
-				soldierCheckBox.setSelected(((CheckBox)hBox.getChildren().get(2)).isSelected());
-				carryingWeaponCheckBox.setSelected(((CheckBox)hBox.getChildren().get(3)).isSelected());
-			}
-		}
-	}
-
-	// An inner class meant to envelop the "Status" property type
-	public static class StatusItem {
-		// Fields
-		private ObjectProperty<HBox> statusHBox;
-
-		// Properties
-		public HBox getStatusHBox() {
-			return statusHBox.get();
-		}
-
-		private void setStatusHBox(HBox hBox) {
-			statusHBox.set(hBox);
-		}
-
-		public ObjectProperty<HBox> StatusHBoxProperty() {
-			return statusHBox;
-		}
-
-		// Constructors
-		public StatusItem(HBox hBox) {
-			setStatusHBox(hBox);
-		}
 	}
 
 //==================== STARTING HERE ARE THE CONSOLE METHODS (TO BE DELETED LATER) ===================

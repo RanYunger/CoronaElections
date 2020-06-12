@@ -56,6 +56,9 @@ public class ElectionsTabView {
 		finalResultsPieChart = new PieChart();
 		resultsByBallotBarChart = new BarChart<String, Number>(new CategoryAxis(), new NumberAxis());
 
+		runElectionsButton.setMinWidth(100);
+		showResultsButton.setMinWidth(100);
+		
 		gridPane.getRowConstraints().add(new RowConstraints());
 		gridPane.getRowConstraints().get(0).setPercentHeight(20);
 		gridPane.getRowConstraints().add(new RowConstraints());

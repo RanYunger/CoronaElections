@@ -1,13 +1,22 @@
 package ID318783479_ID316334473.Controllers;
 
+import java.util.ArrayList;
+
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.AddCandidateToPartyModel;
 import ID318783479_ID316334473.Models.AddPartyModel;
+import ID318783479_ID316334473.Models.BallotModel;
+import ID318783479_ID316334473.Models.CandidateModel;
+import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Models.CitizensTabModel;
 import ID318783479_ID316334473.Models.PartiesTabModel;
+import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Views.AddCandidateToPartyView;
 import ID318783479_ID316334473.Views.AddPartyView;
 import ID318783479_ID316334473.Views.PartiesTabView;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
@@ -60,9 +69,10 @@ public class PartiesTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					CitizensTabModel citizensTabModel = (CitizensTabModel)UIHandler.getModelByName("CitizensTabModel");
+					CitizensTabModel citizensTabModel = (CitizensTabModel) UIHandler.getModelByName("CitizensTabModel");
 					AddCandidateToPartyModel model = new AddCandidateToPartyModel(citizensTabModel.getCitizens());
-					AddCandidateToPartyView view = new AddCandidateToPartyView(new Stage(), partiesTabModel.getElectionsDate());
+					AddCandidateToPartyView view = new AddCandidateToPartyView(new Stage(),
+							partiesTabModel.getElectionsDate());
 					AddCandidateToPartyController controller = new AddCandidateToPartyController(model, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
@@ -72,7 +82,8 @@ public class PartiesTabController {
 		EventHandler<ActionEvent> removePartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				TableView<String> partiesTableView = (TableView<String>) partiesTabView.getNodeByName("partiesTableView");
+				TableView<String> partiesTableView = (TableView<String>) partiesTabView
+						.getNodeByName("partiesTableView");
 				int selectedIndex = partiesTableView.getSelectionModel().getSelectedIndex();
 
 				try {
@@ -89,10 +100,24 @@ public class PartiesTabController {
 				}
 			}
 		};
+		ChangeListener<? super Number> partiesTableViewEventHandler = new ChangeListener<>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observableValue, Number oldSelectedIndex,
+					Number newSelectedIndex) {
+				TableView<CandidateModel> candidatesInPartyTableView = (TableView<CandidateModel>) partiesTabView
+						.getNodeByName("candidatesInPartyLabel");
+				PartyModel selectedParty = partiesTabModel.getParties().get((int) newSelectedIndex);
+				ArrayList<CandidateModel> candidateRegistry = selectedParty.getCandidates();
+
+				candidatesInPartyTableView.setItems(FXCollections.observableList(candidateRegistry));
+			}
+		};
 
 		partiesTabView.addEventHandlerToButton("addPartyButton", addPartyButtonEventHandler);
-		partiesTabView.addEventHandlerToButton("removePartyButton", removePartyButtonEventHandler);
 		partiesTabView.addEventHandlerToButton("addCandidateToPartyButton", addCandidateToPartyButtonEventHandler);
+		partiesTabView.addEventHandlerToButton("removePartyButton", removePartyButtonEventHandler);
+		partiesTabView.addEventHandlerToTableView("partiesTableView", partiesTableViewEventHandler);
 	}
 
 	// Methods

@@ -15,6 +15,7 @@ public class CitizenModel implements Comparable<CitizenModel> {
 	protected BallotModel<? extends CitizenModel> associatedBallot;
 	protected boolean isIsolated;
 	protected boolean isWearingSuit;
+	protected boolean isSoldier;
 
 	// Properties (Getters and Setters)
 	public int getID() {
@@ -93,6 +94,14 @@ public class CitizenModel implements Comparable<CitizenModel> {
 	private void setIswearingSuit(boolean iswearingSuit) {
 		this.isWearingSuit = iswearingSuit;
 	}
+	
+	public boolean isSoldier() {
+		return isSoldier;
+	}
+
+	private void setIsSoldier(boolean isSoldier) {
+		this.isSoldier = isSoldier;
+	} 
 
 	// Constructors
 	public CitizenModel(int ID, String fullName, int yearOfBirth, int daysOfSickness,
@@ -103,6 +112,7 @@ public class CitizenModel implements Comparable<CitizenModel> {
 			setYearOfBirth(yearOfBirth);
 			setDaysOfSickness(daysOfSickness);
 			setIsIsolated(isIsolated);
+			setIsSoldier(this instanceof SoldierModel);
 			setIswearingSuit(isWearingSuit);
 			setAssociatedBallot(associatedBallot);
 		} catch (Exception ex) {

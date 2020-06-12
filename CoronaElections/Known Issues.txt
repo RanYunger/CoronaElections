@@ -1,10 +1,10 @@
 TODO Shy:
+0. Make Ballot IDs start from 1
 1. Build logic for each view
 2. Make data displayable in each view
 3. Implement Regex for textual data (ID, Address, Name...) + set in all suitable nodes
 
 TODOs Ran:
-0. Create an encapsolation to "Status" cell in table views (using CheckBoxTableCell maybe?)
 1. Make sure all unique behavior in AddX views work!
 2. Think of a funny thing to do with Bugs image
 3. Implement some kind of EE

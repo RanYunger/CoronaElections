@@ -1,6 +1,7 @@
 package ID318783479_ID316334473.Views;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.CitizenModel;
 import ID318783479_ID316334473.Models.CitizensTabModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,7 +26,7 @@ public class CitizensTabView {
 	private GridPane gridPane;
 	private Button addCitizenButton, removeCitizenButton;
 	private HBox hBox;
-	private TableView<String> citizensTableView;
+	private TableView<CitizenModel> citizensTableView;
 
 	// Properties (Getters and Setters)
 	public void setRoot(Group root) {
@@ -47,14 +48,17 @@ public class CitizensTabView {
 	}
 
 	private void buildScene() {
-		TableColumn<String, String> citizenIDTableColumn, citizenNameTableColumn, citizenYearOfBirthTableColumn,
-				citizenAssociatedBallotTableColumn, citizenStatusTableColumn;
+		TableColumn<CitizenModel, Integer> citizenIDTableColumn, citizenYearOfBirthTableColumn, citizenAssociatedBallotTableColumn;
+		TableColumn<CitizenModel, String> citizenNameTableColumn;
 
 		gridPane = new GridPane();
 		addCitizenButton = new Button("Add Citizen");
 		removeCitizenButton = new Button("Remove Citizen");
 		hBox = new HBox();
-		citizensTableView = new TableView<String>();
+		citizensTableView = new TableView<CitizenModel>();
+		
+		addCitizenButton.setMinWidth(100);
+		removeCitizenButton.setMinWidth(100);
 
 		gridPane.getRowConstraints().add(new RowConstraints());
 		gridPane.getRowConstraints().get(0).setPercentHeight(20);
@@ -69,29 +73,26 @@ public class CitizensTabView {
 		HBox.setMargin(addCitizenButton, new Insets(0, 10, 0, 0));
 		HBox.setMargin(removeCitizenButton, new Insets(0, 0, 0, 10));
 
-		citizenIDTableColumn = new TableColumn<String, String>("ID");
+		citizenIDTableColumn = new TableColumn<CitizenModel, Integer>("ID");
 		citizenIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 		citizenIDTableColumn.setMinWidth(200);
 
-		citizenNameTableColumn = new TableColumn<String, String>("Full Name");
+		citizenNameTableColumn = new TableColumn<CitizenModel, String>("Full Name");
 		citizenNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
 		citizenNameTableColumn.setMinWidth(300);
 
-		citizenYearOfBirthTableColumn = new TableColumn<String, String>("Birth");
+		citizenYearOfBirthTableColumn = new TableColumn<CitizenModel, Integer>("Birth");
 		citizenYearOfBirthTableColumn.setCellValueFactory(new PropertyValueFactory<>("YearOfBirth"));
 		citizenYearOfBirthTableColumn.setMinWidth(100);
 
-		citizenAssociatedBallotTableColumn = new TableColumn<String, String>("Associated Ballot");
+		citizenAssociatedBallotTableColumn = new TableColumn<CitizenModel, Integer>("Associated Ballot");
 		citizenAssociatedBallotTableColumn.setCellValueFactory(new PropertyValueFactory<>("Associated"));
 		citizenAssociatedBallotTableColumn.setMinWidth(150);
 
-		citizenStatusTableColumn = new TableColumn<String, String>("Status");
-		// TODO: use setStatusHBox() as the column's content
-		citizenStatusTableColumn.setMinWidth(750);
-
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn,
-				citizenYearOfBirthTableColumn, citizenAssociatedBallotTableColumn, citizenStatusTableColumn);
+				citizenYearOfBirthTableColumn, citizenAssociatedBallotTableColumn, UIHandler.buildStatusTableColumn(750));
 		for (TableColumn<?, ?> tableColumn : citizensTableView.getColumns()) {
+			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setResizable(false);
 		}
