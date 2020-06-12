@@ -6,5 +6,5 @@ TODO Shy:
 
 TODOs Ran:
 1. Make sure all unique behavior in AddX views work!
-2. Think of a funny thing to do with Bugs image
+2. Implement THE RED SHINY BUTTON ("File a Complaint") XD
 3. Implement some kind of EE
