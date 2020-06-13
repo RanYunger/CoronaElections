@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -17,6 +18,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 
 public class ElectionsTabView {
 	// Constants
@@ -118,5 +120,12 @@ public class ElectionsTabView {
 		Button requiredButton = (Button) getNodeByName(buttonName);
 
 		requiredButton.setOnAction(eventHandler);
+	}
+
+	public void addEffects(Stage stage) {
+		Scene scene = stage.getScene();
+		
+		UIHandler.addCursorEffectsToNode(scene, runElectionsButton);
+		UIHandler.addCursorEffectsToNode(scene, showResultsButton);
 	}
 }

@@ -1,10 +1,13 @@
 TODO Shy:
-0. Make Ballot IDs start from 1
-1. Build logic for each view
-2. Make data displayable in each view
-3. Implement Regex for textual data (ID, Address, Name...) + set in all suitable nodes
+1. Make Ballot IDs start from 1
+2. Build logic for each view
+3. Make data displayable in each view
+4. Implement Regex for textual data (ID, Address, Name...) + set in all suitable nodes
 
 TODOs Ran:
 1. Make sure all unique behavior in AddX views work!
 2. Implement THE RED SHINY BUTTON ("File a Complaint") XD
 3. Implement some kind of EE
+
+TODOs BOTH:
+1. Comment important code pieces

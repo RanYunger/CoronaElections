@@ -179,9 +179,12 @@ public class AddCitizenView {
 		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
 				electionsDate.getYear()));
 		stage.setResizable(false);
-		UIHandler.setIcon(stage);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
+		
+		UIHandler.setIcon(stage);
+		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		
 		stage.show();
 	}
 

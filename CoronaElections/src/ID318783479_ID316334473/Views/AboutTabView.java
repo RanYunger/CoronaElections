@@ -36,10 +36,11 @@ public class AboutTabView {
 		ramiLeviImageView = UIHandler.buildImage("RamiLeviLogo.png", 160, 160);
 
 		madeByLabel = new Label("Developed by: Ran Yunger, Shy Ohev Zion");
-		madeByLabel.setFont(new Font(30));
 		sponseredByLabel = new Label("Sponsered by: ");
-		sponseredByLabel.setFont(new Font(30));
 		dateLabel = new Label("June 2020");
+		
+		madeByLabel.setFont(new Font(30));
+		sponseredByLabel.setFont(new Font(30));
 		dateLabel.setFont(new Font(30));
 
 		hBox.setAlignment(Pos.CENTER);
@@ -60,7 +61,7 @@ public class AboutTabView {
 		return (Node) vBox;
 	}
 
-	public void addAudio(Stage stage) {
+	public void addEffects(Stage stage) {
 		UIHandler.addAudioToImageView(stage.getScene(), dorAlonImageView, "DorAlonSlogan.mp3");
 		UIHandler.addAudioToImageView(stage.getScene(), tnuvaImageView, "TnuvaSlogan.mp3");
 		UIHandler.addAudioToImageView(stage.getScene(), ramiLeviImageView, "RamiLeviSlogan.mp3");

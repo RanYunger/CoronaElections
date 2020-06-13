@@ -24,12 +24,14 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -161,7 +163,7 @@ public class UIHandler {
 		return -1;
 	}
 
-	public static void addAudioToImageView(Scene scene, ImageView imageView, String audioFileName) {
+	public static void addCursorEffectsToNode(Scene scene, Node node) {
 		EventHandler<MouseEvent> imageViewMouseEnteredEventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
@@ -174,6 +176,13 @@ public class UIHandler {
 				scene.setCursor(javafx.scene.Cursor.DEFAULT);
 			}
 		};
+
+		node.setOnMouseEntered(imageViewMouseEnteredEventHandler);
+		node.setOnMouseExited(imageViewMouseExitedEventHandler);
+	}
+
+	public static void addAudioToImageView(Scene scene, ImageView imageView, String audioFileName) {
+
 		EventHandler<MouseEvent> imageViewMouseClickedEventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
@@ -194,9 +203,9 @@ public class UIHandler {
 			}
 		};
 
-		imageView.setOnMouseEntered(imageViewMouseEnteredEventHandler);
-		imageView.setOnMouseExited(imageViewMouseExitedEventHandler);
 		imageView.setOnMouseClicked(imageViewMouseClickedEventHandler);
+
+		addCursorEffectsToNode(scene, imageView);
 	}
 
 	public static ButtonType showConfirmation(String message) {
@@ -272,28 +281,29 @@ public class UIHandler {
 		ObservableList<TableColumn<S, ?>> nestedStatusTableColumns;
 
 		statusTableColumn = new TableColumn<S, CheckBox>("Status");
-		
+
 		nestedStatusTableColumns = statusTableColumn.getColumns();
-		isolatedTableColumn = new TableColumn<S, CheckBox>("Isolated");	
+		isolatedTableColumn = new TableColumn<S, CheckBox>("Isolated");
 		isolatedTableColumn.setCellValueFactory(new PropertyValueFactory<>("isIsolated"));
-		
+
 		wearingSuitTableColumn = new TableColumn<S, CheckBox>("Wearing Suit");
 		wearingSuitTableColumn.setCellValueFactory(new PropertyValueFactory<>("isWearingSuit"));
-		
+
 		soldierTableColumn = new TableColumn<S, CheckBox>("Soldier");
 		soldierTableColumn.setCellValueFactory(new PropertyValueFactory<>("isSoldier"));
-		
+
 		carryingWeaponTableColumn = new TableColumn<S, CheckBox>("Armed");
 		carryingWeaponTableColumn.setCellValueFactory(new PropertyValueFactory<>("isCarryingWeapon"));
-		
-		nestedStatusTableColumns.addAll(isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn, carryingWeaponTableColumn);
+
+		nestedStatusTableColumns.addAll(isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
+				carryingWeaponTableColumn);
 		for (TableColumn<S, ?> tableColumn : nestedStatusTableColumns) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setResizable(false);
 			tableColumn.setMinWidth(statusColumnWidth / nestedStatusTableColumns.size());
 		}
-		
+
 		return statusTableColumn;
 	}
 
@@ -301,13 +311,25 @@ public class UIHandler {
 		ImageView backgroundImage = buildImage("IsraelFlag.PNG", width, height);
 		Label topLabel = new Label("מדינה אנונימית במזרח התיכון");
 		Label bottomLabel = new Label("מערכת ניהול בחירות בתקופת קורונה");
+		Label fileAComplaintLabel = new Label("מצאת תקלה?");
+		Button fileAComplaintButton = new Button("התלונן עלינו!");
 		StackPane stackPane = new StackPane();
 
 		topLabel.setFont(new Font(fontSize));
 		topLabel.setTextFill(Color.WHITE);
 		bottomLabel.setFont(new Font(fontSize));
 		bottomLabel.setTextFill(Color.WHITE);
+		fileAComplaintLabel.setFont(new Font(15));
+		fileAComplaintLabel.setTextFill(Color.WHITE);
+		fileAComplaintButton.setStyle("-fx-background-radius: 5em; -fx-background-color: Red;");
+		fileAComplaintButton.toFront();
+
 		stackPane.getChildren().addAll(backgroundImage, topLabel, bottomLabel, node);
+		if (node instanceof TabPane) { // Visible only in Tabs
+			stackPane.getChildren().addAll(fileAComplaintLabel, fileAComplaintButton);
+			StackPane.setMargin(fileAComplaintLabel, new Insets(height, 10, height * 1.8, width * 0.92));
+			StackPane.setMargin(fileAComplaintButton, new Insets(height, 10, height * 1.8, width * 0.8));
+		}
 		StackPane.setMargin(topLabel, new Insets(hasTabs ? height : height * 0.92, 0, height * 1.8, 0));
 		StackPane.setMargin(bottomLabel, new Insets(hasTabs ? height * 0.95 : height * 0.92, 0, height * 0.08, 0));
 

@@ -71,7 +71,8 @@ public class ElectionsDateView {
 
 	private void buildScene() {
 		LocalDate minDate = LocalDate.of(2020, 2, 27), maxDate = LocalDate.now();
-
+		double sceneWidth = 400, sceneHeight = 300;
+		
 		vBox = new VBox();
 		electionsDateLabel = new Label("Elections Date");
 		electionsDateDatePicker = new DatePicker();
@@ -107,8 +108,11 @@ public class ElectionsDateView {
 
 		stage.setTitle("Welcome to our system!");
 		stage.setResizable(false);
-		stage.getIcons().add(UIHandler.buildImage("Elections.jpg", 0, 0).getImage());
-		stage.setScene(new Scene(vBox, 400, 300));
+		stage.setScene(new Scene(vBox, sceneWidth, sceneHeight));
+		
+		UIHandler.setIcon(stage);
+		UIHandler.addCursorEffectsToNode(stage.getScene(), enterButton);
+		
 		stage.show();
 	}
 

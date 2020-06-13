@@ -4,9 +4,13 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.MainModel;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -18,6 +22,8 @@ public class MainView {
 	private Group root;
 	private Stage stage;
 	private TabPane tabPane;
+	private Button fileAComplaintButton;
+
 	private ElectionsTabView electionsTabView;
 	private BallotsTabView ballotsTabView;
 	private CitizensTabView citizensTabView;
@@ -25,15 +31,26 @@ public class MainView {
 	private AboutTabView aboutTabView;
 
 	// Properties (Getters and Setters)
+	private void setRoot(Group root) {
+		this.root = root;
+	}
 	
 	public Stage getStage() {
 		return stage;
 	}
 	
-	public void setStage(Stage stage) {
+	private void setStage(Stage stage) {
 		this.stage = stage;
 	}
 
+	public Button getFileAComplaintButton() {
+		return fileAComplaintButton;
+	}
+	
+	private void setFileAComplaintButton(Button fileAComplaintButton) {
+		this.fileAComplaintButton = fileAComplaintButton;
+	}
+	
 	public ElectionsTabView getElectionsTabView() {
 		return electionsTabView;
 	}
@@ -76,7 +93,7 @@ public class MainView {
 
 	// Constructors
 	public MainView(Stage stage, LocalDate electionsDate) {
-		root = new Group();
+		setRoot(new Group());
 
 		setStage(stage);
 		setElectionsTabView(new ElectionsTabView());
@@ -86,7 +103,13 @@ public class MainView {
 		setAboutTabView(new AboutTabView());
 		
 		buildScene(electionsDate);
-		aboutTabView.addAudio(stage);
+		
+		addEffects();
+		electionsTabView.addEffects(stage);
+		ballotsTabView.addEffects(stage);
+		citizensTabView.addEffects(stage);
+		partiesTabView.addEffects(stage);
+		aboutTabView.addEffects(stage);
 	}
 
 	// Methods
@@ -111,8 +134,49 @@ public class MainView {
 
 		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
 		stage.setResizable(false);
-		UIHandler.setIcon(stage);
 		stage.setScene(new Scene(UIHandler.buildBackground(tabPane, sceneWidth, sceneHeight, fontSize, true), sceneWidth, sceneHeight));
+		
+		UIHandler.setIcon(stage);
+		
 		stage.show();
 	}
+	
+	public Node getNodeByName(String nodeName) {
+		try {
+			return (Node) getClass().getDeclaredField(nodeName).get(this);
+		} catch (Exception ex) {
+			UIHandler.showError("An unexpected error occured", ex.getMessage());
+		}
+
+		return null;
+	}
+	
+	public Object getPropertyByName(String nodeName, String propertyName) {
+		Node node = getNodeByName(nodeName);
+
+		return node.getProperties().get(propertyName);
+	}
+	
+	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
+		Button requiredButton = (Button) getNodeByName(buttonName);
+		
+		requiredButton.setOnAction(eventHandler);
+	}
+	
+	private void addEffects() {
+		Scene scene = stage.getScene();
+		ObservableList<Node> rootNodes = scene.getRoot().getChildrenUnmodifiable();
+		Node currentNode;
+		
+		for (int i = 0; i < rootNodes.size(); i++) {
+			currentNode = rootNodes.get(i);
+			if((currentNode instanceof Button) && (((Button)currentNode).getText() == "התלונן עלינו!")){
+				setFileAComplaintButton((Button)currentNode);
+				
+				break;
+			}
+		}
+		
+		UIHandler.addCursorEffectsToNode(scene, fileAComplaintButton);
+	}	
 }

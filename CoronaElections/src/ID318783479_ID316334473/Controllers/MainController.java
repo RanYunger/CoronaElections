@@ -1,5 +1,6 @@
 package ID318783479_ID316334473.Controllers;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.BallotsTabModel;
 import ID318783479_ID316334473.Models.CitizensTabModel;
 import ID318783479_ID316334473.Models.ElectionsTabModel;
@@ -7,9 +8,13 @@ import ID318783479_ID316334473.Models.MainModel;
 import ID318783479_ID316334473.Models.PartiesTabModel;
 import ID318783479_ID316334473.Views.BallotsTabView;
 import ID318783479_ID316334473.Views.CitizensTabView;
+import ID318783479_ID316334473.Views.ComplaintView;
 import ID318783479_ID316334473.Views.ElectionsTabView;
 import ID318783479_ID316334473.Views.MainView;
 import ID318783479_ID316334473.Views.PartiesTabView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.stage.Stage;
 
 public class MainController {
 	// Constants
@@ -84,6 +89,20 @@ public class MainController {
 		setPartiesTabController(new PartiesTabController(partiesTabModel, partiesTabView));
 
 		mainView.refresh(mainModel);
+		
+		EventHandler<ActionEvent> fileAComplaintButtonEventHandler = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					ComplaintView view = new ComplaintView(new Stage(), mainModel.getElectionsDate());
+//					ComplaintController controller = new ComplaintController(view);
+				} catch (Exception ex) {
+					UIHandler.showError("An unexpected error occured", ex.getMessage());
+				}
+			}
+		};
+		
+		mainView.addEventHandlerToButton("fileAComplaintButton", fileAComplaintButtonEventHandler);
 	}
 
 	// Methods

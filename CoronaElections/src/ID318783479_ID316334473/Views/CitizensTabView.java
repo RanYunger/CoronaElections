@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -17,6 +18,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 
 public class CitizensTabView {
 	// Constants
@@ -129,5 +131,12 @@ public class CitizensTabView {
 		Button requiredButton = (Button) getNodeByName(buttonName);
 
 		requiredButton.setOnAction(eventHandler);
+	}
+
+	public void addEffects(Stage stage) {
+		Scene scene = stage.getScene();
+		
+		UIHandler.addCursorEffectsToNode(scene, addCitizenButton);
+		UIHandler.addCursorEffectsToNode(scene, removeCitizenButton);
 	}
 }

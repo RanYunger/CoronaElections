@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -23,6 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class PartiesTabView {
 	// Constants
@@ -184,5 +186,13 @@ public class PartiesTabView {
 		TableView<?> requiredTableView = (TableView<?>) getNodeByName(tableViewName);
 
 		requiredTableView.getSelectionModel().selectedIndexProperty().addListener(changeListener);
+	}
+
+	public void addEffects(Stage stage) {
+		Scene scene = stage.getScene();
+		
+		UIHandler.addCursorEffectsToNode(scene, addPartyButton);
+		UIHandler.addCursorEffectsToNode(scene, addCandidateToPartyButton);
+		UIHandler.addCursorEffectsToNode(scene, removePartyButton);
 	}
 }
