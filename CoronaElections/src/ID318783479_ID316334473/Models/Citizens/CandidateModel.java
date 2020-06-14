@@ -1,6 +1,9 @@
-package ID318783479_ID316334473.Models;
+package ID318783479_ID316334473.Models.Citizens;
 
 import java.util.Objects;
+
+import ID318783479_ID316334473.Models.PartyModel;
+import ID318783479_ID316334473.Models.Ballots.BallotModel;
 
 public class CandidateModel extends CitizenModel {
 	// Fields
@@ -25,9 +28,10 @@ public class CandidateModel extends CitizenModel {
 	}
 
 	// Constructors
-	public CandidateModel(int ID, String fullName, int yearOfBirth, int daysOfSickness,
-			BallotModel<? extends CitizenModel> associatedBallot, boolean isIsolated, boolean isWearingSuit) {
+	public CandidateModel(int ID, String fullName, int yearOfBirth, int daysOfSickness, BallotModel associatedBallot,
+			boolean isIsolated, boolean isWearingSuit) {
 		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated, isWearingSuit);
+
 	}
 
 	@Override
@@ -45,15 +49,15 @@ public class CandidateModel extends CitizenModel {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(super.toString());
-		int citizenIndex = sb.indexOf("CitizenModel");
+		int citizenIndex = sb.indexOf("Citizen");
 
-		sb.replace(citizenIndex, citizenIndex + 7, "CandidateModel");
+		sb.replace(citizenIndex, citizenIndex + 7, "Candidate");
 		sb.deleteCharAt(sb.length() - 1); // removes "]" at the end of the string
 
 		if (associatedParty == null)
 			sb.append(" | Is not associated with party yet");
 		else
-			sb.append(String.format(" | PartyModel: %s]", associatedParty.getName()));
+			sb.append(String.format(" | Party: %s]", associatedParty.getTextualName()));
 
 		return sb.toString();
 	}

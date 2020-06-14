@@ -14,6 +14,7 @@ public class Program extends Application {
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	public void start(Stage primaryStage) throws Exception {
 		ElectionsDateModel model = new ElectionsDateModel();
 		ElectionsDateView view = new ElectionsDateView(primaryStage);

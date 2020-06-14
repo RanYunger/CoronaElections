@@ -4,15 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.AddCitizenModel;
-import ID318783479_ID316334473.Models.BallotModel;
-import ID318783479_ID316334473.Models.BallotsTabModel;
+import ID318783479_ID316334473.Models.Ballots.BallotModel;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -33,7 +31,6 @@ public class AddCitizenView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox, row4HBox, row5HBox, row6HBox;
@@ -41,23 +38,18 @@ public class AddCitizenView {
 	private Label headerLabel, IDLabel, nameLabel, yearOfBirthLabel, daysOfSicknessLabel, associatedBallotLabel,
 			statusLabel;
 	private TextField IDTextField, nameTextField;
-	private ComboBox<Integer> yearOfBirthComboBox, daysOfSicknessComboBox, associatedBallotComboBox;
+	private ComboBox<Number> yearOfBirthComboBox, daysOfSicknessComboBox, associatedBallotComboBox;
 	private GridPane gridPane;
 	private CheckBox isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox, carryingWeaponCheckBox;
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-	public void setRoot(Group root) {
-		this.root = root;
-	}
-
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
 
 	// Constructors
 	public AddCitizenView(Stage stage, LocalDate electionsDate) {
-		setRoot(new Group());
 		setStage(stage);
 
 		buildScene(electionsDate);
@@ -66,11 +58,6 @@ public class AddCitizenView {
 	}
 
 	// Methods
-	public void refresh(AddCitizenModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
 	private void buildScene(LocalDate electionsDate) {
 		int maxBorderYear = LocalDate.now().getYear() - 18, minBorderYear = maxBorderYear - 82;
 		ArrayList<Integer> years = new ArrayList<Integer>(), daysOfSickness = new ArrayList<Integer>();
@@ -78,7 +65,7 @@ public class AddCitizenView {
 
 		for (int currentYear = maxBorderYear; currentYear >= minBorderYear; currentYear--)
 			years.add(currentYear);
-		for (int i = 1; i <= 100; i++)
+		for (int i = 1; i <= 14; i++)
 			daysOfSickness.add(i);
 
 		vBox = new VBox();
@@ -99,9 +86,9 @@ public class AddCitizenView {
 		statusLabel = new Label("Status:");
 		IDTextField = new TextField();
 		nameTextField = new TextField();
-		yearOfBirthComboBox = new ComboBox<Integer>(FXCollections.observableArrayList(years));
-		daysOfSicknessComboBox = new ComboBox<Integer>(FXCollections.observableArrayList(daysOfSickness));
-		associatedBallotComboBox = new ComboBox<Integer>();
+		yearOfBirthComboBox = new ComboBox<Number>(FXCollections.observableArrayList(years));
+		daysOfSicknessComboBox = new ComboBox<Number>(FXCollections.observableArrayList(daysOfSickness));
+		associatedBallotComboBox = new ComboBox<Number>();
 		gridPane = new GridPane();
 		isolatedCheckBox = new CheckBox("Isolated");
 		wearingSuitCheckBox = new CheckBox("Wearing Suit");
@@ -181,10 +168,10 @@ public class AddCitizenView {
 		stage.setResizable(false);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
-		
+
 		UIHandler.setIcon(stage);
 		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
-		
+
 		stage.show();
 	}
 
@@ -224,18 +211,24 @@ public class AddCitizenView {
 
 	public void refreshAssociatedBallotComboBox(boolean isIsolated, boolean isSoldier) {
 		ArrayList<Integer> ballotIDs = new ArrayList<Integer>();
-		BallotsTabModel ballotsTabModel = (BallotsTabModel) UIHandler.getModelByName("BallotsTabModel");
-		ArrayList<BallotModel<?>> allBallots = ballotsTabModel.getAllBallots();
-		int currentBallotID;
+		ObservableList<BallotModel> allBallots = ((BallotsTabView) UIHandler.getViewByName("BallotsTabView"))
+				.getAllBallots();
 
-		for (BallotModel<?> ballotModel : allBallots) {
-			currentBallotID = ballotModel.getID();
+		for (BallotModel ballotModel : allBallots) {
+			int currentBallotID = ballotModel.getNumericID();
 			if (!ballotIDs.contains(currentBallotID))
-				if ((ballotModel.isCoronaBallot() == isIsolated) && (ballotModel.isMilitaryBallot() == isSoldier))
+				if (!ballotModel.isRegularBallot()) {
+					if ((ballotModel.isCoronaBallot() == isIsolated) && (ballotModel.isMilitaryBallot() == isSoldier))
+						ballotIDs.add(currentBallotID);
+				} else
 					ballotIDs.add(currentBallotID);
 		}
 
 		associatedBallotComboBox.getSelectionModel().clearSelection();
 		associatedBallotComboBox.setItems(FXCollections.observableArrayList(ballotIDs));
+	}
+
+	public void close() {
+		stage.close();
 	}
 }

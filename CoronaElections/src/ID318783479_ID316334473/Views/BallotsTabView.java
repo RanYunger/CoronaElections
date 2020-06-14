@@ -1,15 +1,15 @@
 package ID318783479_ID316334473.Views;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.BallotModel;
-import ID318783479_ID316334473.Models.BallotsTabModel;
-import ID318783479_ID316334473.Models.CitizenModel;
+import ID318783479_ID316334473.Models.Ballots.BallotModel;
+import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -30,48 +29,44 @@ public class BallotsTabView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private GridPane gridPane;
 	private Button addBallotButton, removeBallotButton;
 	private VBox vBox;
-	private HBox row1HBox, row2HBox;
+	private HBox addRemoveBottons, tableLables;
 	private Label ballotsLabel, votersInBallotLabel;
-	private TableView<BallotModel<?>> ballotsTableView;
+	private ObservableList<BallotModel> allBallots;
+	private TableView<BallotModel> ballotsTableView;
 	private TableView<CitizenModel> votersInBallotTableView;
 
 	// Properties (Getters and Setters)
-	public void setRoot(Group root) {
-		this.root = root;
+	public ObservableList<BallotModel> getAllBallots() {
+		return allBallots;
 	}
 
 	// Constructors
 	public BallotsTabView() {
-		setRoot(new Group());
-
 		buildScene();
 	}
 
 	// Methods
-	public void refresh(BallotsTabModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
+	@SuppressWarnings("unchecked")
 	private void buildScene() {
-		TableColumn<BallotModel<?>, Integer> ballotIDTableColumn;
-		TableColumn<BallotModel<?>, String> ballotTypeTableColumn, ballotAddressTableColumn;
-		TableColumn<CitizenModel, Integer> voterIDTableColumn, voterYearOfBirthTableColumn;
+		TableColumn<BallotModel, Number> ballotIDTableColumn;
+		TableColumn<BallotModel, String> ballotTypeTableColumn, ballotAddressTableColumn;
+		TableColumn<CitizenModel, Number> voterIDTableColumn, voterYearOfBirthTableColumn;
 		TableColumn<CitizenModel, String> voterNameTableColumn;
 
+		allBallots = FXCollections.observableArrayList();
 		gridPane = new GridPane();
 		addBallotButton = new Button("Add Ballot");
 		removeBallotButton = new Button("Remove Ballot");
 		vBox = new VBox();
-		row1HBox = new HBox();
-		row2HBox = new HBox();
+		addRemoveBottons = new HBox();
+		tableLables = new HBox();
 		ballotsLabel = new Label("Ballots");
 		votersInBallotLabel = new Label("Voters in Ballot");
-		ballotsTableView = new TableView<BallotModel<?>>();
+		ballotsTableView = new TableView<BallotModel>();
+		ballotsTableView.setItems(allBallots);
 		votersInBallotTableView = new TableView<CitizenModel>();
 
 		addBallotButton.setMinWidth(100);
@@ -91,40 +86,40 @@ public class BallotsTabView {
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
 		gridPane.getColumnConstraints().get(1).setPercentWidth(50);
 
-		row1HBox.setAlignment(Pos.CENTER);
-		row1HBox.getChildren().addAll(addBallotButton, removeBallotButton);
+		addRemoveBottons.setAlignment(Pos.CENTER);
+		addRemoveBottons.getChildren().addAll(addBallotButton, removeBallotButton);
 		HBox.setMargin(addBallotButton, new Insets(0, 10, 0, 0));
 		HBox.setMargin(removeBallotButton, new Insets(0, 0, 0, 10));
 
-		row2HBox.setAlignment(Pos.CENTER);
-		row2HBox.getChildren().addAll(ballotsLabel, votersInBallotLabel);
+		tableLables.setAlignment(Pos.CENTER);
+		tableLables.getChildren().addAll(ballotsLabel, votersInBallotLabel);
 		HBox.setMargin(ballotsLabel, new Insets(0, 300, 0, 50));
 		HBox.setMargin(votersInBallotLabel, new Insets(0, 0, 0, 350));
 
-		vBox.getChildren().addAll(row1HBox, row2HBox);
+		vBox.getChildren().addAll(addRemoveBottons, tableLables);
 
-		ballotIDTableColumn = new TableColumn<BallotModel<?>, Integer>("ID");
-		ballotIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+		ballotIDTableColumn = new TableColumn<BallotModel, Number>("ID");
+		ballotIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
 		ballotIDTableColumn.setMinWidth(100);
 
-		ballotTypeTableColumn = new TableColumn<BallotModel<?>, String>("Type");
-		ballotTypeTableColumn.setCellValueFactory(new PropertyValueFactory<>("Type"));
+		ballotTypeTableColumn = new TableColumn<BallotModel, String>("Type");
+		ballotTypeTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableType());
 		ballotTypeTableColumn.setMinWidth(200);
 
-		ballotAddressTableColumn = new TableColumn<BallotModel<?>, String>("Address");
-		ballotAddressTableColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
+		ballotAddressTableColumn = new TableColumn<BallotModel, String>("Address");
+		ballotAddressTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableAddress());
 		ballotAddressTableColumn.setMinWidth(450);
 
-		voterIDTableColumn = new TableColumn<CitizenModel, Integer>("ID");
-		voterIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+		voterIDTableColumn = new TableColumn<CitizenModel, Number>("ID");
+		voterIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
 		voterIDTableColumn.setMinWidth(100);
 
 		voterNameTableColumn = new TableColumn<CitizenModel, String>("Full Name");
-		voterNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
+		voterNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableFullName());
 		voterNameTableColumn.setMinWidth(150);
 
-		voterYearOfBirthTableColumn = new TableColumn<CitizenModel, Integer>("Birth");
-		voterYearOfBirthTableColumn.setCellValueFactory(new PropertyValueFactory<>("YearOfBirth"));
+		voterYearOfBirthTableColumn = new TableColumn<CitizenModel, Number>("Birth");
+		voterYearOfBirthTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableYearOfBirth());
 		voterYearOfBirthTableColumn.setMinWidth(50);
 
 		ballotsTableView.getColumns().addAll(ballotIDTableColumn, ballotTypeTableColumn, ballotAddressTableColumn);
@@ -135,8 +130,8 @@ public class BallotsTabView {
 		}
 		ballotsTableView.setOpacity(0.8);
 
-		votersInBallotTableView.getColumns().addAll(voterIDTableColumn, voterNameTableColumn, voterYearOfBirthTableColumn,
-				UIHandler.buildStatusTableColumn(410));
+		votersInBallotTableView.getColumns().addAll(voterIDTableColumn, voterNameTableColumn,
+				voterYearOfBirthTableColumn, UIHandler.buildStatusTableColumn(410));
 		for (TableColumn<?, ?> tableColumn : votersInBallotTableView.getColumns()) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
@@ -187,8 +182,12 @@ public class BallotsTabView {
 
 	public void addEffects(Stage stage) {
 		Scene scene = stage.getScene();
-		
+
 		UIHandler.addCursorEffectsToNode(scene, addBallotButton);
 		UIHandler.addCursorEffectsToNode(scene, removeBallotButton);
+	}
+
+	public void addBallot(BallotModel ballot) {
+		allBallots.add(ballot);
 	}
 }

@@ -1,15 +1,15 @@
 package ID318783479_ID316334473.Views;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.CandidateModel;
-import ID318783479_ID316334473.Models.PartiesTabModel;
 import ID318783479_ID316334473.Models.PartyModel;
+import ID318783479_ID316334473.Models.Citizens.CandidateModel;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,39 +30,34 @@ public class PartiesTabView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private GridPane gridPane;
 	private Button addPartyButton, removePartyButton, addCandidateToPartyButton;
 	private VBox vBox;
 	private HBox row1HBox, row2HBox;
 	private Label partiesLabel, candidatesInPartyLabel;
+	private ObservableList<PartyModel> parties;
 	private TableView<PartyModel> partiesTableView;
 	private TableView<CandidateModel> candidatesInPartyTableView;
 
 	// Properties (Getters and Setters)
-	public void setRoot(Group root) {
-		this.root = root;
+	public ObservableList<PartyModel> getAllParties() {
+		return parties;
 	}
 
 	// Constructors
 	public PartiesTabView() {
-		setRoot(new Group());
-
 		buildScene();
 	}
 
 	// Methods
-	public void refresh(PartiesTabModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
+	@SuppressWarnings("unchecked")
 	private void buildScene() {
-		TableColumn<PartyModel, Integer> partyYearOfFoundationTableColumn;
+		TableColumn<PartyModel, String> partyFoundationTableColumn;
 		TableColumn<PartyModel, String> partyNameTableColumn, partyWingTableColumn;
-		TableColumn<CandidateModel, Integer> candidateIDTableColumn, candidateRankTableColumn;
+		TableColumn<CandidateModel, Number> candidateIDTableColumn, candidateRankTableColumn;
 		TableColumn<CandidateModel, String> candidateNameTableColumn;
 
+		parties = FXCollections.observableArrayList();
 		gridPane = new GridPane();
 		addPartyButton = new Button("Add Party");
 		removePartyButton = new Button("Remove Party");
@@ -73,6 +68,7 @@ public class PartiesTabView {
 		partiesLabel = new Label("Parties");
 		candidatesInPartyLabel = new Label("Candidates in Party");
 		partiesTableView = new TableView<PartyModel>();
+		partiesTableView.setItems(parties);
 		candidatesInPartyTableView = new TableView<CandidateModel>();
 
 		addPartyButton.setMinWidth(150);
@@ -107,31 +103,30 @@ public class PartiesTabView {
 		vBox.getChildren().addAll(row1HBox, row2HBox);
 
 		partyNameTableColumn = new TableColumn<PartyModel, String>("Name");
-		partyNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
+		partyNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableName());
 		partyNameTableColumn.setMinWidth(450);
 
 		partyWingTableColumn = new TableColumn<PartyModel, String>("Wing");
 		partyWingTableColumn.setCellValueFactory(new PropertyValueFactory<>("Wing"));
 		partyWingTableColumn.setMinWidth(150);
 
-		partyYearOfFoundationTableColumn = new TableColumn<PartyModel, Integer>("Foundation");
-		partyYearOfFoundationTableColumn.setCellValueFactory(new PropertyValueFactory<>("Foundation"));
-		partyYearOfFoundationTableColumn.setMinWidth(150);
+		partyFoundationTableColumn = new TableColumn<PartyModel, String>("Foundation");
+		partyFoundationTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableFoundationDate());
+		partyFoundationTableColumn.setMinWidth(150);
 
-		candidateIDTableColumn = new TableColumn<CandidateModel, Integer>("ID");
-		candidateIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+		candidateIDTableColumn = new TableColumn<CandidateModel, Number>("ID");
+		candidateIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
 		candidateIDTableColumn.setMinWidth(100);
 
 		candidateNameTableColumn = new TableColumn<CandidateModel, String>("Full Name");
-		candidateNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
+		candidateNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableFullName());
 		candidateNameTableColumn.setMinWidth(150);
 
-		candidateRankTableColumn = new TableColumn<CandidateModel, Integer>("Rank");
-		candidateRankTableColumn.setCellValueFactory(new PropertyValueFactory<>("Rank"));
-		candidateRankTableColumn.setMinWidth(50);
+//		candidateRankTableColumn = new TableColumn<CandidateModel, Number>("Rank");
+//		candidateRankTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableRank());
+//		candidateRankTableColumn.setMinWidth(50);
 
-		partiesTableView.getColumns().addAll(partyNameTableColumn, partyWingTableColumn,
-				partyYearOfFoundationTableColumn);
+		partiesTableView.getColumns().addAll(partyNameTableColumn, partyWingTableColumn, partyFoundationTableColumn);
 		for (TableColumn<?, ?> tableColumn : partiesTableView.getColumns()) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
@@ -139,7 +134,7 @@ public class PartiesTabView {
 		}
 		partiesTableView.setOpacity(0.8);
 		candidatesInPartyTableView.getColumns().addAll(candidateIDTableColumn, candidateNameTableColumn,
-				candidateRankTableColumn, UIHandler.buildStatusTableColumn(410));
+				/* candidateRankTableColumn, */ UIHandler.buildStatusTableColumn(410));
 		for (TableColumn<?, ?> tableColumn : candidatesInPartyTableView.getColumns()) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
@@ -181,7 +176,7 @@ public class PartiesTabView {
 
 		requiredButton.setOnAction(eventHandler);
 	}
-	
+
 	public <T> void addEventHandlerToTableView(String tableViewName, ChangeListener<? super Number> changeListener) {
 		TableView<?> requiredTableView = (TableView<?>) getNodeByName(tableViewName);
 
@@ -190,9 +185,13 @@ public class PartiesTabView {
 
 	public void addEffects(Stage stage) {
 		Scene scene = stage.getScene();
-		
+
 		UIHandler.addCursorEffectsToNode(scene, addPartyButton);
 		UIHandler.addCursorEffectsToNode(scene, addCandidateToPartyButton);
 		UIHandler.addCursorEffectsToNode(scene, removePartyButton);
+	}
+
+	public void addParty(PartyModel party) {
+		parties.add(party);
 	}
 }

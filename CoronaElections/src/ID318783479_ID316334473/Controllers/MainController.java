@@ -1,11 +1,7 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.BallotsTabModel;
-import ID318783479_ID316334473.Models.CitizensTabModel;
-import ID318783479_ID316334473.Models.ElectionsTabModel;
 import ID318783479_ID316334473.Models.MainModel;
-import ID318783479_ID316334473.Models.PartiesTabModel;
 import ID318783479_ID316334473.Views.BallotsTabView;
 import ID318783479_ID316334473.Views.CitizensTabView;
 import ID318783479_ID316334473.Views.ComplaintView;
@@ -20,7 +16,6 @@ public class MainController {
 	// Constants
 
 	// Fields
-	private MainModel mainModel;
 	private MainView mainView;
 	private ElectionsTabController electionsTabController;
 	private BallotsTabController ballotsTabController;
@@ -28,14 +23,6 @@ public class MainController {
 	private PartiesTabController partiesTabController;
 
 	// Properties (Getters and Setters)
-	public MainModel getMainModel() {
-		return mainModel;
-	}
-
-	private void setMainModel(MainModel mainModel) {
-		this.mainModel = mainModel;
-	}
-
 	public MainView getMainView() {
 		return mainView;
 	}
@@ -77,31 +64,26 @@ public class MainController {
 	}
 
 	// Constructors
-	public MainController(MainModel mainModel, MainView mainView, ElectionsTabModel electionsTabModel,
-			ElectionsTabView electionsTabView, BallotsTabModel ballotsTabModel, BallotsTabView ballotsTabView,
-			CitizensTabModel citizensTabModel, CitizensTabView citizensTabView, PartiesTabModel partiesTabModel,
-			PartiesTabView partiesTabView) {
-		setMainModel(mainModel);
+	public MainController(MainModel mainModel, MainView mainView, ElectionsTabView electionsTabView,
+			BallotsTabView ballotsTabView, CitizensTabView citizensTabView, PartiesTabView partiesTabView) {
 		setMainView(mainView);
-		setElectionsTabController(new ElectionsTabController(electionsTabModel, electionsTabView));
-		setBallotsTabController(new BallotsTabController(ballotsTabModel, ballotsTabView));
-		setCitizensTabController(new CitizensTabController(citizensTabModel, citizensTabView));
-		setPartiesTabController(new PartiesTabController(partiesTabModel, partiesTabView));
+		setElectionsTabController(new ElectionsTabController(electionsTabView));
+		setBallotsTabController(new BallotsTabController(ballotsTabView));
+		setCitizensTabController(new CitizensTabController(citizensTabView));
+		setPartiesTabController(new PartiesTabController(partiesTabView));
 
-		mainView.refresh(mainModel);
-		
 		EventHandler<ActionEvent> fileAComplaintButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					ComplaintView view = new ComplaintView(new Stage(), mainModel.getElectionsDate());
+					ComplaintView view = new ComplaintView(new Stage(), UIHandler.getElectionsDate());
 //					ComplaintController controller = new ComplaintController(view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
 				}
 			}
 		};
-		
+
 		mainView.addEventHandlerToButton("fileAComplaintButton", fileAComplaintButtonEventHandler);
 	}
 

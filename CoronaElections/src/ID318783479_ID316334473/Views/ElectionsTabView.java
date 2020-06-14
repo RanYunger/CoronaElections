@@ -1,12 +1,10 @@
 package ID318783479_ID316334473.Views;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.ElectionsTabModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -24,7 +22,6 @@ public class ElectionsTabView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private GridPane gridPane;
 	private Button runElectionsButton, showResultsButton;
 	private HBox hBox;
@@ -32,24 +29,12 @@ public class ElectionsTabView {
 	private BarChart<String, Number> resultsByBallotBarChart;
 
 	// Properties (Getters and Setters)
-	public void setRoot(Group root) {
-		this.root = root;
-	}
-
 	// Constructors
 	public ElectionsTabView() {
-		setRoot(new Group());
-		
 		buildScene();
 	}
 
 	// Methods
-
-	public void refresh(ElectionsTabModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
 	private void buildScene() {
 		gridPane = new GridPane();
 		runElectionsButton = new Button("Run Elections");
@@ -60,7 +45,7 @@ public class ElectionsTabView {
 
 		runElectionsButton.setMinWidth(100);
 		showResultsButton.setMinWidth(100);
-		
+
 		gridPane.getRowConstraints().add(new RowConstraints());
 		gridPane.getRowConstraints().get(0).setPercentHeight(20);
 		gridPane.getRowConstraints().add(new RowConstraints());
@@ -124,7 +109,7 @@ public class ElectionsTabView {
 
 	public void addEffects(Stage stage) {
 		Scene scene = stage.getScene();
-		
+
 		UIHandler.addCursorEffectsToNode(scene, runElectionsButton);
 		UIHandler.addCursorEffectsToNode(scene, showResultsButton);
 	}

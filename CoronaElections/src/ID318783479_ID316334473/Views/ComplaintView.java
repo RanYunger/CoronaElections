@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,7 +24,6 @@ public class ComplaintView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private Stage stage;
 	private VBox vBox;
 	private HBox row1HBox, row2HBox, row3HBox;
@@ -36,9 +34,6 @@ public class ComplaintView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-	private void setRoot(Group root) {
-		this.root = root;
-	}
 
 	public Stage getStage() {
 		return stage;
@@ -50,7 +45,6 @@ public class ComplaintView {
 
 	// Constructors
 	public ComplaintView(Stage stage, LocalDate electionsDate) {
-		setRoot(new Group());
 
 		setStage(stage);
 

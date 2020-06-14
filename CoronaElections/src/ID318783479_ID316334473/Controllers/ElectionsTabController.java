@@ -1,7 +1,6 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.ElectionsTabModel;
 import ID318783479_ID316334473.Views.ElectionsTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,18 +9,9 @@ public class ElectionsTabController {
 	// Constants
 
 	// Fields
-	private ElectionsTabModel electionsTabModel;
 	private ElectionsTabView electionsTabView;
 
 	// Properties (Getters and Setters)
-	public ElectionsTabModel getElectionsTabModel() {
-		return electionsTabModel;
-	}
-
-	public void setElectionsTabModel(ElectionsTabModel electionsTabModel) {
-		this.electionsTabModel = electionsTabModel;
-	}
-
 	public ElectionsTabView getElectionsTabView() {
 		return electionsTabView;
 	}
@@ -31,17 +21,14 @@ public class ElectionsTabController {
 	}
 
 	// Constructors
-	public ElectionsTabController(ElectionsTabModel model, ElectionsTabView view) {
-		setElectionsTabModel(model);
+	public ElectionsTabController(ElectionsTabView view) {
 		setElectionsTabView(view);
-
-		electionsTabView.refresh(electionsTabModel);
 
 		EventHandler<ActionEvent> runElectionsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					electionsTabModel.runElections();
+					// TODO: fix
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
@@ -51,11 +38,7 @@ public class ElectionsTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					// Validations
-					if (!electionsTabModel.getElectionsOccurred())
-						throw new IllegalStateException("The results will be visible once the process is complete.");
-					
-					electionsTabModel.showResults();
+					// TODO: fix
 
 				} catch (IllegalStateException ex) {
 					UIHandler.showError(ex.getMessage());

@@ -6,7 +6,7 @@ import javafx.scene.Group;
 
 public class ElectionsDateModel {
 	// Constants
-	
+
 	// Fields
 	private LocalDate electionsDate;
 
@@ -14,18 +14,18 @@ public class ElectionsDateModel {
 	public LocalDate getElectionsDate() {
 		return electionsDate;
 	}
-	
+
 	public void setElectionsDate(LocalDate electionsDate) {
 		this.electionsDate = electionsDate;
 	}
-	
+
 	// Constructors
 	public ElectionsDateModel() {
 		electionsDate = null;
 	}
-	
+
 	// Methods
 	public void show(Group root) {
 		// TODO: COMPLETE
-	}	
+	}
 }

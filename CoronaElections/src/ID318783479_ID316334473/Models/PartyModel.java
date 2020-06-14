@@ -1,7 +1,14 @@
 package ID318783479_ID316334473.Models;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import ID318783479_ID316334473.Models.Citizens.CandidateModel;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class PartyModel implements Comparable<PartyModel> {
 	// Constants
@@ -10,21 +17,24 @@ public class PartyModel implements Comparable<PartyModel> {
 	}
 
 	// Fields
-	private String name;
+	private ObservableValue<String> name;
 	private PartyAssociation wing;
 	private LocalDate foundationDate;
-	private ArrayList<CandidateModel> candidates;
-	private int capacity;
+	private ObservableList<CandidateModel> candidates;
 
 	// Properties (Getters and Setters)
-	public String getName() {
+	public ObservableValue<String> getObservableName() {
 		return name;
 	}
 
+	public String getTextualName() {
+		return name.getValue();
+	}
+
 	private void setName(String name) throws Exception {
-		if (name.trim().length() == 0)
+		if (name.isBlank())
 			throw new Exception("PartyModel's name must contain at least 1 letter.");
-		this.name = name;
+		this.name = new SimpleStringProperty(name);
 	}
 
 	public PartyAssociation getWing() {
@@ -35,7 +45,11 @@ public class PartyModel implements Comparable<PartyModel> {
 		this.wing = wing;
 	}
 
-	public LocalDate getFoundationDate() {
+	public ObservableValue<String> getObservableFoundationDate() {
+		return new SimpleStringProperty(foundationDate.format(DateTimeFormatter.ofPattern("MM/dd/uuuu")));
+	}
+
+	public LocalDate getTemporalFoundationDate() {
 		return foundationDate;
 	}
 
@@ -45,12 +59,12 @@ public class PartyModel implements Comparable<PartyModel> {
 		this.foundationDate = foundationDate;
 	}
 
-	public ArrayList<CandidateModel> getCandidates() {
+	public ObservableList<CandidateModel> getCandidates() {
 		return candidates;
 	}
 
 	private void setCandidates(ArrayList<CandidateModel> candidates) {
-		this.candidates = candidates;
+		this.candidates = FXCollections.observableArrayList(candidates);
 	}
 
 	public int getCandidateCount() {
@@ -89,7 +103,7 @@ public class PartyModel implements Comparable<PartyModel> {
 	public int getCandidateOffsetByID(int candidateID, int start, int end) {
 		if (end >= start) {
 			int mid = (start + end) / 2;
-			int ID = candidates.get(mid).getID();
+			int ID = candidates.get(mid).getNumericID();
 			if (ID == candidateID)
 				return mid;
 
@@ -110,7 +124,7 @@ public class PartyModel implements Comparable<PartyModel> {
 			// Validations
 			int lastRank = candidates.size() - 1;
 
-			if (getCandidateByID(candidate.getID()) != null)
+			if (getCandidateByID(candidate.getNumericID()) != null)
 				throw new Exception("This candidate is already in this party.");
 			if (rank > lastRank || rank == -1)
 				candidates.add(candidate);
@@ -118,7 +132,6 @@ public class PartyModel implements Comparable<PartyModel> {
 				candidates.add(rank, candidate);
 
 			candidate.joinParty(this);
-			ensureCapacity();
 
 			return true;
 		} catch (Exception e) {
@@ -130,13 +143,6 @@ public class PartyModel implements Comparable<PartyModel> {
 			return true;
 		}
 
-	}
-
-	private void ensureCapacity() {
-		if (candidates.size() == capacity) {
-			capacity *= 2;
-			candidates.ensureCapacity(capacity);
-		}
 	}
 
 	private static String ordinal(int rank) {
@@ -159,7 +165,7 @@ public class PartyModel implements Comparable<PartyModel> {
 
 	@Override
 	public int compareTo(PartyModel other) {
-		return name.compareToIgnoreCase(other.name);
+		return getTextualName().compareToIgnoreCase(other.getTextualName());
 	}
 
 	@Override
@@ -169,7 +175,7 @@ public class PartyModel implements Comparable<PartyModel> {
 		if (!(obj instanceof PartyModel))
 			return false;
 		PartyModel other = (PartyModel) obj;
-		return name.equalsIgnoreCase(other.name); // Two parties can't have the same name
+		return getTextualName().equalsIgnoreCase(other.getTextualName()); // Two parties can't have the same name
 	}
 
 	@Override

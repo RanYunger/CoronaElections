@@ -3,13 +3,11 @@ package ID318783479_ID316334473.Views;
 import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.AddPartyModel;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,7 +28,6 @@ public class AddPartyView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox;
@@ -42,9 +39,6 @@ public class AddPartyView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-	public void setRoot(Group root) {
-		this.root = root;
-	}
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
@@ -52,18 +46,12 @@ public class AddPartyView {
 
 	// Constructors
 	public AddPartyView(Stage stage, LocalDate electionsDate) {
-		setRoot(new Group());
 		setStage(stage);
 
 		buildScene(electionsDate);
 	}
 
 	// Methods
-	public void refresh(AddPartyModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
 	private void buildScene(LocalDate electionsDate) {
 		LocalDate minDate = LocalDate.of(1948, 5, 14), maxDate = electionsDate;
 		String[] wings = { "Left", "Center", "Right" };
@@ -136,10 +124,10 @@ public class AddPartyView {
 		stage.setResizable(false);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
-		
+
 		UIHandler.setIcon(stage);
 		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
-		
+
 		stage.show();
 	}
 
@@ -163,5 +151,9 @@ public class AddPartyView {
 		Button requiredButton = (Button) getNodeByName(buttonName);
 
 		requiredButton.setOnAction(eventHandler);
+	}
+
+	public void close() {
+		stage.close();
 	}
 }

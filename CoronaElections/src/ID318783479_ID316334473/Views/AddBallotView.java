@@ -3,13 +3,11 @@ package ID318783479_ID316334473.Views;
 import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.AddBallotModel;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,10 +24,9 @@ public class AddBallotView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private Stage stage;
 	private VBox vBox;
-	private HBox mainHBox, row1HBox, row2HBox;
+	private HBox mainHBox, addressBox, typeBox;
 	private ImageView ballotImageView;
 	private Label headerLabel, addressLabel, typeLabel;
 	private TextField addressTextField;
@@ -37,9 +34,6 @@ public class AddBallotView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-	public void setRoot(Group root) {
-		this.root = root;
-	}
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
@@ -47,27 +41,21 @@ public class AddBallotView {
 
 	// Constructors
 	public AddBallotView(Stage stage, LocalDate electionsDate) {
-		setRoot(new Group());
 		setStage(stage);
-		
+
 		buildScene(electionsDate);
 	}
 
 	// Methods
-	public void refresh(AddBallotModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
 	private void buildScene(LocalDate electionsDate) {
 		String[] ballotTypes = { "Regular (Citizens / Candidates)", "Military (Soldiers)", "Sick Citizens",
-				"Sick Candidates", "Sick Soldiers" };
+				"Sick Soldiers" };
 		double sceneWidth = 600, sceneHeight = 260, fontSize = 30;
 
 		vBox = new VBox();
 		mainHBox = new HBox();
-		row1HBox = new HBox();
-		row2HBox = new HBox();
+		addressBox = new HBox();
+		typeBox = new HBox();
 		ballotImageView = UIHandler.buildImage("Ballot.png", sceneHeight * 0.6, sceneHeight * 0.6);
 		headerLabel = new Label("New Ballot");
 		addressLabel = new Label("Address:");
@@ -82,28 +70,30 @@ public class AddBallotView {
 		addressTextField.setMinWidth(210);
 		submitButton.setFont(new Font(20));
 
-		row1HBox.getChildren().addAll(addressLabel, addressTextField);
+		addressBox.getChildren().addAll(addressLabel, addressTextField);
 		HBox.setMargin(addressLabel, new Insets(0, 10, 0, 10));
 		HBox.setMargin(addressTextField, new Insets(0, 10, 0, 10));
 
-		row2HBox.getChildren().addAll(typeLabel, typeComboBox);
+		typeBox.getChildren().addAll(typeLabel, typeComboBox);
 		HBox.setMargin(typeLabel, new Insets(0, 10, 0, 10));
 		HBox.setMargin(typeComboBox, new Insets(0, 10, 0, 40));
 
-		vBox.getChildren().addAll(headerLabel, row1HBox, row2HBox, submitButton);
+		vBox.getChildren().addAll(headerLabel, addressBox, typeBox, submitButton);
 		vBox.setAlignment(Pos.TOP_CENTER);
 		VBox.setMargin(headerLabel, new Insets(sceneHeight * 0.2, 0, 0, 0));
 
 		mainHBox.getChildren().addAll(vBox, ballotImageView);
 		HBox.setMargin(ballotImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.3));
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
+		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
+				electionsDate.getYear()));
 		stage.setResizable(false);
-		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false), sceneWidth, sceneHeight));
-		
+		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
+				sceneWidth, sceneHeight));
+
 		UIHandler.setIcon(stage);
 		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
-		
+
 		stage.show();
 	}
 
@@ -127,5 +117,9 @@ public class AddBallotView {
 		Button requiredButton = (Button) getNodeByName(buttonName);
 
 		requiredButton.setOnAction(eventHandler);
+	}
+
+	public void close() {
+		stage.close();
 	}
 }

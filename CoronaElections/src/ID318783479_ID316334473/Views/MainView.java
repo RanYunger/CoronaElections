@@ -3,11 +3,9 @@ package ID318783479_ID316334473.Views;
 import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.MainModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,7 +17,6 @@ public class MainView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private Stage stage;
 	private TabPane tabPane;
 	private Button fileAComplaintButton;
@@ -31,10 +28,6 @@ public class MainView {
 	private AboutTabView aboutTabView;
 
 	// Properties (Getters and Setters)
-	private void setRoot(Group root) {
-		this.root = root;
-	}
-	
 	public Stage getStage() {
 		return stage;
 	}
@@ -93,8 +86,6 @@ public class MainView {
 
 	// Constructors
 	public MainView(Stage stage, LocalDate electionsDate) {
-		setRoot(new Group());
-
 		setStage(stage);
 		setElectionsTabView(new ElectionsTabView());
 		setBallotsTabView(new BallotsTabView());
@@ -113,11 +104,6 @@ public class MainView {
 	}
 
 	// Methods
-	public void refresh(MainModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
 	private void buildScene(LocalDate electionsDate) {
 		String[] tabNames = new String[] { "Elections", "Ballots", "Citizens", "Parties", "About" };
 		Node[] tabContents = { electionsTabView.asNode(), ballotsTabView.asNode(), citizensTabView.asNode(),

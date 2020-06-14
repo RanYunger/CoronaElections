@@ -3,9 +3,10 @@ package ID318783479_ID316334473.Views;
 import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.AddCandidateToPartyModel;
-import ID318783479_ID316334473.Models.CitizenModel;
+import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -29,7 +30,6 @@ public class AddCandidateToPartyView {
 	// Constants
 
 	// Fields
-	private Group root;
 	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox;
@@ -40,30 +40,22 @@ public class AddCandidateToPartyView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-	public void setRoot(Group root) {
-		this.root = root;
-	}
-
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
 
 	// Constructors
-	public AddCandidateToPartyView(Stage stage, LocalDate electionsDate) {
-		setRoot(new Group());
+	public AddCandidateToPartyView(Stage stage, LocalDate electionsDate, ObservableList<CitizenModel> citizens) {
 		setStage(stage);
 
-		buildScene(electionsDate);
+		buildScene(electionsDate, citizens);
 	}
 
 	// Methods
-	public void refresh(AddCandidateToPartyModel model) {
-		root.getChildren().clear(); // clean the previous view
-		model.show(root);
-	}
-
-	private void buildScene(LocalDate electionsDate) {
-		TableColumn<CitizenModel, ?> citizenIDTableColumn, citizenNameTableColumn;
+	@SuppressWarnings("unchecked")
+	private void buildScene(LocalDate electionsDate, ObservableList<CitizenModel> citizens) {
+		TableColumn<CitizenModel, Number> citizenIDTableColumn;
+		TableColumn<CitizenModel, String> citizenNameTableColumn;
 		double sceneWidth = 850, sceneHeight = 500, fontSize = 40;
 
 		vBox = new VBox();
@@ -76,6 +68,7 @@ public class AddCandidateToPartyView {
 		candidateIDTextField = new TextField();
 		candidateNameTextField = new TextField();
 		citizensTableView = new TableView<CitizenModel>();
+		citizensTableView.setItems(citizens);
 		submitButton = new Button("Submit");
 
 		headerLabel.setFont(new Font(20));
@@ -86,11 +79,11 @@ public class AddCandidateToPartyView {
 		submitButton.setFont(new Font(20));
 
 		citizenIDTableColumn = new TableColumn<CitizenModel, Number>("ID");
-		citizenIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+		citizenIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
 		citizenIDTableColumn.setMinWidth(225);
 
 		citizenNameTableColumn = new TableColumn<CitizenModel, String>("Full Name");
-		citizenIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("FullName"));
+		citizenNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableFullName());
 		citizenNameTableColumn.setMinWidth(225);
 
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn);
@@ -122,10 +115,10 @@ public class AddCandidateToPartyView {
 		stage.setResizable(false);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
-		
+
 		UIHandler.setIcon(stage);
 		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
-		
+
 		stage.show();
 	}
 
@@ -155,5 +148,9 @@ public class AddCandidateToPartyView {
 		TextField requiredTextField = (TextField) getNodeByName(textFieldName);
 
 		requiredTextField.textProperty().addListener(changeListener);
+	}
+
+	public void close() {
+		stage.close();
 	}
 }

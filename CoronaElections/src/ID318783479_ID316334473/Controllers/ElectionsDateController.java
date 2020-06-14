@@ -50,17 +50,13 @@ public class ElectionsDateController {
 				MainView mainView = new MainView(new Stage(), electionsDate);
 				MainController mainController;
 
-				mainModel.init();
-				
 				electionsDateModel.setElectionsDate(electionsDate);
 				electionsDateView.refresh(electionsDateModel);
-				
+
 				electionsDateView.close();
 
-				mainController = new MainController(mainModel, mainView, mainModel.getElectionsTabModel(),
-						mainView.getElectionsTabView(), mainModel.getBallotsTabModel(), mainView.getBallotsTabView(),
-						mainModel.getCitizensTabModel(), mainView.getCitizensTabView(), mainModel.getPartiesTabModel(),
-						mainView.getPartiesTabView());
+				mainController = new MainController(mainModel, mainView, mainView.getElectionsTabView(),
+						mainView.getBallotsTabView(), mainView.getCitizensTabView(), mainView.getPartiesTabView());
 
 				// These bindings will help to retrieve generic Model/Controller/View in need
 				UIHandler.mainModel = mainModel;
