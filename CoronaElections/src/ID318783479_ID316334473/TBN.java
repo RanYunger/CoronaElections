@@ -14,19 +14,19 @@ import ID318783479_ID316334473.Models.Citizens.SickSoldierModel;
 import ID318783479_ID316334473.Models.Citizens.SoldierModel;
 import ID318783479_ID316334473.Views.BallotsTabView;
 
-// This class will contain methods which aren't necessarily related to UI
+// This class contains methods which aren't necessarily related to UI
 public class TBN {
 	// Constants
-
-	// Fields
 	public static final String VALID_CITIZEN_ID_PATTERN = "^[0-9]{9}$";
 	public static final String VALID_CITIZEN_FULL_NAME_PATTERN = "^([A-Z][a-z]+ ?){2}$";
 	public static final String VALID_PARTY_NAME_PATTERN = "^([A-Z][a-z]+ ?)+$";
-	public static final String VALID_BALLOT_ADDRESS_PATTERN = ""; // TODO: fill
+	public static final String VALID_BALLOT_ADDRESS_PATTERN = "^([0-9]{2} ([A-Z][a-z]+ ?){1,3}, ([A-Z][a-z]+ ?){1,2})$";
+
+	// Fields
+
 	// Properties
 
 	// Methods
-
 	public static <T, U> T binarySearch(ArrayList<T> array, U key) {
 		return binarySearch(array, key, 0, array.size() - 1);
 	}

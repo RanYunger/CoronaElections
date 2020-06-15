@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,32 +11,19 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
-public class MainView {
+public class MainView extends View {
 	// Constants
 
 	// Fields
-	private Stage stage;
 	private TabPane tabPane;
 	private Button fileAComplaintButton;
-
 	private ElectionsTabView electionsTabView;
 	private BallotsTabView ballotsTabView;
 	private CitizensTabView citizensTabView;
 	private PartiesTabView partiesTabView;
 	private AboutTabView aboutTabView;
 
-	// Properties (Getters and Setters)
-	public Stage getStage() {
-		return stage;
-	}
-	
-	private void setStage(Stage stage) {
-		this.stage = stage;
-	}
-
-	public Button getFileAComplaintButton() {
-		return fileAComplaintButton;
-	}
+	// Properties (Getters and Setters)	
 	
 	private void setFileAComplaintButton(Button fileAComplaintButton) {
 		this.fileAComplaintButton = fileAComplaintButton;
@@ -83,28 +68,35 @@ public class MainView {
 	public void setAboutTabView(AboutTabView aboutTabView) {
 		this.aboutTabView = aboutTabView;
 	}
+	
+	public Button getFileAComplaintButton() {
+		return fileAComplaintButton;
+	}
 
 	// Constructors
-	public MainView(Stage stage, LocalDate electionsDate) {
-		setStage(stage);
-		setElectionsTabView(new ElectionsTabView());
-		setBallotsTabView(new BallotsTabView());
-		setCitizensTabView(new CitizensTabView());
-		setPartiesTabView(new PartiesTabView());
-		setAboutTabView(new AboutTabView());
+	public MainView(Stage stage) {
+		super(stage);
 		
-		buildScene(electionsDate);
+		setElectionsTabView(new ElectionsTabView(stage));
+		setBallotsTabView(new BallotsTabView(stage));
+		setCitizensTabView(new CitizensTabView(stage));
+		setPartiesTabView(new PartiesTabView(stage));
+		setAboutTabView(new AboutTabView(stage));
+		
+		buildScene();
 		
 		addEffects();
-		electionsTabView.addEffects(stage);
-		ballotsTabView.addEffects(stage);
-		citizensTabView.addEffects(stage);
-		partiesTabView.addEffects(stage);
-		aboutTabView.addEffects(stage);
+		electionsTabView.addEffects();
+		ballotsTabView.addEffects();
+		citizensTabView.addEffects();
+		partiesTabView.addEffects();
+		aboutTabView.addEffects();
 	}
 
 	// Methods
-	private void buildScene(LocalDate electionsDate) {
+	@Override
+	protected void buildScene() {
+		LocalDate electionsDate = UIHandler.getElectionsDate();
 		String[] tabNames = new String[] { "Elections", "Ballots", "Citizens", "Parties", "About" };
 		Node[] tabContents = { electionsTabView.asNode(), ballotsTabView.asNode(), citizensTabView.asNode(),
 				partiesTabView.asNode(), aboutTabView.asNode() };
@@ -126,30 +118,8 @@ public class MainView {
 		
 		stage.show();
 	}
-	
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
 
-		return null;
-	}
-	
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-	
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-		
-		requiredButton.setOnAction(eventHandler);
-	}
-	
-	private void addEffects() {
+	protected void addEffects() {
 		Scene scene = stage.getScene();
 		ObservableList<Node> rootNodes = scene.getRoot().getChildrenUnmodifiable();
 		Node currentNode;
@@ -164,5 +134,5 @@ public class MainView {
 		}
 		
 		UIHandler.addCursorEffectsToNode(scene, fileAComplaintButton);
-	}	
+	}
 }

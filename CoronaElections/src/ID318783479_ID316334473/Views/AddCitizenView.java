@@ -7,17 +7,15 @@ import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -25,40 +23,76 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-public class AddCitizenView {
+public class AddCitizenView extends View {
 	// Constants
 
 	// Fields
-	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox, row4HBox, row5HBox, row6HBox;
 	private ImageView citizenImageView;
 	private Label headerLabel, IDLabel, nameLabel, yearOfBirthLabel, daysOfSicknessLabel, associatedBallotLabel,
 			statusLabel;
-	private TextField IDTextField, nameTextField;
-	private ComboBox<Number> yearOfBirthComboBox, daysOfSicknessComboBox, associatedBallotComboBox;
+	private TextField citizenIDTextField, citizenFullNameTextField;
+	private ComboBox<Number> citizenYearOfBirthComboBox, citizenDaysOfSicknessComboBox, citizenAssociatedBallotComboBox;
 	private GridPane gridPane;
-	private CheckBox isolatedCheckBox, wearingSuitCheckBox, soldierCheckBox, carryingWeaponCheckBox;
+	private CheckBox citizenIsIsolatedCheckBox, citizenIsWearingSuitCheckBox, citizenIsSoldierCheckBox,
+			citizenIsCarryingWeaponCheckBox;
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public TextField getCitizenIDTextField() {
+		return citizenIDTextField;
+	}
+
+	public TextField getCitizenFullNameTextField() {
+		return citizenFullNameTextField;
+	}
+
+	public ComboBox<Number> getCitizenYearOfBirthComboBox() {
+		return citizenYearOfBirthComboBox;
+	}
+
+	public ComboBox<Number> getCitizenDaysOfSicknessComboBox() {
+		return citizenDaysOfSicknessComboBox;
+	}
+
+	public ComboBox<Number> getCitizenAssociatedBallotComboBox() {
+		return citizenAssociatedBallotComboBox;
+	}
+
+	public CheckBox getCitizenIsIsolatedCheckBox() {
+		return citizenIsIsolatedCheckBox;
+	}
+
+	public CheckBox getCitizenIsWearingSuitCheckBox() {
+		return citizenIsWearingSuitCheckBox;
+	}
+
+	public CheckBox getCitizenIsSoldierCheckBox() {
+		return citizenIsSoldierCheckBox;
+	}
+
+	public CheckBox getCitizenIsCarryingWeaponCheckBox() {
+		return citizenIsCarryingWeaponCheckBox;
+	}
+
+	public Button getSubmitButton() {
+		return submitButton;
 	}
 
 	// Constructors
-	public AddCitizenView(Stage stage, LocalDate electionsDate) {
-		setStage(stage);
+	public AddCitizenView() {
+		super();
+		
+		buildScene();
 
-		buildScene(electionsDate);
-
-		UIHandler.addAudioToImageView(stage.getScene(), citizenImageView, "ToiletFlush.mp3");
+		addEffects();
 	}
 
 	// Methods
-	private void buildScene(LocalDate electionsDate) {
+	protected void buildScene() {
+		LocalDate electionsDate = UIHandler.getElectionsDate();
 		int maxBorderYear = LocalDate.now().getYear() - 18, minBorderYear = maxBorderYear - 82;
 		ArrayList<Integer> years = new ArrayList<Integer>(), daysOfSickness = new ArrayList<Integer>();
 		double sceneWidth = 950, sceneHeight = 500, fontSize = 50;
@@ -84,19 +118,24 @@ public class AddCitizenView {
 		daysOfSicknessLabel = new Label("Days of Sickness:");
 		associatedBallotLabel = new Label("Associated Ballot:");
 		statusLabel = new Label("Status:");
-		IDTextField = new TextField();
-		nameTextField = new TextField();
-		yearOfBirthComboBox = new ComboBox<Number>(FXCollections.observableArrayList(years));
-		daysOfSicknessComboBox = new ComboBox<Number>(FXCollections.observableArrayList(daysOfSickness));
-		associatedBallotComboBox = new ComboBox<Number>();
+		citizenIDTextField = new TextField();
+		citizenFullNameTextField = new TextField();
+		citizenYearOfBirthComboBox = new ComboBox<Number>(FXCollections.observableArrayList(years));
+		citizenDaysOfSicknessComboBox = new ComboBox<Number>(FXCollections.observableArrayList(daysOfSickness));
+		citizenAssociatedBallotComboBox = new ComboBox<Number>();
 		gridPane = new GridPane();
-		isolatedCheckBox = new CheckBox("Isolated");
-		wearingSuitCheckBox = new CheckBox("Wearing Suit");
-		soldierCheckBox = new CheckBox("Soldier");
-		carryingWeaponCheckBox = new CheckBox("Carrrying Weapon");
+		citizenIsIsolatedCheckBox = new CheckBox("Isolated");
+		citizenIsWearingSuitCheckBox = new CheckBox("Wearing Suit");
+		citizenIsSoldierCheckBox = new CheckBox("Soldier");
+		citizenIsCarryingWeaponCheckBox = new CheckBox("Carrrying Weapon");
 		submitButton = new Button("Submit");
 
 		refreshAssociatedBallotComboBox(false, false);
+		// TODO: FIX THIS
+//		citizenYearOfBirthComboBox.getSelectionModel().selectFirst();
+//		citizenAssociatedBallotComboBox.getSelectionModel().selectFirst();
+//		citizenIsSoldierCheckBox.setSelected(true);
+
 		headerLabel.setFont(new Font(30));
 		IDLabel.setFont(new Font(20));
 		nameLabel.setFont(new Font(20));
@@ -104,15 +143,17 @@ public class AddCitizenView {
 		daysOfSicknessLabel.setFont(new Font(20));
 		associatedBallotLabel.setFont(new Font(20));
 		statusLabel.setFont(new Font(20));
-		IDTextField.setMinWidth(210);
-		nameTextField.setMinWidth(210);
-		yearOfBirthComboBox.setMinWidth(210);
-		daysOfSicknessComboBox.setMinWidth(210);
-		associatedBallotComboBox.setMinWidth(210);
-		daysOfSicknessComboBox.setDisable(true);
-		soldierCheckBox.setDisable(true);
-		wearingSuitCheckBox.setDisable(true);
-		carryingWeaponCheckBox.setDisable(true);
+		citizenIDTextField.setMinWidth(210);
+		citizenIDTextField.setTooltip(new Tooltip("Format: 9 digits"));
+		citizenFullNameTextField.setMinWidth(210);
+		citizenFullNameTextField.setTooltip(new Tooltip("Format: firstname surename (capitalized) (i.e. John Doe)"));
+		citizenYearOfBirthComboBox.setMinWidth(210);
+		citizenDaysOfSicknessComboBox.setMinWidth(210);
+		citizenAssociatedBallotComboBox.setMinWidth(210);
+		citizenDaysOfSicknessComboBox.setDisable(true);
+		citizenIsSoldierCheckBox.setDisable(true);
+		citizenIsWearingSuitCheckBox.setDisable(true);
+		citizenIsCarryingWeaponCheckBox.setDisable(true);
 		submitButton.setFont(new Font(20));
 
 		gridPane.getRowConstraints().add(new RowConstraints());
@@ -125,30 +166,30 @@ public class AddCitizenView {
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
 		gridPane.getColumnConstraints().get(1).setPercentWidth(50);
 
-		gridPane.add(isolatedCheckBox, 0, 0);
-		gridPane.add(wearingSuitCheckBox, 0, 1);
-		gridPane.add(soldierCheckBox, 1, 0);
-		gridPane.add(carryingWeaponCheckBox, 1, 1);
+		gridPane.add(citizenIsIsolatedCheckBox, 0, 0);
+		gridPane.add(citizenIsWearingSuitCheckBox, 0, 1);
+		gridPane.add(citizenIsSoldierCheckBox, 1, 0);
+		gridPane.add(citizenIsCarryingWeaponCheckBox, 1, 1);
 
-		row1HBox.getChildren().addAll(IDLabel, IDTextField);
+		row1HBox.getChildren().addAll(IDLabel, citizenIDTextField);
 		HBox.setMargin(IDLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(IDTextField, new Insets(0, 10, 0, 145));
+		HBox.setMargin(citizenIDTextField, new Insets(0, 10, 0, 145));
 
-		row2HBox.getChildren().addAll(nameLabel, nameTextField);
+		row2HBox.getChildren().addAll(nameLabel, citizenFullNameTextField);
 		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(nameTextField, new Insets(0, 10, 0, 75));
+		HBox.setMargin(citizenFullNameTextField, new Insets(0, 10, 0, 75));
 
-		row3HBox.getChildren().addAll(yearOfBirthLabel, yearOfBirthComboBox);
+		row3HBox.getChildren().addAll(yearOfBirthLabel, citizenYearOfBirthComboBox);
 		HBox.setMargin(yearOfBirthLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(yearOfBirthComboBox, new Insets(0, 10, 0, 55));
+		HBox.setMargin(citizenYearOfBirthComboBox, new Insets(0, 10, 0, 55));
 
-		row4HBox.getChildren().addAll(daysOfSicknessLabel, daysOfSicknessComboBox);
+		row4HBox.getChildren().addAll(daysOfSicknessLabel, citizenDaysOfSicknessComboBox);
 		HBox.setMargin(daysOfSicknessLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(daysOfSicknessComboBox, new Insets(0, 10, 0, 20));
+		HBox.setMargin(citizenDaysOfSicknessComboBox, new Insets(0, 10, 0, 20));
 
-		row5HBox.getChildren().addAll(associatedBallotLabel, associatedBallotComboBox);
+		row5HBox.getChildren().addAll(associatedBallotLabel, citizenAssociatedBallotComboBox);
 		HBox.setMargin(associatedBallotLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(associatedBallotComboBox, new Insets(0, 10, 0, 15));
+		HBox.setMargin(citizenAssociatedBallotComboBox, new Insets(0, 10, 0, 15));
 
 		row6HBox.getChildren().addAll(statusLabel, gridPane);
 		HBox.setMargin(statusLabel, new Insets(0, 40, 0, 10));
@@ -175,40 +216,6 @@ public class AddCitizenView {
 		stage.show();
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
-	}
-
-	public void addEventHandlerToComboBox(String comboBoxName, EventHandler<ActionEvent> eventHandler) {
-		ComboBox<?> requiredComboBox = (ComboBox<?>) getNodeByName(comboBoxName);
-
-		requiredComboBox.setOnAction(eventHandler);
-	}
-
-	public void addEventHandlerToCheckBox(String checkBoxName, EventHandler<ActionEvent> eventHandler) {
-		CheckBox requiredCheckBox = (CheckBox) getNodeByName(checkBoxName);
-
-		requiredCheckBox.setOnAction(eventHandler);
-	}
-
 	public void refreshAssociatedBallotComboBox(boolean isIsolated, boolean isSoldier) {
 		ArrayList<Integer> ballotIDs = new ArrayList<Integer>();
 		ObservableList<BallotModel> allBallots = ((BallotsTabView) UIHandler.getViewByName("BallotsTabView"))
@@ -216,19 +223,18 @@ public class AddCitizenView {
 
 		for (BallotModel ballotModel : allBallots) {
 			int currentBallotID = ballotModel.getNumericID();
-			if (!ballotIDs.contains(currentBallotID))
-				if (!ballotModel.isRegularBallot()) {
-					if ((ballotModel.isCoronaBallot() == isIsolated) && (ballotModel.isMilitaryBallot() == isSoldier))
-						ballotIDs.add(currentBallotID);
-				} else
+			if (!ballotIDs.contains(currentBallotID)) {
+				if ((ballotModel.isCoronaBallot() == isIsolated) && (ballotModel.isMilitaryBallot() == isSoldier))
 					ballotIDs.add(currentBallotID);
+			}
 		}
 
-		associatedBallotComboBox.getSelectionModel().clearSelection();
-		associatedBallotComboBox.setItems(FXCollections.observableArrayList(ballotIDs));
+		citizenAssociatedBallotComboBox.getSelectionModel().clearSelection();
+		citizenAssociatedBallotComboBox.setItems(FXCollections.observableArrayList(ballotIDs));
 	}
 
-	public void close() {
-		stage.close();
+	@Override
+	protected void addEffects() {
+		UIHandler.addAudioToImageView(stage.getScene(), citizenImageView, "ToiletFlush.mp3");
 	}
 }

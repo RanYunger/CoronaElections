@@ -4,11 +4,8 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -21,39 +18,49 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public class AddPartyView {
+public class AddPartyView extends View {
 	// Constants
 
 	// Fields
-	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox;
 	private ImageView partyImageView;
 	private Label headerLabel, nameLabel, wingLabel, foundationLabel;
-	private TextField nameTextField;
-	private ComboBox<String> wingComboBox;
-	private DatePicker foundationDatePicker;
+	private TextField partyNameTextField;
+	private ComboBox<String> partyWingComboBox;
+	private DatePicker partyFoundationDatePicker;
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
+	public TextField getPartyNameTextField() {
+		return partyNameTextField;
+	}
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public ComboBox<String> getPartyWingComboBox() {
+		return partyWingComboBox;
+	}
+
+	public DatePicker getPartyFoundationDatePicker() {
+		return partyFoundationDatePicker;
+	}
+
+	public Button getSubmitButton() {
+		return submitButton;
 	}
 
 	// Constructors
-	public AddPartyView(Stage stage, LocalDate electionsDate) {
-		setStage(stage);
+	public AddPartyView() {
+		super();
 
-		buildScene(electionsDate);
+		buildScene();
 	}
 
 	// Methods
-	private void buildScene(LocalDate electionsDate) {
-		LocalDate minDate = LocalDate.of(1948, 5, 14), maxDate = electionsDate;
+	@Override
+	protected void buildScene() {
+		LocalDate minDate = LocalDate.of(1948, 5, 14), maxDate = UIHandler.getElectionsDate();
 		String[] wings = { "Left", "Center", "Right" };
 		double sceneWidth = 700, sceneHeight = 350, fontSize = 40;
 
@@ -67,9 +74,9 @@ public class AddPartyView {
 		nameLabel = new Label("Name:");
 		wingLabel = new Label("Wing:");
 		foundationLabel = new Label("Foundation:");
-		nameTextField = new TextField();
-		wingComboBox = new ComboBox<String>(FXCollections.observableArrayList(wings));
-		foundationDatePicker = new DatePicker();
+		partyNameTextField = new TextField();
+		partyWingComboBox = new ComboBox<String>(FXCollections.observableArrayList(wings));
+		partyFoundationDatePicker = new DatePicker();
 		submitButton = new Button("Submit");
 
 		headerLabel.setFont(new Font(30));
@@ -77,9 +84,12 @@ public class AddPartyView {
 		wingLabel.setFont(new Font(20));
 		foundationLabel.setFont(new Font(20));
 		submitButton.setFont(new Font(20));
-		nameTextField.setMinWidth(175);
-		wingComboBox.setMinWidth(175);
-		foundationDatePicker.setDayCellFactory(new Callback<DatePicker, DateCell>() {
+		partyNameTextField.setMinWidth(175);
+		partyNameTextField.setTooltip(new Tooltip("Format: name (capitalized) (i.e. Halikud, Blue And White)"));
+		partyWingComboBox.setMinWidth(175);
+
+		partyWingComboBox.getSelectionModel().select("Center");
+		partyFoundationDatePicker.setDayCellFactory(new Callback<DatePicker, DateCell>() {
 			public DateCell call(final DatePicker datePicker) {
 				return new DateCell() {
 					@Override
@@ -97,19 +107,19 @@ public class AddPartyView {
 				};
 			}
 		});
-		foundationDatePicker.setValue(maxDate);
+		partyFoundationDatePicker.setValue(maxDate);
 
-		row1HBox.getChildren().addAll(nameLabel, nameTextField);
+		row1HBox.getChildren().addAll(nameLabel, partyNameTextField);
 		HBox.setMargin(nameLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(nameTextField, new Insets(0, 10, 0, 60));
+		HBox.setMargin(partyNameTextField, new Insets(0, 10, 0, 60));
 
-		row2HBox.getChildren().addAll(wingLabel, wingComboBox);
+		row2HBox.getChildren().addAll(wingLabel, partyWingComboBox);
 		HBox.setMargin(wingLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(wingComboBox, new Insets(0, 10, 0, 65));
+		HBox.setMargin(partyWingComboBox, new Insets(0, 10, 0, 65));
 
-		row3HBox.getChildren().addAll(foundationLabel, foundationDatePicker);
+		row3HBox.getChildren().addAll(foundationLabel, partyFoundationDatePicker);
 		HBox.setMargin(foundationLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(foundationDatePicker, new Insets(0, 10, 0, 10));
+		HBox.setMargin(partyFoundationDatePicker, new Insets(0, 10, 0, 10));
 
 		vBox.getChildren().addAll(headerLabel, row1HBox, row2HBox, row3HBox, submitButton);
 		vBox.setAlignment(Pos.TOP_CENTER);
@@ -119,8 +129,7 @@ public class AddPartyView {
 		mainHBox.getChildren().addAll(vBox, partyImageView);
 		HBox.setMargin(partyImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.4));
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
-				electionsDate.getYear()));
+		stage.setTitle(String.format("Corona Elections [%s %d]", maxDate.getMonth().toString(), maxDate.getYear()));
 		stage.setResizable(false);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
@@ -131,29 +140,9 @@ public class AddPartyView {
 		stage.show();
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
+	@Override
+	protected void addEffects() {
+		// TODO Auto-generated method stub
 
-		return null;
-	}
-
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
-	}
-
-	public void close() {
-		stage.close();
 	}
 }

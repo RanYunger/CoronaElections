@@ -9,15 +9,15 @@ public class ElectionsTabController {
 	// Constants
 
 	// Fields
-	private ElectionsTabView electionsTabView;
+	private ElectionsTabView tabView;
 
 	// Properties (Getters and Setters)
 	public ElectionsTabView getElectionsTabView() {
-		return electionsTabView;
+		return tabView;
 	}
 
 	public void setElectionsTabView(ElectionsTabView electionsTabView) {
-		this.electionsTabView = electionsTabView;
+		this.tabView = electionsTabView;
 	}
 
 	// Constructors
@@ -28,7 +28,7 @@ public class ElectionsTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					// TODO: fix
+					// TODO: COMPLETE
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
@@ -38,7 +38,7 @@ public class ElectionsTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					// TODO: fix
+					// TODO: COMPLETE
 
 				} catch (IllegalStateException ex) {
 					UIHandler.showError(ex.getMessage());
@@ -48,8 +48,8 @@ public class ElectionsTabController {
 			}
 		};
 
-		electionsTabView.addEventHandlerToButton("runElectionsButton", runElectionsButtonEventHandler);
-		electionsTabView.addEventHandlerToButton("showResultsButton", showResultsButtonEventHandler);
+		tabView.getRunElectionsButton().setOnAction(runElectionsButtonEventHandler);
+		tabView.getShowResultsButton().setOnAction(showResultsButtonEventHandler);
 	}
 
 	// Methods

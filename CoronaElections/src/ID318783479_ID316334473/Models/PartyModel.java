@@ -3,7 +3,9 @@ package ID318783479_ID316334473.Models;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 
+import ID318783479_ID316334473.TBN;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -67,10 +69,6 @@ public class PartyModel implements Comparable<PartyModel> {
 		this.candidates = FXCollections.observableArrayList(candidates);
 	}
 
-	public int getCandidateCount() {
-		return candidates.size();
-	}
-
 	// Constructors
 	public PartyModel() {
 		this("<UNKNOWN>", PartyAssociation.Center, LocalDate.now());
@@ -90,29 +88,22 @@ public class PartyModel implements Comparable<PartyModel> {
 	// Methods
 	public CandidateModel getCandidateByID(int candidateID) {
 		try {
-			return candidates.get(getCandidateOffsetByID(candidateID));
+			ArrayList<CandidateModel> candidatesArrayList = new ArrayList<CandidateModel>(candidates);
+
+			Collections.sort(candidatesArrayList);
+
+			return TBN.binarySearch(candidatesArrayList, candidateID);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
 	}
 
-	public int getCandidateOffsetByID(int candidateID) {
-		return getCandidateOffsetByID(candidateID, 0, candidates.size() - 1);
+	public int getNumericLastRank() {
+		return candidates.isEmpty() ? 1 : candidates.size();
 	}
 
-	public int getCandidateOffsetByID(int candidateID, int start, int end) {
-		if (end >= start) {
-			int mid = (start + end) / 2;
-			int ID = candidates.get(mid).getNumericID();
-			if (ID == candidateID)
-				return mid;
-
-			if (ID > candidateID)
-				return getCandidateOffsetByID(candidateID, start, mid - 1);
-
-			return getCandidateOffsetByID(candidateID, mid + 1, end);
-		}
-		return -1;
+	public String getTextualLastRank() {
+		return ordinal(getNumericLastRank());
 	}
 
 	public boolean addCandidate(CandidateModel candidate) {
@@ -120,29 +111,20 @@ public class PartyModel implements Comparable<PartyModel> {
 	}
 
 	public boolean addCandidate(CandidateModel candidate, int rank) {
-		try {
-			// Validations
-			int lastRank = candidates.size() - 1;
+		int lastRank = getNumericLastRank();
 
-			if (getCandidateByID(candidate.getNumericID()) != null)
-				throw new Exception("This candidate is already in this party.");
-			if (rank > lastRank || rank == -1)
-				candidates.add(candidate);
-			else
-				candidates.add(rank, candidate);
-
-			candidate.joinParty(this);
-
+		// TODO: FIX (something here makes the ranks start from 0
+		if (getCandidateByID(candidate.getNumericID()) != null)
 			return true;
-		} catch (Exception e) {
-			// TODO: fix this, or ask about using it
-			if (!e.getStackTrace()[1].toString().split("[.(]")[1].equals("CandidateModel")) {
-				System.err.println(e.getMessage());
-				return false;
-			}
-			return true;
-		}
 
+		if ((rank > lastRank) || (rank == -1))
+			candidates.add(candidate);
+		else
+			candidates.add(rank, candidate);
+
+		candidate.joinParty(this);
+
+		return true;
 	}
 
 	private static String ordinal(int rank) {
@@ -160,7 +142,8 @@ public class PartyModel implements Comparable<PartyModel> {
 				return (rank + "rd");
 			break;
 		}
-		return (rank + "th");
+
+		return rank + "th";
 	}
 
 	@Override

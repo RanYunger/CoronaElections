@@ -4,81 +4,87 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-public class AddBallotView {
+public class AddBallotView extends View {
 	// Constants
 
 	// Fields
-	private Stage stage;
 	private VBox vBox;
-	private HBox mainHBox, addressBox, typeBox;
+	private HBox mainHBox, ballotAddressHBox, ballotTypeHBox;
 	private ImageView ballotImageView;
 	private Label headerLabel, addressLabel, typeLabel;
-	private TextField addressTextField;
-	private ComboBox<String> typeComboBox;
+	private TextField ballotAddressTextField;
+	private ComboBox<String> ballotTypeComboBox;
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
+	public TextField getBallotAddressTextField() {
+		return ballotAddressTextField;
+	}
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public ComboBox<String> getBallotTypeComboBox() {
+		return ballotTypeComboBox;
+	}
+
+	public Button getSubmitButton() {
+		return submitButton;
 	}
 
 	// Constructors
-	public AddBallotView(Stage stage, LocalDate electionsDate) {
-		setStage(stage);
+	public AddBallotView() {
+		super();
 
-		buildScene(electionsDate);
+		buildScene();
 	}
 
 	// Methods
-	private void buildScene(LocalDate electionsDate) {
+	protected void buildScene() {
+		LocalDate electionsDate = UIHandler.getElectionsDate();
 		String[] ballotTypes = { "Regular (Citizens / Candidates)", "Military (Soldiers)", "Sick Citizens",
 				"Sick Soldiers" };
 		double sceneWidth = 600, sceneHeight = 260, fontSize = 30;
 
 		vBox = new VBox();
 		mainHBox = new HBox();
-		addressBox = new HBox();
-		typeBox = new HBox();
+		ballotAddressHBox = new HBox();
+		ballotTypeHBox = new HBox();
 		ballotImageView = UIHandler.buildImage("Ballot.png", sceneHeight * 0.6, sceneHeight * 0.6);
 		headerLabel = new Label("New Ballot");
 		addressLabel = new Label("Address:");
 		typeLabel = new Label("Type:");
-		addressTextField = new TextField();
-		typeComboBox = new ComboBox<String>(FXCollections.observableArrayList(ballotTypes));
+		ballotAddressTextField = new TextField();
+		ballotTypeComboBox = new ComboBox<String>(FXCollections.observableArrayList(ballotTypes));
 		submitButton = new Button("Submit");
 
 		headerLabel.setFont(new Font(30));
 		addressLabel.setFont(new Font(20));
 		typeLabel.setFont(new Font(20));
-		addressTextField.setMinWidth(210);
+		ballotAddressTextField.setMinWidth(210);
+		ballotAddressTextField.setTooltip(new Tooltip("Format: number street, city (capitalized) (i.e. 21 Jump Street, Metropolis)"));
 		submitButton.setFont(new Font(20));
+		ballotTypeComboBox.getSelectionModel().selectFirst();
 
-		addressBox.getChildren().addAll(addressLabel, addressTextField);
+		ballotAddressHBox.getChildren().addAll(addressLabel, ballotAddressTextField);
 		HBox.setMargin(addressLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(addressTextField, new Insets(0, 10, 0, 10));
+		HBox.setMargin(ballotAddressTextField, new Insets(0, 10, 0, 10));
 
-		typeBox.getChildren().addAll(typeLabel, typeComboBox);
+		ballotTypeHBox.getChildren().addAll(typeLabel, ballotTypeComboBox);
 		HBox.setMargin(typeLabel, new Insets(0, 10, 0, 10));
-		HBox.setMargin(typeComboBox, new Insets(0, 10, 0, 40));
+		HBox.setMargin(ballotTypeComboBox, new Insets(0, 10, 0, 40));
 
-		vBox.getChildren().addAll(headerLabel, addressBox, typeBox, submitButton);
+		vBox.getChildren().addAll(headerLabel, ballotAddressHBox, ballotTypeHBox, submitButton);
 		vBox.setAlignment(Pos.TOP_CENTER);
 		VBox.setMargin(headerLabel, new Insets(sceneHeight * 0.2, 0, 0, 0));
 
@@ -92,34 +98,13 @@ public class AddBallotView {
 				sceneWidth, sceneHeight));
 
 		UIHandler.setIcon(stage);
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		addEffects();
 
 		stage.show();
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
-	}
-
-	public void close() {
-		stage.close();
+	@Override
+	protected void addEffects() {
+		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
 	}
 }

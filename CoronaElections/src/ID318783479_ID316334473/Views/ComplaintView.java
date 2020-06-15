@@ -4,11 +4,8 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -18,13 +15,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-public class ComplaintView {
+public class ComplaintView extends View {
 	// Constants
 
 	// Fields
-	private Stage stage;
 	private VBox vBox;
 	private HBox row1HBox, row2HBox, row3HBox;
 	private Label headerLabel, windowNameLabel, controlNameLabel, descriptionLabel;
@@ -34,25 +29,33 @@ public class ComplaintView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-
-	public Stage getStage() {
-		return stage;
+	public ComboBox<String> getWindowNameComboBox() {
+		return windowNameComboBox;
 	}
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public TextField getControlNameTextField() {
+		return controlNameTextField;
+	}
+
+	public TextArea getDescriptionTextArea() {
+		return descriptionTextArea;
+	}
+
+	public Button getSubmitButton() {
+		return submitButton;
 	}
 
 	// Constructors
-	public ComplaintView(Stage stage, LocalDate electionsDate) {
-
-		setStage(stage);
-
-		buildScene(stage, electionsDate);
+	public ComplaintView() {
+		super();
+		
+		buildScene();
 	}
 
 	// Methods
-	private void buildScene(Stage stage, LocalDate electionsDate) {
+	@Override
+	protected void buildScene() {
+		LocalDate electionsDate = UIHandler.getElectionsDate();
 		String[] windowNames = { "About", "Ballots", "Citizens", "Elections", "Parties" };
 		double sceneWidth = 700, sceneHeight = 400;
 
@@ -112,25 +115,9 @@ public class ComplaintView {
 		stage.show();
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
+	@Override
+	protected void addEffects() {
+		// TODO Auto-generated method stub
+		
 	}
 }

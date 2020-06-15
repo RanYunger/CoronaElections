@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import ID318783479_ID316334473.Controllers.MainController;
-import ID318783479_ID316334473.Models.MainModel;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SoldierModel;
@@ -14,13 +13,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
@@ -48,7 +47,7 @@ public class UIHandler {
 	// Constants
 
 	// Fields
-	public static MainModel mainModel;
+	public static LocalDate electionsDate;
 	public static MainController mainController;
 	public static MainView mainView;
 
@@ -56,23 +55,31 @@ public class UIHandler {
 	public static Media media;
 
 	// Properties
+	public static LocalDate getElectionsDate() {
+		return electionsDate;
+	}
+
+	public static void setElectionsDate(LocalDate electionsDate) {
+		UIHandler.electionsDate = electionsDate;
+	}
+
+	public static MainController getMainController() {
+		return mainController;
+	}
+
+	public static void setMainController(MainController mainController) {
+		UIHandler.mainController = mainController;
+	}
+
+	public static MainView getMainView() {
+		return mainView;
+	}
+
+	public static void setMainView(MainView mainView) {
+		UIHandler.mainView = mainView;
+	}
 
 	// Methods
-	public static LocalDate getElectionsDate() {
-		return mainModel.getElectionsDate();
-	}
-
-	// First Letter in modelName must be capital!
-	public static Object getModelByName(String modelName) {
-		try {
-			return mainModel.getClass().getMethod(String.format("get%s", modelName)).invoke(mainModel);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
 	// First Letter in controllerName must be capital!
 	public static Object getControllerByName(String controllerName) {
 		try {
@@ -84,6 +91,7 @@ public class UIHandler {
 		return null;
 	}
 
+	// First Letter in controllerName must be capital!
 	public static Object getViewByName(String viewName) {
 		try {
 			return mainView.getClass().getDeclaredMethod(String.format("get%s", viewName)).invoke(mainView);
@@ -159,21 +167,21 @@ public class UIHandler {
 	}
 
 	public static void addCursorEffectsToNode(Scene scene, Node node) {
-		EventHandler<MouseEvent> imageViewMouseEnteredEventHandler = new EventHandler<MouseEvent>() {
+		EventHandler<MouseEvent> nodeMouseEnteredEventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				scene.setCursor(javafx.scene.Cursor.HAND);
+				scene.setCursor(Cursor.HAND);
 			}
 		};
-		EventHandler<MouseEvent> imageViewMouseExitedEventHandler = new EventHandler<MouseEvent>() {
+		EventHandler<MouseEvent> nodeMouseExitedEventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				scene.setCursor(javafx.scene.Cursor.DEFAULT);
+				scene.setCursor(Cursor.DEFAULT);
 			}
 		};
 
-		node.setOnMouseEntered(imageViewMouseEnteredEventHandler);
-		node.setOnMouseExited(imageViewMouseExitedEventHandler);
+		node.setOnMouseEntered(nodeMouseEnteredEventHandler);
+		node.setOnMouseExited(nodeMouseExitedEventHandler);
 	}
 
 	public static void addAudioToImageView(Scene scene, ImageView imageView, String audioFileName) {
@@ -270,48 +278,47 @@ public class UIHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <S extends CitizenModel> TableColumn<S, CheckBox> buildStatusTableColumn(double statusColumnWidth) {
-		TableColumn<S, CheckBox> statusTableColumn;
-		TableColumn<S, CheckBox> isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
+	public static <S extends CitizenModel> TableColumn<S, ImageView> buildStatusTableColumn(double statusColumnWidth) {
+		TableColumn<S, ImageView> statusTableColumn;
+		TableColumn<S, ImageView> isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
 				carryingWeaponTableColumn;
+//		ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
 		ObservableList<TableColumn<S, ?>> nestedStatusTableColumns;
 
-		statusTableColumn = new TableColumn<S, CheckBox>("Status");
+		statusTableColumn = new TableColumn<S, ImageView>("Status");
 
+		// TODO: FIX
 		nestedStatusTableColumns = statusTableColumn.getColumns();
-		isolatedTableColumn = new TableColumn<S, CheckBox>("Isolated");
+		isolatedTableColumn = new TableColumn<S, ImageView>("Isolated");
 		isolatedTableColumn.setCellValueFactory(cell -> {
-			CheckBox cb = new CheckBox();
-			cb.setSelected(cell.getValue().isIsolated());
-			cb.setDisable(true);
-			return new SimpleObjectProperty<CheckBox>(cb);
+			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
+
+			return new SimpleObjectProperty<ImageView>(cell.getValue().isIsolated() ? vImageView : xImageView);
 		});
 
-		wearingSuitTableColumn = new TableColumn<S, CheckBox>("Wearing Suit");
+		wearingSuitTableColumn = new TableColumn<S, ImageView>("Wearing Suit");
 		wearingSuitTableColumn.setCellValueFactory(cell -> {
-			CheckBox cb = new CheckBox();
-			cb.setSelected(cell.getValue().isWearingSuit());
-			cb.setDisable(true);
-			return new SimpleObjectProperty<CheckBox>(cb);
+			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
+
+			return new SimpleObjectProperty<ImageView>(cell.getValue().isWearingSuit() ? vImageView : xImageView);
 		});
 
-		soldierTableColumn = new TableColumn<S, CheckBox>("Soldier");
+		soldierTableColumn = new TableColumn<S, ImageView>("Soldier");
 		soldierTableColumn.setCellValueFactory(cell -> {
-			CheckBox cb = new CheckBox();
-			cb.setSelected(cell.getValue().isSoldier());
-			cb.setDisable(true);
-			return new SimpleObjectProperty<CheckBox>(cb);
+			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
+
+			return new SimpleObjectProperty<ImageView>(cell.getValue().isSoldier() ? vImageView : xImageView);
 		});
 
-		carryingWeaponTableColumn = new TableColumn<S, CheckBox>("Armed");
+		carryingWeaponTableColumn = new TableColumn<S, ImageView>("Armed");
 		carryingWeaponTableColumn.setCellValueFactory(cell -> {
-			CheckBox cb = new CheckBox();
+			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
+
 			if (cell.getValue() instanceof SoldierModel)
-				cb.setSelected(((SoldierModel) cell.getValue()).isCarryingWeapon());
-			else
-				cb.setSelected(false);
-			cb.setDisable(true);
-			return new SimpleObjectProperty<CheckBox>(cb);
+				return new SimpleObjectProperty<ImageView>(
+						((SoldierModel) cell.getValue()).isCarryingWeapon() ? vImageView : xImageView);
+
+			return new SimpleObjectProperty<ImageView>(xImageView);
 		});
 
 		nestedStatusTableColumns.addAll(isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
@@ -319,7 +326,9 @@ public class UIHandler {
 		for (TableColumn<S, ?> tableColumn : nestedStatusTableColumns) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
 			tableColumn.setResizable(false);
+			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setMinWidth(statusColumnWidth / nestedStatusTableColumns.size());
 		}
 

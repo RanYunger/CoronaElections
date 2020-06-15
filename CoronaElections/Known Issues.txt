@@ -1,17 +1,10 @@
-TODO Shy:
-2. Build logic for each view - almost complete
-3. Make data displayable in each view - I THINK this is done?
-4. Implement Regex for textual data (ID, Address, Name...) + set in all suitable nodes
+TODOs Shy:
+1. Build logic for each view - almost complete (ElectionsTab + Controller, AddCandidate needs fixes)
+2. Make data displayable in each view
 
 TODOs Ran:
-1. Make sure all unique behavior in AddX views work!
-2. Implement THE RED SHINY BUTTON ("File a Complaint") XD
-3. Implement some kind of EE
-4. Open addCandidateToParty only if a party is selected, and send that party as a parameter
-5. Add tooltip for regex format (i.e. 9 digit for citizen id)
-6. Set default value for each control in every add{X}View, as to not mess around with nulls
-7. get images of V and X for status columns instead of checkboxes
-8. delete all remove {X} buttons - ain't no one's gonna mess with that!
+1. Implement THE RED SHINY BUTTON ("File a Complaint") XD
+2. Implement some kind of EE
 
 TODOs BOTH:
 1. Comment important code pieces

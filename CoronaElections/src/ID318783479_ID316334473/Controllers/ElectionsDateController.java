@@ -3,8 +3,6 @@ package ID318783479_ID316334473.Controllers;
 import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
-import ID318783479_ID316334473.Models.ElectionsDateModel;
-import ID318783479_ID316334473.Models.MainModel;
 import ID318783479_ID316334473.Views.ElectionsDateView;
 import ID318783479_ID316334473.Views.MainView;
 import javafx.event.ActionEvent;
@@ -15,18 +13,9 @@ public class ElectionsDateController {
 	// Constants
 
 	// Fields
-	private ElectionsDateModel electionsDateModel;
 	private ElectionsDateView electionsDateView;
 
 	// Properties (Getters and Setters)
-	public ElectionsDateModel getElectionsDateModel() {
-		return electionsDateModel;
-	}
-
-	private void setElectionsDateModel(ElectionsDateModel electionsDateModel) {
-		this.electionsDateModel = electionsDateModel;
-	}
-
 	public ElectionsDateView getElectionsDateView() {
 		return electionsDateView;
 	}
@@ -36,35 +25,29 @@ public class ElectionsDateController {
 	}
 
 	// Constructors
-	public ElectionsDateController(ElectionsDateModel model, ElectionsDateView view) {
-		setElectionsDateModel(model);
+	public ElectionsDateController(ElectionsDateView view) {
 		setElectionsDateView(view);
-
-		electionsDateView.refresh(electionsDateModel);
 
 		EventHandler<ActionEvent> enterButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				LocalDate electionsDate = electionsDateView.getElectionsDate();
-				MainModel mainModel = new MainModel(electionsDate);
-				MainView mainView = new MainView(new Stage(), electionsDate);
+				MainView mainView;
 				MainController mainController;
 
-				electionsDateModel.setElectionsDate(electionsDate);
-				electionsDateView.refresh(electionsDateModel);
-
-				electionsDateView.close();
-
-				mainController = new MainController(mainModel, mainView, mainView.getElectionsTabView(),
+				UIHandler.setElectionsDate(electionsDate);
+				
+				mainView = new MainView(new Stage());
+				mainController = new MainController(mainView, mainView.getElectionsTabView(),
 						mainView.getBallotsTabView(), mainView.getCitizensTabView(), mainView.getPartiesTabView());
-
-				// These bindings will help to retrieve generic Model/Controller/View in need
-				UIHandler.mainModel = mainModel;
+				
 				UIHandler.mainController = mainController;
 				UIHandler.mainView = mainView;
+				electionsDateView.close();		
 			}
 		};
-		electionsDateView.addEventHandlerToEnterButton(enterButtonEventHandler);
+		
+		electionsDateView.getEnterButton().setOnAction(enterButtonEventHandler);
 	}
 
 	// Methods

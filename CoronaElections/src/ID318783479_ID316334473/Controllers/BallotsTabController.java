@@ -15,20 +15,20 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
-@SuppressWarnings({ "unchecked", "unused" })
+@SuppressWarnings({ "unused" })
 public class BallotsTabController {
 	// Constants
 
 	// Fields
-	private BallotsTabView ballotsTabView;
+	private BallotsTabView tabView;
 
 	// Properties (Getters and Setters)
 	public BallotsTabView getBallotsTabView() {
-		return ballotsTabView;
+		return tabView;
 	}
 
 	public void setBallotsTabView(BallotsTabView ballotsTabView) {
-		this.ballotsTabView = ballotsTabView;
+		this.tabView = ballotsTabView;
 	}
 
 	// Constructors
@@ -39,30 +39,10 @@ public class BallotsTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					AddBallotView addView = new AddBallotView(new Stage(), UIHandler.getElectionsDate());
-					AddBallotController controller = new AddBallotController(ballotsTabView, addView);
+					AddBallotView addView = new AddBallotView();
+					AddBallotController controller = new AddBallotController(tabView, addView);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
-				}
-			}
-		};
-		EventHandler<ActionEvent> removeBallotButtonEventHandler = new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				TableView<String> ballotsTableView = (TableView<String>) ballotsTabView
-						.getNodeByName("ballotsTableView");
-				int selectedIndex = ballotsTableView.getSelectionModel().getSelectedIndex();
-
-				try {
-					// Validations
-					if (selectedIndex == -1)
-						throw new IllegalStateException("Choose a ballot to remove.");
-
-				} catch (IllegalStateException ex) {
-					UIHandler.showError(ex.getMessage());
-				} catch (Exception ex) {
-					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
 			}
 		};
@@ -71,18 +51,16 @@ public class BallotsTabController {
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSelectedIndex,
 					Number newSelectedIndex) {
-				TableView<CitizenModel> votersInBallotTableView = (TableView<CitizenModel>) ballotsTabView
-						.getNodeByName("votersInBallotTableView");
+				TableView<CitizenModel> votersInBallotTableView = tabView.getVotersInBallotTableView();
 				if (newSelectedIndex.intValue() != -1) {
-					BallotModel selectedBallot = ballotsTabView.getAllBallots().get((int) newSelectedIndex);
+					BallotModel selectedBallot = tabView.getAllBallots().get((int) newSelectedIndex);
 
 					votersInBallotTableView.setItems(selectedBallot.getVoterRegistry());
 				}
 			}
 		};
 
-		ballotsTabView.addEventHandlerToButton("addBallotButton", addBallotButtonEventHandler);
-		ballotsTabView.addEventHandlerToButton("removeBallotButton", removeBallotButtonEventHandler);
-		ballotsTabView.addEventHandlerToTableView("ballotsTableView", ballotsTableViewEventHandler);
+		tabView.getAddBallotButton().setOnAction(addBallotButtonEventHandler);
+		tabView.getBallotsTableView().getSelectionModel().selectedIndexProperty().addListener(ballotsTableViewEventHandler);
 	}
 }

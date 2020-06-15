@@ -8,5 +8,4 @@ public class SickSoldierModel extends SoldierModel {
 			boolean isIsolated, boolean isWearingSuit, boolean isCarryingWeapon) {
 		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated, isWearingSuit, isCarryingWeapon);
 	}
-
 }

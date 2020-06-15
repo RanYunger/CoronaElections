@@ -4,33 +4,25 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class AddCandidateToPartyView {
+public class AddCandidateToPartyView extends View {
 	// Constants
 
 	// Fields
-	private Stage stage;
 	private VBox vBox;
 	private HBox mainHBox, row1HBox;
 	private ImageView candidateImageView;
@@ -40,20 +32,34 @@ public class AddCandidateToPartyView {
 	private Button submitButton;
 
 	// Properties (Getters and Setters)
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public TextField getCandidateIDTextField() {
+		return candidateIDTextField;
+	}
+
+	public TextField getCandidateNameTextField() {
+		return candidateNameTextField;
+	}
+
+	public TableView<CitizenModel> getCitizensTableView() {
+		return citizensTableView;
+	}
+
+	public Button getSubmitButton() {
+		return submitButton;
 	}
 
 	// Constructors
-	public AddCandidateToPartyView(Stage stage, LocalDate electionsDate, ObservableList<CitizenModel> citizens) {
-		setStage(stage);
+	public AddCandidateToPartyView(Stage stage, ObservableList<CitizenModel> citizens) {
+		super(stage);
 
-		buildScene(electionsDate, citizens);
+		buildScene();
 	}
 
 	// Methods
+	@Override
 	@SuppressWarnings("unchecked")
-	private void buildScene(LocalDate electionsDate, ObservableList<CitizenModel> citizens) {
+	protected void buildScene() {
+		LocalDate electionsDate = UIHandler.getElectionsDate();
 		TableColumn<CitizenModel, Number> citizenIDTableColumn;
 		TableColumn<CitizenModel, String> citizenNameTableColumn;
 		double sceneWidth = 850, sceneHeight = 500, fontSize = 40;
@@ -68,7 +74,6 @@ public class AddCandidateToPartyView {
 		candidateIDTextField = new TextField();
 		candidateNameTextField = new TextField();
 		citizensTableView = new TableView<CitizenModel>();
-		citizensTableView.setItems(citizens);
 		submitButton = new Button("Submit");
 
 		headerLabel.setFont(new Font(20));
@@ -77,6 +82,8 @@ public class AddCandidateToPartyView {
 		candidateIDTextField.setMinWidth(150);
 		candidateNameTextField.setMinWidth(150);
 		submitButton.setFont(new Font(20));
+
+		citizensTableView.getSelectionModel().selectFirst();
 
 		citizenIDTableColumn = new TableColumn<CitizenModel, Number>("ID");
 		citizenIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
@@ -88,7 +95,9 @@ public class AddCandidateToPartyView {
 
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn);
 		for (TableColumn<?, ?> tableColumn : citizensTableView.getColumns()) {
+			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
 			tableColumn.setResizable(false);
 		}
 		citizensTableView.setOpacity(0.8);
@@ -122,35 +131,12 @@ public class AddCandidateToPartyView {
 		stage.show();
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
+	@Override
+	protected void addEffects() {
+		// TODO Auto-generated method stub
 	}
 
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
-	}
-
-	public void addChangeListenerToTextField(String textFieldName, ChangeListener<String> changeListener) {
-		TextField requiredTextField = (TextField) getNodeByName(textFieldName);
-
-		requiredTextField.textProperty().addListener(changeListener);
-	}
-
-	public void close() {
-		stage.close();
+	public void refreshCitizensTableView(ObservableList<CitizenModel> citizens) {
+		citizensTableView.setItems(citizens);
 	}
 }

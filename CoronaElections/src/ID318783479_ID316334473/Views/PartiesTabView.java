@@ -3,11 +3,8 @@ package ID318783479_ID316334473.Views;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -26,12 +23,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class PartiesTabView {
+public class PartiesTabView extends View {
 	// Constants
 
 	// Fields
 	private GridPane gridPane;
-	private Button addPartyButton, removePartyButton, addCandidateToPartyButton;
+	private Button addPartyButton, addCandidateToPartyButton;
 	private VBox vBox;
 	private HBox row1HBox, row2HBox;
 	private Label partiesLabel, candidatesInPartyLabel;
@@ -44,23 +41,48 @@ public class PartiesTabView {
 		return parties;
 	}
 
+	public TableView<CandidateModel> getCandidatesInPartyTableView() {
+		return candidatesInPartyTableView;
+	}
+
+	public Button getAddPartyButton() {
+		return addPartyButton;
+	}
+
+	public void setAddPartyButton(Button addPartyButton) {
+		this.addPartyButton = addPartyButton;
+	}
+
+	public Button getAddCandidateToPartyButton() {
+		return addCandidateToPartyButton;
+	}
+
+	public void setAddCandidateToPartyButton(Button addCandidateToPartyButton) {
+		this.addCandidateToPartyButton = addCandidateToPartyButton;
+	}
+
+	public TableView<PartyModel> getPartiesTableView() {
+		return partiesTableView;
+	}
+
 	// Constructors
-	public PartiesTabView() {
+	public PartiesTabView(Stage stage) {
+		super(stage);
+
 		buildScene();
 	}
 
 	// Methods
 	@SuppressWarnings("unchecked")
-	private void buildScene() {
+	protected void buildScene() {
 		TableColumn<PartyModel, String> partyFoundationTableColumn;
 		TableColumn<PartyModel, String> partyNameTableColumn, partyWingTableColumn;
-		TableColumn<CandidateModel, Number> candidateIDTableColumn, candidateRankTableColumn;
-		TableColumn<CandidateModel, String> candidateNameTableColumn;
+		TableColumn<CandidateModel, Number> candidateIDTableColumn;
+		TableColumn<CandidateModel, String> candidateNameTableColumn, candidateRankTableColumn;
 
 		parties = FXCollections.observableArrayList();
 		gridPane = new GridPane();
 		addPartyButton = new Button("Add Party");
-		removePartyButton = new Button("Remove Party");
 		addCandidateToPartyButton = new Button("Add Candidate to Party");
 		vBox = new VBox();
 		row1HBox = new HBox();
@@ -73,7 +95,6 @@ public class PartiesTabView {
 
 		addPartyButton.setMinWidth(150);
 		addCandidateToPartyButton.setMinWidth(150);
-		removePartyButton.setMinWidth(150);
 		partiesLabel.setFont(new Font(30));
 		candidatesInPartyLabel.setFont(new Font(30));
 		partiesTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -90,10 +111,9 @@ public class PartiesTabView {
 		gridPane.getColumnConstraints().get(1).setPercentWidth(50);
 
 		row1HBox.setAlignment(Pos.CENTER);
-		row1HBox.getChildren().addAll(addPartyButton, addCandidateToPartyButton, removePartyButton);
+		row1HBox.getChildren().addAll(addPartyButton, addCandidateToPartyButton);
 		HBox.setMargin(addPartyButton, new Insets(0, 10, 0, 0));
-		HBox.setMargin(addCandidateToPartyButton, new Insets(0, 10, 0, 10));
-		HBox.setMargin(removePartyButton, new Insets(0, 0, 0, 10));
+		HBox.setMargin(addCandidateToPartyButton, new Insets(0, 0, 0, 10));
 
 		row2HBox.setAlignment(Pos.CENTER);
 		row2HBox.getChildren().addAll(partiesLabel, candidatesInPartyLabel);
@@ -104,7 +124,7 @@ public class PartiesTabView {
 
 		partyNameTableColumn = new TableColumn<PartyModel, String>("Name");
 		partyNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableName());
-		partyNameTableColumn.setMinWidth(450);
+		partyNameTableColumn.setMinWidth(437);
 
 		partyWingTableColumn = new TableColumn<PartyModel, String>("Wing");
 		partyWingTableColumn.setCellValueFactory(new PropertyValueFactory<>("Wing"));
@@ -122,22 +142,24 @@ public class PartiesTabView {
 		candidateNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableFullName());
 		candidateNameTableColumn.setMinWidth(150);
 
-//		candidateRankTableColumn = new TableColumn<CandidateModel, Number>("Rank");
-//		candidateRankTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableRank());
-//		candidateRankTableColumn.setMinWidth(50);
+		candidateRankTableColumn = new TableColumn<CandidateModel, String>("Rank");
+		candidateRankTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableRank());
+		candidateRankTableColumn.setMinWidth(50);
 
 		partiesTableView.getColumns().addAll(partyNameTableColumn, partyWingTableColumn, partyFoundationTableColumn);
 		for (TableColumn<?, ?> tableColumn : partiesTableView.getColumns()) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
 			tableColumn.setResizable(false);
 		}
 		partiesTableView.setOpacity(0.8);
 		candidatesInPartyTableView.getColumns().addAll(candidateIDTableColumn, candidateNameTableColumn,
-				/* candidateRankTableColumn, */ UIHandler.buildStatusTableColumn(410));
+				candidateRankTableColumn, UIHandler.buildStatusTableColumn(406));
 		for (TableColumn<?, ?> tableColumn : candidatesInPartyTableView.getColumns()) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
 			tableColumn.setResizable(false);
 		}
 		candidatesInPartyTableView.setOpacity(0.8);
@@ -155,43 +177,23 @@ public class PartiesTabView {
 		return (Node) gridPane;
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
-	}
-
-	public <T> void addEventHandlerToTableView(String tableViewName, ChangeListener<? super Number> changeListener) {
-		TableView<?> requiredTableView = (TableView<?>) getNodeByName(tableViewName);
-
-		requiredTableView.getSelectionModel().selectedIndexProperty().addListener(changeListener);
-	}
-
 	public void addEffects(Stage stage) {
 		Scene scene = stage.getScene();
 
 		UIHandler.addCursorEffectsToNode(scene, addPartyButton);
 		UIHandler.addCursorEffectsToNode(scene, addCandidateToPartyButton);
-		UIHandler.addCursorEffectsToNode(scene, removePartyButton);
 	}
 
 	public void addParty(PartyModel party) {
 		parties.add(party);
+	}
+
+	@Override
+	protected void addEffects() {
+		Scene scene = stage.getScene();
+		
+		UIHandler.addCursorEffectsToNode(scene, addPartyButton);
+		UIHandler.addCursorEffectsToNode(scene, addCandidateToPartyButton);
+
 	}
 }

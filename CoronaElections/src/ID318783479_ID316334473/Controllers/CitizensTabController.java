@@ -1,7 +1,9 @@
 package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.Ballots.BallotModel;
 import ID318783479_ID316334473.Views.AddCitizenView;
+import ID318783479_ID316334473.Views.BallotsTabView;
 import ID318783479_ID316334473.Views.CitizensTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,16 +14,16 @@ public class CitizensTabController {
 	// Constants
 
 	// Fields
-	private CitizensTabView citizensTabView;
+	private CitizensTabView tabView;
 
 	// Properties (Getters and Setters)
 
 	public CitizensTabView getCitizensTabView() {
-		return citizensTabView;
+		return tabView;
 	}
 
 	public void setCitizensTabView(CitizensTabView citizensTabView) {
-		this.citizensTabView = citizensTabView;
+		this.tabView = citizensTabView;
 	}
 
 	// Constructors
@@ -30,39 +32,24 @@ public class CitizensTabController {
 
 		EventHandler<ActionEvent> addCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
-			@SuppressWarnings("unused")
 			public void handle(ActionEvent event) {
 				try {
-					AddCitizenView addView = new AddCitizenView(new Stage(), UIHandler.getElectionsDate());
-					AddCitizenController controller = new AddCitizenController(citizensTabView, addView);
+					BallotsTabView ballotsTabView = (BallotsTabView) UIHandler.getViewByName("BallotsTabView");
+
+					TableView<BallotModel> ballotsTableView = ballotsTabView.getBallotsTableView();
+					if (ballotsTableView.getItems().isEmpty())
+						UIHandler.showError("Make sure to have at least 1 ballot before creating a new citizen");
+					else {
+						AddCitizenView addView = new AddCitizenView();
+						AddCitizenController controller = new AddCitizenController(tabView, addView);
+					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
 		};
-		EventHandler<ActionEvent> removeCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public void handle(ActionEvent event) {
-				TableView<String> citizensTableView = (TableView<String>) citizensTabView
-						.getNodeByName("citizensTableView");
-				int selectedIndex = citizensTableView.getSelectionModel().getSelectedIndex();
 
-				try {
-					// Validations
-					if (selectedIndex == -1)
-						throw new IllegalStateException("Choose a citizen to remove.");
-
-				} catch (IllegalStateException ex) {
-					UIHandler.showError(ex.getMessage());
-				} catch (Exception ex) {
-					UIHandler.showError("An unexpected error occured.", ex.getMessage());
-				}
-			}
-		};
-
-		citizensTabView.addEventHandlerToButton("addCitizenButton", addCitizenButtonEventHandler);
-		citizensTabView.addEventHandlerToButton("removeCitizenButton", removeCitizenButtonEventHandler);
+		tabView.getAddCitizenButton().setOnAction(addCitizenButtonEventHandler);
 	}
 
 	// Methods

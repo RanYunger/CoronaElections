@@ -1,8 +1,6 @@
 package ID318783479_ID316334473.Views;
 
 import ID318783479_ID316334473.UIHandler;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,7 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
-public class ElectionsTabView {
+public class ElectionsTabView extends View {
 	// Constants
 
 	// Fields
@@ -29,13 +27,24 @@ public class ElectionsTabView {
 	private BarChart<String, Number> resultsByBallotBarChart;
 
 	// Properties (Getters and Setters)
+	public Button getRunElectionsButton() {
+		return runElectionsButton;
+	}
+	
+	public Button getShowResultsButton() {
+		return showResultsButton;
+	}
+		
 	// Constructors
-	public ElectionsTabView() {
+	public ElectionsTabView(Stage stage) {
+		super(stage);
+		
 		buildScene();
 	}
 
 	// Methods
-	private void buildScene() {
+	@Override
+	protected void buildScene() {
 		gridPane = new GridPane();
 		runElectionsButton = new Button("Run Elections");
 		showResultsButton = new Button("Show Results");
@@ -85,29 +94,8 @@ public class ElectionsTabView {
 		return (Node) gridPane;
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
-	}
-
-	public void addEffects(Stage stage) {
+	@Override
+	protected void addEffects() {
 		Scene scene = stage.getScene();
 
 		UIHandler.addCursorEffectsToNode(scene, runElectionsButton);

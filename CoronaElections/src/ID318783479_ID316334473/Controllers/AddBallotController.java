@@ -6,15 +6,14 @@ import ID318783479_ID316334473.Views.AddBallotView;
 import ID318783479_ID316334473.Views.BallotsTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 public class AddBallotController {
 	// Constants
 
 	// Fields
-	private AddBallotView addView;
 	private BallotsTabView tabView;
+	private AddBallotView addView;
 
 	// Properties (Getters and Setters)
 	public BallotsTabView getBallotTabView() {
@@ -40,20 +39,23 @@ public class AddBallotController {
 
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
-			@SuppressWarnings("unchecked")
 			public void handle(ActionEvent event) {
-				String address = ((TextField) addView.getNodeByName("addressTextField")).getText();
-				if (address.isEmpty()) {
-					UIHandler.showError("Empty address!", "ballot address cannot be an empty string!");
+				TextField ballotAddressTextField = addView.getBallotAddressTextField();
+				String address = ballotAddressTextField.getText();
+				if (!address.matches(TBN.VALID_BALLOT_ADDRESS_PATTERN)) {
+					UIHandler.showError("Invalid address!", ballotAddressTextField.getTooltip().getText());
 				} else {
-					String type = ((ComboBox<String>) addView.getNodeByName("typeComboBox")).getSelectionModel()
-							.selectedItemProperty().getValue();
-					// TODO: make sure type cannot be null
-					tabView.addBallot(TBN.createBallotByType(type, address, UIHandler.getElectionsDate()));
-					addView.close();
+					String ballotType = addView.getBallotTypeComboBox().getValue();
+					if (ballotType == null)
+						UIHandler.showError("Choose a ballot type");
+					else {
+						tabView.addBallot(TBN.createBallotByType(ballotType, address, UIHandler.getElectionsDate()));
+						addView.close();
+					}
 				}
 			}
 		};
-		addView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+
+		addView.getSubmitButton().setOnAction(submitButtonEventHandler);
 	}
 }

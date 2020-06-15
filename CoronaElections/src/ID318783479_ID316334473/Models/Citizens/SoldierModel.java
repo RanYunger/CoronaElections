@@ -20,6 +20,7 @@ public class SoldierModel extends CitizenModel {
 	public SoldierModel(int ID, String fullName, int yearOfBirth, int daysOfSickness, BallotModel associatedBallot,
 			boolean isIsolated, boolean isWearingSuit, boolean isCarryingWeapon) {
 		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated, isWearingSuit);
+		
 		setIsCarryingWeapon(isCarryingWeapon);
 	}
 }

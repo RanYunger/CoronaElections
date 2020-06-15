@@ -38,27 +38,31 @@ public class AddPartyController {
 		setAddPartyView(addPartyView);
 		setPartiesTabView(partiesTabView);
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(ActionEvent event) {
-				String name = ((TextField) addView.getNodeByName("nameTextField")).getText();
+				TextField partyNameTextField = addView.getPartyNameTextField();
+
+				String name = partyNameTextField.getText();
 				if (!name.matches(TBN.VALID_PARTY_NAME_PATTERN)) {
-					UIHandler.showError("Invalid Party Name!",
-							"Party name nust be at least one word in camel case (i.e. This Is An Example)");
+					UIHandler.showError("Invalid Party Name!", partyNameTextField.getTooltip().getText());
 				} else {
-					String type = ((ComboBox<String>) addView.getNodeByName("wingComboBox")).getSelectionModel()
-							.selectedItemProperty().getValue();
+					ComboBox<String> partyWingComboBox = addView.getPartyWingComboBox();
+					DatePicker partyFoundationDatePicker = addView.getPartyFoundationDatePicker();
+					String partyWing = partyWingComboBox.getSelectionModel().selectedItemProperty().getValue();
+					LocalDate foundationDate = partyFoundationDatePicker.getValue();
+
+					partyWing = partyWing == null ? partyWingComboBox.getItems().get(0) : partyWing;
+					foundationDate = foundationDate == null ? LocalDate.now() : foundationDate;
 
 					// TODO: set default value to wing combobox as to not mess with nulls
-					PartyModel.PartyAssociation wing = PartyModel.PartyAssociation.valueOf(type);
-					LocalDate foundationDate = ((DatePicker) addView.getNodeByName("foundationDatePicker")).getValue();
-					tabView.addParty(new PartyModel(name, wing, foundationDate));
+					tabView.addParty(
+							new PartyModel(name, PartyModel.PartyAssociation.valueOf(partyWing), foundationDate));
 					addView.close();
 				}
 			}
 		};
 
-		addPartyView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+		addPartyView.getSubmitButton().setOnAction(submitButtonEventHandler);
 	}
 
 	// Methods

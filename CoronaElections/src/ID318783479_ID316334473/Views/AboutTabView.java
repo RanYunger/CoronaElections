@@ -4,6 +4,7 @@ import ID318783479_ID316334473.UIHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -11,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class AboutTabView {
+public class AboutTabView extends View {
 	// Constants
 
 	// Fields
@@ -23,12 +24,15 @@ public class AboutTabView {
 	// Properties (Getters and Setters)
 
 	// Constructors
-	public AboutTabView() {
+	public AboutTabView(Stage stage) {
+		super(stage);
+
 		buildScene();
 	}
 
 	// Methods
-	private void buildScene() {
+	@Override
+	protected void buildScene() {
 		hBox = new HBox();
 		vBox = new VBox();
 		dorAlonImageView = UIHandler.buildImage("DorAlonLogo.png", 160, 160);
@@ -61,9 +65,12 @@ public class AboutTabView {
 		return (Node) vBox;
 	}
 
-	public void addEffects(Stage stage) {
-		UIHandler.addAudioToImageView(stage.getScene(), dorAlonImageView, "DorAlonSlogan.mp3");
-		UIHandler.addAudioToImageView(stage.getScene(), tnuvaImageView, "TnuvaSlogan.mp3");
-		UIHandler.addAudioToImageView(stage.getScene(), ramiLeviImageView, "RamiLeviSlogan.mp3");
+	@Override
+	protected void addEffects() {
+		Scene scene = stage.getScene();
+		
+		UIHandler.addAudioToImageView(scene, dorAlonImageView, "DorAlonSlogan.mp3");
+		UIHandler.addAudioToImageView(scene, tnuvaImageView, "TnuvaSlogan.mp3");
+		UIHandler.addAudioToImageView(scene, ramiLeviImageView, "RamiLeviSlogan.mp3");	
 	}
 }

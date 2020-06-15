@@ -3,11 +3,8 @@ package ID318783479_ID316334473.Views;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -25,14 +22,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class BallotsTabView {
+public class BallotsTabView extends View {
 	// Constants
 
 	// Fields
 	private GridPane gridPane;
-	private Button addBallotButton, removeBallotButton;
+	private Button addBallotButton;
 	private VBox vBox;
-	private HBox addRemoveBottons, tableLables;
+	private HBox addButtonHBox, tableLables;
 	private Label ballotsLabel, votersInBallotLabel;
 	private ObservableList<BallotModel> allBallots;
 	private TableView<BallotModel> ballotsTableView;
@@ -43,14 +40,29 @@ public class BallotsTabView {
 		return allBallots;
 	}
 
+	public TableView<BallotModel> getBallotsTableView() {
+		return ballotsTableView;
+	}
+
+	public TableView<CitizenModel> getVotersInBallotTableView() {
+		return votersInBallotTableView;
+	}
+
+	public Button getAddBallotButton() {
+		return addBallotButton;
+	}
+
 	// Constructors
-	public BallotsTabView() {
+	public BallotsTabView(Stage stage) {
+		super(stage);
+		
 		buildScene();
 	}
 
 	// Methods
+	@Override
 	@SuppressWarnings("unchecked")
-	private void buildScene() {
+	protected void buildScene() {
 		TableColumn<BallotModel, Number> ballotIDTableColumn;
 		TableColumn<BallotModel, String> ballotTypeTableColumn, ballotAddressTableColumn;
 		TableColumn<CitizenModel, Number> voterIDTableColumn, voterYearOfBirthTableColumn;
@@ -59,9 +71,8 @@ public class BallotsTabView {
 		allBallots = FXCollections.observableArrayList();
 		gridPane = new GridPane();
 		addBallotButton = new Button("Add Ballot");
-		removeBallotButton = new Button("Remove Ballot");
 		vBox = new VBox();
-		addRemoveBottons = new HBox();
+		addButtonHBox = new HBox();
 		tableLables = new HBox();
 		ballotsLabel = new Label("Ballots");
 		votersInBallotLabel = new Label("Voters in Ballot");
@@ -70,7 +81,6 @@ public class BallotsTabView {
 		votersInBallotTableView = new TableView<CitizenModel>();
 
 		addBallotButton.setMinWidth(100);
-		removeBallotButton.setMinWidth(100);
 		ballotsLabel.setFont(new Font(30));
 		votersInBallotLabel.setFont(new Font(30));
 		ballotsTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -86,17 +96,15 @@ public class BallotsTabView {
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
 		gridPane.getColumnConstraints().get(1).setPercentWidth(50);
 
-		addRemoveBottons.setAlignment(Pos.CENTER);
-		addRemoveBottons.getChildren().addAll(addBallotButton, removeBallotButton);
-		HBox.setMargin(addBallotButton, new Insets(0, 10, 0, 0));
-		HBox.setMargin(removeBallotButton, new Insets(0, 0, 0, 10));
+		addButtonHBox.setAlignment(Pos.CENTER);
+		addButtonHBox.getChildren().addAll(addBallotButton);
 
 		tableLables.setAlignment(Pos.CENTER);
 		tableLables.getChildren().addAll(ballotsLabel, votersInBallotLabel);
 		HBox.setMargin(ballotsLabel, new Insets(0, 300, 0, 50));
 		HBox.setMargin(votersInBallotLabel, new Insets(0, 0, 0, 350));
 
-		vBox.getChildren().addAll(addRemoveBottons, tableLables);
+		vBox.getChildren().addAll(addButtonHBox, tableLables);
 
 		ballotIDTableColumn = new TableColumn<BallotModel, Number>("ID");
 		ballotIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
@@ -108,7 +116,7 @@ public class BallotsTabView {
 
 		ballotAddressTableColumn = new TableColumn<BallotModel, String>("Address");
 		ballotAddressTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableAddress());
-		ballotAddressTableColumn.setMinWidth(450);
+		ballotAddressTableColumn.setMinWidth(438);
 
 		voterIDTableColumn = new TableColumn<CitizenModel, Number>("ID");
 		voterIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
@@ -126,15 +134,17 @@ public class BallotsTabView {
 		for (TableColumn<?, ?> tableColumn : ballotsTableView.getColumns()) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
 			tableColumn.setResizable(false);
 		}
 		ballotsTableView.setOpacity(0.8);
 
 		votersInBallotTableView.getColumns().addAll(voterIDTableColumn, voterNameTableColumn,
-				voterYearOfBirthTableColumn, UIHandler.buildStatusTableColumn(410));
+				voterYearOfBirthTableColumn, UIHandler.buildStatusTableColumn(406));
 		for (TableColumn<?, ?> tableColumn : votersInBallotTableView.getColumns()) {
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
 			tableColumn.setResizable(false);
 		}
 		votersInBallotTableView.setOpacity(0.8);
@@ -152,42 +162,14 @@ public class BallotsTabView {
 		return (Node) gridPane;
 	}
 
-	public Node getNodeByName(String nodeName) {
-		try {
-			return (Node) getClass().getDeclaredField(nodeName).get(this);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
-	public Object getPropertyByName(String nodeName, String propertyName) {
-		Node node = getNodeByName(nodeName);
-
-		return node.getProperties().get(propertyName);
-	}
-
-	public void addEventHandlerToButton(String buttonName, EventHandler<ActionEvent> eventHandler) {
-		Button requiredButton = (Button) getNodeByName(buttonName);
-
-		requiredButton.setOnAction(eventHandler);
-	}
-
-	public <T> void addEventHandlerToTableView(String tableViewName, ChangeListener<? super Number> changeListener) {
-		TableView<?> requiredTableView = (TableView<?>) getNodeByName(tableViewName);
-
-		requiredTableView.getSelectionModel().selectedIndexProperty().addListener(changeListener);
-	}
-
-	public void addEffects(Stage stage) {
-		Scene scene = stage.getScene();
-
-		UIHandler.addCursorEffectsToNode(scene, addBallotButton);
-		UIHandler.addCursorEffectsToNode(scene, removeBallotButton);
-	}
-
 	public void addBallot(BallotModel ballot) {
 		allBallots.add(ballot);
+	}
+
+	@Override
+	protected void addEffects() {
+		Scene scene = stage.getScene();
+		
+		UIHandler.addCursorEffectsToNode(scene, addBallotButton);
 	}
 }

@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 
 public class ComplaintController {
 	// Constants
-	
+
 	// Fields
 	private ComplaintView complaintView;
 
@@ -38,14 +38,14 @@ public class ComplaintController {
 			}
 		};
 
-		complaintView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+		complaintView.getSubmitButton().setOnAction(submitButtonEventHandler);
 	}
 
 	// Methods
 	public boolean isFormValid() {
-		ComboBox<?> windowNameComboBox = (ComboBox<?>) complaintView.getNodeByName("windowNameComboBox");
-		TextField controlNameTextField = (TextField) complaintView.getNodeByName("controlNameTextField");
-		TextArea descriptionTextArea = (TextArea) complaintView.getNodeByName("descriptionTextArea");
+		ComboBox<?> windowNameComboBox = complaintView.getWindowNameComboBox();
+		TextField controlNameTextField = complaintView.getControlNameTextField();
+		TextArea descriptionTextArea = complaintView.getDescriptionTextArea();
 
 		try {
 			// Validations

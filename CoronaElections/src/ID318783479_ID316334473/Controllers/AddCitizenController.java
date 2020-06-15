@@ -35,105 +35,118 @@ public class AddCitizenController {
 
 		EventHandler<ActionEvent> yearOfBirthComboBoxEventHandler = new EventHandler<ActionEvent>() {
 			@Override
-			@SuppressWarnings("unchecked")
 			public void handle(ActionEvent event) {
 
-				ComboBox<Integer> yearOfBirthComboBox = (ComboBox<Integer>) addView
-						.getNodeByName("yearOfBirthComboBox");
-				CheckBox soldierCheckBox = (CheckBox) addView.getNodeByName("soldierCheckBox"),
-						isolatedCheckBox = (CheckBox) addView.getNodeByName("isolatedCheckBox"),
-						carryingWeaponCheckBox = (CheckBox) addView.getNodeByName("carryingWeaponCheckBox");
+				ComboBox<Number> citizenYearOfBirthComboBox = addView.getCitizenYearOfBirthComboBox();
+				CheckBox citizenIsSoldierCheckBox = addView.getCitizenIsSoldierCheckBox(),
+						citizenIsIsolatedCheckBox = addView.getCitizenIsIsolatedCheckBox(),
+						citizenIsCarryingWeaponCheckBox = addView.getCitizenIsCarryingWeaponCheckBox();
 
-				if (yearOfBirthComboBox.getSelectionModel().getSelectedIndex() <= 3) { // Citizen is soldier
-					soldierCheckBox.setSelected(true);
-					carryingWeaponCheckBox.setDisable(false);
+				if (citizenYearOfBirthComboBox.getSelectionModel().getSelectedIndex() <= 3) { // Citizen is soldier
+					citizenIsSoldierCheckBox.setSelected(true);
+					citizenIsCarryingWeaponCheckBox.setDisable(false);
 				} else {
-					soldierCheckBox.setSelected(false);
-					carryingWeaponCheckBox.setSelected(false);
-					carryingWeaponCheckBox.setDisable(true);
+					citizenIsSoldierCheckBox.setSelected(false);
+					citizenIsCarryingWeaponCheckBox.setSelected(false);
+					citizenIsCarryingWeaponCheckBox.setDisable(true);
 				}
 
-				addView.refreshAssociatedBallotComboBox(isolatedCheckBox.isSelected(), soldierCheckBox.isSelected());
+				addView.refreshAssociatedBallotComboBox(citizenIsIsolatedCheckBox.isSelected(),
+						citizenIsSoldierCheckBox.isSelected());
 			}
 		};
 		EventHandler<ActionEvent> isolatedCheckBoxEventHandler = new EventHandler<ActionEvent>() {
 			@Override
-			@SuppressWarnings("unchecked")
 			public void handle(ActionEvent event) {
 
-				CheckBox isolatedCheckBox = (CheckBox) addView.getNodeByName("isolatedCheckBox");
-				CheckBox wearingSuitCheckBox = (CheckBox) addView.getNodeByName("wearingSuitCheckBox");
-				CheckBox soldierCheckBox = (CheckBox) addView.getNodeByName("soldierCheckBox");
-				ComboBox<Integer> daysOfSicknessComboBox = (ComboBox<Integer>) addView
-						.getNodeByName("daysOfSicknessComboBox");
+				CheckBox citizenIsIsolatedCheckBox = addView.getCitizenIsIsolatedCheckBox(),
+						citizenIsWearingSuitCheckBox = addView.getCitizenIsWearingSuitCheckBox(),
+						citizenIsSoldierCheckBox = addView.getCitizenIsSoldierCheckBox();
+				ComboBox<Number> citizenDaysOfSicknessComboBox = addView.getCitizenDaysOfSicknessComboBox();
 
-				if (isolatedCheckBox.isSelected()) {
-					wearingSuitCheckBox.setDisable(false);
-					daysOfSicknessComboBox.setDisable(false);
-					daysOfSicknessComboBox.getSelectionModel().selectFirst();
+				if (citizenIsIsolatedCheckBox.isSelected()) {
+					citizenIsWearingSuitCheckBox.setDisable(false);
+					citizenDaysOfSicknessComboBox.setDisable(false);
+					citizenDaysOfSicknessComboBox.getSelectionModel().selectFirst();
 				} else {
-					wearingSuitCheckBox.setSelected(false);
-					wearingSuitCheckBox.setDisable(true);
-					daysOfSicknessComboBox.getSelectionModel().clearSelection();
-					daysOfSicknessComboBox.setDisable(true);
+					citizenIsWearingSuitCheckBox.setSelected(false);
+					citizenIsWearingSuitCheckBox.setDisable(true);
+					citizenDaysOfSicknessComboBox.getSelectionModel().clearSelection();
+					citizenDaysOfSicknessComboBox.setDisable(true);
 				}
 
-				addView.refreshAssociatedBallotComboBox(isolatedCheckBox.isSelected(), soldierCheckBox.isSelected());
+				addView.refreshAssociatedBallotComboBox(citizenIsIsolatedCheckBox.isSelected(),
+						citizenIsSoldierCheckBox.isSelected());
 			}
 		};
 		EventHandler<ActionEvent> soldierCheckBoxEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				CheckBox isolatedCheckBox = (CheckBox) addView.getNodeByName("isolatedCheckBox");
-				CheckBox soldierCheckBox = (CheckBox) addView.getNodeByName("soldierCheckBox");
+				CheckBox citizenIsIsolatedCheckBox = addView.getCitizenIsIsolatedCheckBox(),
+						citizenIsSoldierCheckBox = addView.getCitizenIsSoldierCheckBox();
 
-				addView.refreshAssociatedBallotComboBox(isolatedCheckBox.isSelected(), soldierCheckBox.isSelected());
+				addView.refreshAssociatedBallotComboBox(citizenIsIsolatedCheckBox.isSelected(),
+						citizenIsSoldierCheckBox.isSelected());
 			}
 		};
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
 			public void handle(ActionEvent event) {
-				String IDText = ((TextField) addView.getNodeByName("IDTextField")).getText();
+				TextField citizenIDTextField = addView.getCitizenIDTextField();
+				String IDText = citizenIDTextField.getText();
 				if (!IDText.matches(TBN.VALID_CITIZEN_ID_PATTERN))
-					UIHandler.showError("Invalid ID", "ID must be 9 digits long");
+					UIHandler.showError("Invalid ID", citizenIDTextField.getTooltip().getText());
 				else {
 					int ID = Integer.parseInt(IDText);
-					String fullName = ((TextField) addView.getNodeByName("nameTextField")).getText();
+					TextField citizenFullNameTextField = addView.getCitizenFullNameTextField();
+					String fullName = citizenFullNameTextField.getText();
 					if (!fullName.matches(TBN.VALID_CITIZEN_FULL_NAME_PATTERN))
-						UIHandler.showError("Invalid citizen name",
-								"Name must be comprised of two words, each begins with a capital letter (i.e. John Doe)");
+						UIHandler.showError("Invalid citizen name", citizenFullNameTextField.getTooltip().getText());
 					else {
-						boolean isIsolated = ((CheckBox) addView.getNodeByName("isolatedCheckBox")).isSelected(),
-								isWearingSuit = ((CheckBox) addView.getNodeByName("wearingSuitCheckBox")).isSelected(),
-								isSoldier = ((CheckBox) addView.getNodeByName("soldierCheckBox")).isSelected(),
-								isCarryingWeapon = ((CheckBox) addView.getNodeByName("carryingWeaponCheckBox"))
-										.isSelected();
-						Integer daysOfSickness = ((ComboBox<Integer>) addView.getNodeByName("daysOfSicknessComboBox"))
-								.getValue(),
-								yearOfBirth = ((ComboBox<Integer>) addView.getNodeByName("yearOfBirthComboBox"))
-										.getValue(),
-								associatedBallotID = ((ComboBox<Integer>) addView
-										.getNodeByName("associatedBallotComboBox")).getValue();
-						BallotModel BModel = TBN.getBallotByID(associatedBallotID);
-						// TODO: fix this shit
-						if (daysOfSickness == null)
-							daysOfSickness = 0;
-						CitizenModel citizen = TBN.createCitizen(ID, fullName, yearOfBirth, daysOfSickness, BModel,
-								isIsolated, isWearingSuit, isSoldier, isCarryingWeapon);
-						System.out.println(citizen);
-						tabView.addCitizen(citizen);
-						addView.close();
+						ComboBox<Number> citizenYearOfBirthComboBox = addView.getCitizenYearOfBirthComboBox(),
+								citizenDaysOfSicknessComboBox = addView.getCitizenDaysOfSicknessComboBox(),
+								citizenAssociatedBallotComboBox = addView.getCitizenAssociatedBallotComboBox();
+						Number yearOfBirth = citizenYearOfBirthComboBox.getSelectionModel().getSelectedItem(),
+								daysOfSickness = citizenDaysOfSicknessComboBox.getSelectionModel().getSelectedItem(),
+								associatedBallotID = citizenAssociatedBallotComboBox.getSelectionModel()
+										.getSelectedItem();
+						boolean isIsolated = addView.getCitizenIsIsolatedCheckBox().isSelected(),
+								isWearingSuit = addView.getCitizenIsWearingSuitCheckBox().isSelected(),
+								isSoldier = addView.getCitizenIsSoldierCheckBox().isSelected(),
+								isCarryingWeapon = addView.getCitizenIsCarryingWeaponCheckBox().isSelected();
+
+						yearOfBirth = yearOfBirth == null ? (int) citizenYearOfBirthComboBox.getItems().get(0)
+								: yearOfBirth;
+						daysOfSickness = daysOfSickness == null ? 0 : daysOfSickness;
+
+						addView.refreshAssociatedBallotComboBox(isIsolated, isSoldier);
+						if (citizenAssociatedBallotComboBox.getItems().isEmpty())
+							UIHandler
+									.showError("Be sure there's at least one ballot that matches this citizen's type!");
+						else {
+							associatedBallotID = associatedBallotID == null
+									? citizenAssociatedBallotComboBox.getItems().get(0)
+									: associatedBallotID;
+
+							// TODO: fix this shit
+							BallotModel associatedBallot = TBN.getBallotByID((int) associatedBallotID);
+							CitizenModel citizen = TBN.createCitizen((int) ID, fullName, (int) yearOfBirth,
+									(int) daysOfSickness, associatedBallot, isIsolated, isWearingSuit, isSoldier,
+									isCarryingWeapon);
+
+							tabView.addCitizen(citizen);
+							addView.close();
+						}
 					}
 				}
 			}
 		};
 
-		addView.addEventHandlerToComboBox("yearOfBirthComboBox", yearOfBirthComboBoxEventHandler);
-		addView.addEventHandlerToCheckBox("isolatedCheckBox", isolatedCheckBoxEventHandler);
-		addView.addEventHandlerToCheckBox("soldierCheckBox", soldierCheckBoxEventHandler);
-		addView.addEventHandlerToButton("submitButton", submitButtonEventHandler);
+		addView.getCitizenYearOfBirthComboBox().setOnAction(yearOfBirthComboBoxEventHandler);
+		addView.getCitizenIsIsolatedCheckBox().setOnAction(isolatedCheckBoxEventHandler);
+		addView.getCitizenIsSoldierCheckBox().setOnAction(soldierCheckBoxEventHandler);
+		addView.getSubmitButton().setOnAction(submitButtonEventHandler);
 	}
 
 	// Methods

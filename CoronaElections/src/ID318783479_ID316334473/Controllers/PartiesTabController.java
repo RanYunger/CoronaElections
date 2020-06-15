@@ -18,16 +18,16 @@ public class PartiesTabController {
 	// Constants
 
 	// Fields
-	private PartiesTabView partiesTabView;
+	private PartiesTabView tabView;
 
 	// Properties (Getters and Setters)
 
 	public PartiesTabView getPartiesTabView() {
-		return partiesTabView;
+		return tabView;
 	}
 
 	public void setPartiesTabView(PartiesTabView partiesTabView) {
-		this.partiesTabView = partiesTabView;
+		this.tabView = partiesTabView;
 	}
 
 	// Constructors
@@ -38,72 +38,52 @@ public class PartiesTabController {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					AddPartyView view = new AddPartyView(new Stage(), UIHandler.getElectionsDate());
-					AddPartyController controller = new AddPartyController(partiesTabView, view);
+					AddPartyView view = new AddPartyView();
+					AddPartyController controller = new AddPartyController(tabView, view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
 				}
 			}
 		};
 		EventHandler<ActionEvent> addCandidateToPartyButtonEventHandler = new EventHandler<ActionEvent>() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(ActionEvent event) {
 				try {
 					CitizensTabView citizensTabView = (CitizensTabView) UIHandler.getViewByName("CitizensTabView");
-					AddCandidateToPartyView addView = new AddCandidateToPartyView(new Stage(),
-							UIHandler.getElectionsDate(), citizensTabView.getAllCitizens());
-					PartyModel selectedParty = ((TableView<PartyModel>) partiesTabView
-							.getNodeByName("partiesTableView")).getSelectionModel().getSelectedItem();
-					AddCandidateToPartyController controller = new AddCandidateToPartyController(selectedParty, addView,
-							(CitizensTabView) UIHandler.getViewByName("CitizensTabView"));
+					PartyModel selectedParty = tabView.getPartiesTableView().getSelectionModel().getSelectedItem();
+
+					if (citizensTabView.getAllCitizens().isEmpty())
+						UIHandler.showError("Make sure to have at least 1 citizen before adding a new candidate");
+					else if (selectedParty == null)
+						UIHandler.showError("Choose a party for adding a candidate");
+					else {
+						AddCandidateToPartyView addView = new AddCandidateToPartyView(new Stage(),
+								citizensTabView.getAllCitizens());
+						AddCandidateToPartyController controller = new AddCandidateToPartyController(selectedParty,
+								addView, citizensTabView);
+					}
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
 				}
 			}
 		};
-		EventHandler<ActionEvent> removePartyButtonEventHandler = new EventHandler<ActionEvent>() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public void handle(ActionEvent event) {
-				TableView<String> partiesTableView = (TableView<String>) partiesTabView
-						.getNodeByName("partiesTableView");
-				int selectedIndex = partiesTableView.getSelectionModel().getSelectedIndex();
-
-				try {
-					// Validations
-					if (selectedIndex == -1)
-						throw new IllegalStateException("Choose a party to remove.");
-
-					partiesTableView.getItems().remove(selectedIndex);
-
-				} catch (IllegalStateException ex) {
-					UIHandler.showError(ex.getMessage());
-				} catch (Exception ex) {
-					UIHandler.showError("An unexpected error occured.", ex.getMessage());
-				}
-			}
-		};
 		ChangeListener<? super Number> partiesTableViewEventHandler = new ChangeListener<>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSelectedIndex,
 					Number newSelectedIndex) {
-				TableView<CandidateModel> candidatesInPartyTableView = (TableView<CandidateModel>) partiesTabView
-						.getNodeByName("candidatesInPartyTableView");
+				TableView<CandidateModel> candidatesInPartyTableView = tabView.getCandidatesInPartyTableView();
 				if (newSelectedIndex.intValue() != -1) {
-					PartyModel selectedParty = partiesTabView.getAllParties().get((int) newSelectedIndex);
+					PartyModel selectedParty = tabView.getAllParties().get((int) newSelectedIndex);
 
 					candidatesInPartyTableView.setItems(selectedParty.getCandidates());
 				}
 			}
 		};
 
-		partiesTabView.addEventHandlerToButton("addPartyButton", addPartyButtonEventHandler);
-		partiesTabView.addEventHandlerToButton("addCandidateToPartyButton", addCandidateToPartyButtonEventHandler);
-		partiesTabView.addEventHandlerToButton("removePartyButton", removePartyButtonEventHandler);
-		partiesTabView.addEventHandlerToTableView("partiesTableView", partiesTableViewEventHandler);
+		tabView.getAddPartyButton().setOnAction(addPartyButtonEventHandler);
+		tabView.getAddCandidateToPartyButton().setOnAction(addCandidateToPartyButtonEventHandler);
+		tabView.getPartiesTableView().getSelectionModel().selectedIndexProperty().addListener(partiesTableViewEventHandler);
 	}
 
 	// Methods
