@@ -9,6 +9,8 @@ import ID318783479_ID316334473.Views.MainView;
 import ID318783479_ID316334473.Views.PartiesTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 public class MainController {
 	// Constants
@@ -62,8 +64,8 @@ public class MainController {
 	}
 
 	// Constructors
-	public MainController(MainView mainView, ElectionsTabView electionsTabView,
-			BallotsTabView ballotsTabView, CitizensTabView citizensTabView, PartiesTabView partiesTabView) {
+	public MainController(MainView mainView, ElectionsTabView electionsTabView, BallotsTabView ballotsTabView,
+			CitizensTabView citizensTabView, PartiesTabView partiesTabView) {
 		setMainView(mainView);
 		setElectionsTabController(new ElectionsTabController(electionsTabView));
 		setBallotsTabController(new BallotsTabController(ballotsTabView));
@@ -75,14 +77,25 @@ public class MainController {
 			public void handle(ActionEvent event) {
 				try {
 					ComplaintView view = new ComplaintView();
-//					ComplaintController controller = new ComplaintController(view);
+					ComplaintController controller = new ComplaintController(view);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured", ex.getMessage());
 				}
 			}
 		};
+		EventHandler<MouseEvent> audioImageViewEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				ImageView audioImageView = mainView.getAudioImageView(), newImageView;
+				
+				UIHandler.toggleAudio();
+				newImageView = UIHandler.buildImage(UIHandler.isAudioOn() ?  "AudioOn.png" : "AudioOff.png", 30, 30);
+				audioImageView.setImage(newImageView.getImage());
+			}
+		};
 
 		mainView.getFileAComplaintButton().setOnAction(fileAComplaintButtonEventHandler);
+		mainView.getAudioImageView().setOnMouseClicked(audioImageViewEventHandler);
 	}
 
 	// Methods

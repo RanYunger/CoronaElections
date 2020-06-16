@@ -3,12 +3,16 @@ package ID318783479_ID316334473.Views;
 import java.time.LocalDate;
 
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.Models.PartyModel;
+import ID318783479_ID316334473.Models.Ballots.BallotModel;
+import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class MainView extends View {
@@ -17,18 +21,30 @@ public class MainView extends View {
 	// Fields
 	private TabPane tabPane;
 	private Button fileAComplaintButton;
+	private ImageView audioImageView;
 	private ElectionsTabView electionsTabView;
 	private BallotsTabView ballotsTabView;
 	private CitizensTabView citizensTabView;
 	private PartiesTabView partiesTabView;
 	private AboutTabView aboutTabView;
 
-	// Properties (Getters and Setters)	
-	
+	// Properties (Getters and Setters)
+	public Button getFileAComplaintButton() {
+		return fileAComplaintButton;
+	}
+
 	private void setFileAComplaintButton(Button fileAComplaintButton) {
 		this.fileAComplaintButton = fileAComplaintButton;
 	}
-	
+
+	public ImageView getAudioImageView() {
+		return audioImageView;
+	}
+
+	public void setAudioImageView(ImageView audioImageView) {
+		this.audioImageView = audioImageView;
+	}
+
 	public ElectionsTabView getElectionsTabView() {
 		return electionsTabView;
 	}
@@ -68,23 +84,32 @@ public class MainView extends View {
 	public void setAboutTabView(AboutTabView aboutTabView) {
 		this.aboutTabView = aboutTabView;
 	}
-	
-	public Button getFileAComplaintButton() {
-		return fileAComplaintButton;
+
+	public ObservableList<BallotModel> getAllBallots() {
+		return ballotsTabView.getAllBallots();
+	}
+
+	public ObservableList<CitizenModel> getAllCitizens() {
+		return citizensTabView.getAllCitizens();
+	}
+
+	public ObservableList<PartyModel> getAllParties() {
+		return partiesTabView.getAllParties();
 	}
 
 	// Constructors
 	public MainView(Stage stage) {
 		super(stage);
-		
+
 		setElectionsTabView(new ElectionsTabView(stage));
 		setBallotsTabView(new BallotsTabView(stage));
 		setCitizensTabView(new CitizensTabView(stage));
 		setPartiesTabView(new PartiesTabView(stage));
 		setAboutTabView(new AboutTabView(stage));
-		
+
 		buildScene();
-		
+
+		// the addEffects methods for each tab is invoked externally (cannot be invoked during buildScene)
 		addEffects();
 		electionsTabView.addEffects();
 		ballotsTabView.addEffects();
@@ -110,12 +135,10 @@ public class MainView extends View {
 			tabPane.getTabs().add(currentTab);
 		}
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
-		stage.setResizable(false);
-		stage.setScene(new Scene(UIHandler.buildBackground(tabPane, sceneWidth, sceneHeight, fontSize, true), sceneWidth, sceneHeight));
-		
-		UIHandler.setIcon(stage);
-		
+		UIHandler.setGeneralFeatures(stage);
+		stage.setScene(new Scene(UIHandler.buildBackground(tabPane, sceneWidth, sceneHeight, fontSize, true),
+				sceneWidth, sceneHeight));
+
 		stage.show();
 	}
 
@@ -123,16 +146,16 @@ public class MainView extends View {
 		Scene scene = stage.getScene();
 		ObservableList<Node> rootNodes = scene.getRoot().getChildrenUnmodifiable();
 		Node currentNode;
-		
+
 		for (int i = 0; i < rootNodes.size(); i++) {
 			currentNode = rootNodes.get(i);
-			if((currentNode instanceof Button) && (((Button)currentNode).getText() == "התלונן עלינו!")){
-				setFileAComplaintButton((Button)currentNode);
-				
-				break;
+			if ((currentNode instanceof Button) && (((Button) currentNode).getText() == "התלונן עלינו!")) {
+				setFileAComplaintButton((Button) currentNode);
+				UIHandler.addCursorEffectsToNode(scene, fileAComplaintButton);
+			} else if ((currentNode instanceof ImageView) && ((ImageView) currentNode).getImage().getWidth() == 30) {
+				setAudioImageView((ImageView) currentNode);
+				UIHandler.addAudioToImageView(scene, audioImageView, "Yayyy.mp3");
 			}
 		}
-		
-		UIHandler.addCursorEffectsToNode(scene, fileAComplaintButton);
 	}
 }

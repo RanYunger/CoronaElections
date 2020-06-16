@@ -2,7 +2,6 @@ package ID318783479_ID316334473;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import ID318783479_ID316334473.Controllers.MainController;
 import ID318783479_ID316334473.Models.PartyModel;
@@ -47,16 +46,31 @@ public class UIHandler {
 	// Constants
 
 	// Fields
-	public static LocalDate electionsDate;
-	public static MainController mainController;
-	public static MainView mainView;
-
-	public static MediaPlayer mediaPlayer;
-	public static Media media;
+	private static boolean isAudioOn = true;
+	private static LocalDate electionsDate;
+	private static MainController mainController;
+	private static MainView mainView;
+	private static MediaPlayer mediaPlayer;
+	private static Media media;
 
 	// Properties
+
 	public static LocalDate getElectionsDate() {
 		return electionsDate;
+	}
+
+	public static boolean isAudioOn() {
+		return isAudioOn;
+	}
+
+	public static void toggleAudio() {
+		isAudioOn = !isAudioOn;
+		
+		// Validations
+		if ((!isAudioOn) && (mediaPlayer != null))
+			mediaPlayer.stop();
+		else if ((isAudioOn) && (mediaPlayer != null))
+			mediaPlayer.play();
 	}
 
 	public static void setElectionsDate(LocalDate electionsDate) {
@@ -102,7 +116,7 @@ public class UIHandler {
 		return null;
 	}
 
-	public static int vote(CitizenModel voter, ArrayList<PartyModel> parties) {
+	public static String vote(CitizenModel voter, ObservableList<PartyModel> allParties) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 		ComboBox<String> partiesComboBox = new ComboBox<String>();
@@ -114,7 +128,7 @@ public class UIHandler {
 						String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.",
 								voter.getTextualFullName()));
 
-			for (PartyModel partyModel : parties)
+			for (PartyModel partyModel : allParties)
 				partiesComboBox.getItems().add(partyModel.getTextualName());
 
 			setIcon(stage);
@@ -156,14 +170,14 @@ public class UIHandler {
 
 			alert.show();
 
-			return partiesComboBox.getSelectionModel().getSelectedIndex();
+			return partiesComboBox.getSelectionModel().getSelectedItem();
 		} catch (IllegalStateException ex) {
 			UIHandler.showError(ex.getMessage());
 		} catch (Exception ex) {
 			UIHandler.showError("An unexpected error occured.", ex.getMessage());
 		}
 
-		return -1;
+		return "<UNKNOWN>";
 	}
 
 	public static void addCursorEffectsToNode(Scene scene, Node node) {
@@ -190,16 +204,7 @@ public class UIHandler {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				try {
-					String path = String.format("%s\\bin\\%s", System.getProperty("user.dir"), audioFileName);
-
-					// Validations
-					if (mediaPlayer != null)
-						mediaPlayer.stop();
-
-					media = new Media(new File(path).toURI().toString());
-					mediaPlayer = new MediaPlayer(media);
-
-					mediaPlayer.play();
+					playAudio(audioFileName);
 				} catch (Exception ex) {
 					showError(ex.getMessage());
 				}
@@ -209,6 +214,20 @@ public class UIHandler {
 		imageView.setOnMouseClicked(imageViewMouseClickedEventHandler);
 
 		addCursorEffectsToNode(scene, imageView);
+	}
+
+	public static void playAudio(String audioFileName) {
+		String path = String.format("%s\\bin\\%s", System.getProperty("user.dir"), audioFileName);
+
+		// Validations
+		if (mediaPlayer != null)
+			mediaPlayer.stop();
+
+		media = new Media(new File(path).toURI().toString());
+		mediaPlayer = new MediaPlayer(media);
+
+		if (isAudioOn)
+			mediaPlayer.play();
 	}
 
 	public static ButtonType showConfirmation(String message) {
@@ -232,6 +251,8 @@ public class UIHandler {
 		setIcon(stage);
 		alert.setTitle("Success");
 		alert.setHeaderText(message);
+		
+		playAudio("Yayyy.mp3");
 
 		alert.show();
 	}
@@ -243,6 +264,8 @@ public class UIHandler {
 		setIcon(stage);
 		alert.setTitle("Warning");
 		alert.setHeaderText(message);
+		
+		playAudio("UhOh.mp3");
 
 		alert.show();
 	}
@@ -254,6 +277,8 @@ public class UIHandler {
 		setIcon(stage);
 		alert.setTitle("Error");
 		alert.setHeaderText(message);
+		
+		playAudio("Awww.mp3");
 
 		alert.show();
 	}
@@ -269,8 +294,16 @@ public class UIHandler {
 		alert.setHeaderText(header);
 		if (message.trim().length() != 0)
 			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
+		
+		playAudio("Awww.mp3");
 
 		alert.show();
+	}
+	
+	public static void setGeneralFeatures(Stage stage) {	
+		setIcon(stage);
+		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
+		stage.setResizable(false);
 	}
 
 	public static void setIcon(Stage stage) {
@@ -282,12 +315,10 @@ public class UIHandler {
 		TableColumn<S, ImageView> statusTableColumn;
 		TableColumn<S, ImageView> isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
 				carryingWeaponTableColumn;
-//		ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
 		ObservableList<TableColumn<S, ?>> nestedStatusTableColumns;
 
 		statusTableColumn = new TableColumn<S, ImageView>("Status");
 
-		// TODO: FIX
 		nestedStatusTableColumns = statusTableColumn.getColumns();
 		isolatedTableColumn = new TableColumn<S, ImageView>("Isolated");
 		isolatedTableColumn.setCellValueFactory(cell -> {
@@ -336,10 +367,12 @@ public class UIHandler {
 	}
 
 	public static StackPane buildBackground(Node node, double width, double height, double fontSize, boolean hasTabs) {
-		ImageView backgroundImage = buildImage("IsraelFlag.PNG", width, height);
+		ImageView backgroundImage = buildImage("IsraelFlag.PNG", width, height),
+				audioImageView = buildImage("AudioOn.png", 30, 30);
 		Label topLabel = new Label("מדינה אנונימית במזרח התיכון");
 		Label bottomLabel = new Label("מערכת ניהול בחירות בתקופת קורונה");
 		Label fileAComplaintLabel = new Label("מצאת תקלה?");
+		Label audioLabel = new Label("Audio:");
 		Button fileAComplaintButton = new Button("התלונן עלינו!");
 		StackPane stackPane = new StackPane();
 
@@ -349,14 +382,18 @@ public class UIHandler {
 		bottomLabel.setTextFill(Color.WHITE);
 		fileAComplaintLabel.setFont(new Font(15));
 		fileAComplaintLabel.setTextFill(Color.WHITE);
+		audioLabel.setFont(new Font(15));
+		audioLabel.setTextFill(Color.WHITE);
 		fileAComplaintButton.setStyle("-fx-background-radius: 5em; -fx-background-color: Red;");
 		fileAComplaintButton.toFront();
 
 		stackPane.getChildren().addAll(backgroundImage, topLabel, bottomLabel, node);
 		if (node instanceof TabPane) { // Visible only in Tabs
-			stackPane.getChildren().addAll(fileAComplaintLabel, fileAComplaintButton);
+			stackPane.getChildren().addAll(fileAComplaintLabel, fileAComplaintButton, audioLabel, audioImageView);
 			StackPane.setMargin(fileAComplaintLabel, new Insets(height, 10, height * 1.8, width * 0.92));
 			StackPane.setMargin(fileAComplaintButton, new Insets(height, 10, height * 1.8, width * 0.8));
+			StackPane.setMargin(audioLabel, new Insets(height, width * 0.95, height * 1.8, 10));
+			StackPane.setMargin(audioImageView, new Insets(height, width * 0.88, height * 1.8, 10));
 		}
 		StackPane.setMargin(topLabel, new Insets(hasTabs ? height : height * 0.92, 0, height * 1.8, 0));
 		StackPane.setMargin(bottomLabel, new Insets(hasTabs ? height * 0.95 : height * 0.92, 0, height * 0.08, 0));

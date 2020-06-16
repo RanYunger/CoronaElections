@@ -89,10 +89,8 @@ public class ElectionsDateView extends View {
 		VBox.setMargin(enterButton, new Insets(20));
 
 		stage.setTitle("Welcome to our system!");
-		stage.setResizable(false);
-		stage.setScene(new Scene(vBox, sceneWidth, sceneHeight));
-
 		UIHandler.setIcon(stage);
+		stage.setScene(new Scene(vBox, sceneWidth, sceneHeight));
 		addEffects();
 
 		stage.show();

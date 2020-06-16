@@ -1,6 +1,7 @@
 TODOs Shy:
 1. Build logic for each view - almost complete (ElectionsTab + Controller, AddCandidate needs fixes)
 2. Make data displayable in each view
+3. Make sure there won't be duplicates (Ballots, Citizens, Parties)
 
 TODOs Ran:
 1. Implement THE RED SHINY BUTTON ("File a Complaint") XD

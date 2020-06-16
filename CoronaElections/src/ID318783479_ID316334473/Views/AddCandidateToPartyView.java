@@ -1,7 +1,5 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.LocalDate;
-
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.collections.ObservableList;
@@ -59,7 +57,6 @@ public class AddCandidateToPartyView extends View {
 	@Override
 	@SuppressWarnings("unchecked")
 	protected void buildScene() {
-		LocalDate electionsDate = UIHandler.getElectionsDate();
 		TableColumn<CitizenModel, Number> citizenIDTableColumn;
 		TableColumn<CitizenModel, String> citizenNameTableColumn;
 		double sceneWidth = 850, sceneHeight = 500, fontSize = 40;
@@ -119,21 +116,17 @@ public class AddCandidateToPartyView extends View {
 		mainHBox.getChildren().addAll(vBox, candidateImageView);
 		HBox.setMargin(candidateImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.15));
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
-				electionsDate.getYear()));
-		stage.setResizable(false);
+		UIHandler.setGeneralFeatures(stage);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
-
-		UIHandler.setIcon(stage);
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		addEffects();
 
 		stage.show();
 	}
 
 	@Override
 	protected void addEffects() {
-		// TODO Auto-generated method stub
+		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
 	}
 
 	public void refreshCitizensTableView(ObservableList<CitizenModel> citizens) {

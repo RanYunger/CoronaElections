@@ -204,14 +204,10 @@ public class AddCitizenView extends View {
 		mainHBox.getChildren().addAll(vBox, citizenImageView);
 		HBox.setMargin(citizenImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.35));
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
-				electionsDate.getYear()));
-		stage.setResizable(false);
+		UIHandler.setGeneralFeatures(stage);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
-
-		UIHandler.setIcon(stage);
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		addEffects();
 
 		stage.show();
 	}
@@ -235,6 +231,7 @@ public class AddCitizenView extends View {
 
 	@Override
 	protected void addEffects() {
+		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
 		UIHandler.addAudioToImageView(stage.getScene(), citizenImageView, "ToiletFlush.mp3");
 	}
 }

@@ -1,7 +1,5 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.LocalDate;
-
 import ID318783479_ID316334473.UIHandler;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -55,7 +53,6 @@ public class ComplaintView extends View {
 	// Methods
 	@Override
 	protected void buildScene() {
-		LocalDate electionsDate = UIHandler.getElectionsDate();
 		String[] windowNames = { "About", "Ballots", "Citizens", "Elections", "Parties" };
 		double sceneWidth = 700, sceneHeight = 400;
 
@@ -104,20 +101,15 @@ public class ComplaintView extends View {
 		VBox.setMargin(row3HBox, new Insets(10, 0, 8, 0));
 		VBox.setMargin(submitButton, new Insets(10, 0, 8, 0));
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
-				electionsDate.getYear()));
-		stage.setResizable(false);
+		UIHandler.setGeneralFeatures(stage);
 		stage.setScene(new Scene(vBox, sceneWidth, sceneHeight));
-
-		UIHandler.setIcon(stage);
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		addEffects();
 
 		stage.show();
 	}
 
 	@Override
 	protected void addEffects() {
-		// TODO Auto-generated method stub
-		
+		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
 	}
 }

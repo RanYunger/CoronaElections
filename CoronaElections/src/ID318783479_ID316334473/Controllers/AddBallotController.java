@@ -50,6 +50,8 @@ public class AddBallotController {
 						UIHandler.showError("Choose a ballot type");
 					else {
 						tabView.addBallot(TBN.createBallotByType(ballotType, address, UIHandler.getElectionsDate()));
+						UIHandler.showSuccess("A new ballot was added successfully!");
+
 						addView.close();
 					}
 				}

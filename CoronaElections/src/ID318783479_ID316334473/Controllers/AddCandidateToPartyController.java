@@ -104,8 +104,9 @@ public class AddCandidateToPartyController {
 					UIHandler.showError("Choose a citizen to add to the party");
 				else {
 					CandidateModel candidate = citizensTabView.morphCitizenToCandidate(selectedCitizen);
-					selectedParty.addCandidate(candidate);
 
+					selectedParty.addCandidate(candidate);
+					UIHandler.showSuccess("A new candidate was added successfully!");
 					addCandidateView.close();
 				}
 			}

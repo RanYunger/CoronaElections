@@ -57,6 +57,8 @@ public class AddPartyController {
 					// TODO: set default value to wing combobox as to not mess with nulls
 					tabView.addParty(
 							new PartyModel(name, PartyModel.PartyAssociation.valueOf(partyWing), foundationDate));
+					UIHandler.showSuccess("A new party was added successfully!");
+					
 					addView.close();
 				}
 			}

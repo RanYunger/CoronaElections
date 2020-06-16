@@ -129,20 +129,16 @@ public class AddPartyView extends View {
 		mainHBox.getChildren().addAll(vBox, partyImageView);
 		HBox.setMargin(partyImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.4));
 
-		stage.setTitle(String.format("Corona Elections [%s %d]", maxDate.getMonth().toString(), maxDate.getYear()));
-		stage.setResizable(false);
+		UIHandler.setGeneralFeatures(stage);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
-
-		UIHandler.setIcon(stage);
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
-
+		addEffects();
+		
 		stage.show();
 	}
 
 	@Override
 	protected void addEffects() {
-		// TODO Auto-generated method stub
-
+		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
 	}
 }

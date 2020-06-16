@@ -8,7 +8,6 @@ import ID318783479_ID316334473.Views.CitizensTabView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
-import javafx.stage.Stage;
 
 public class CitizensTabController {
 	// Constants

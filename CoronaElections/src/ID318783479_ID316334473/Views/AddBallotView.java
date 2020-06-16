@@ -90,14 +90,10 @@ public class AddBallotView extends View {
 
 		mainHBox.getChildren().addAll(vBox, ballotImageView);
 		HBox.setMargin(ballotImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.3));
-
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
-				electionsDate.getYear()));
-		stage.setResizable(false);
+		
+		UIHandler.setGeneralFeatures(stage);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
-
-		UIHandler.setIcon(stage);
 		addEffects();
 
 		stage.show();

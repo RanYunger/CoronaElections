@@ -1,6 +1,7 @@
 package ID318783479_ID316334473.Models.Ballots;
 
 import java.time.LocalDate;
+import java.util.TreeMap;
 
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -19,9 +20,9 @@ public class BallotModel {
 	protected ObservableValue<Number> ID;
 	protected ObservableValue<String> address;
 	protected ObservableList<CitizenModel> voterRegistry;
-	private LocalDate votingDate;
-	private ObservableValue<Number> votersPercentage;
-//	private TreeMap<String, Number> results;
+	protected LocalDate electionsDate;
+	protected ObservableValue<Number> votersPercentage;
+	protected TreeMap<String, Integer> results;
 
 	// Properties (Getters and Setters)
 	public final ObservableValue<Number> getObservableID() {
@@ -59,14 +60,14 @@ public class BallotModel {
 		this.voterRegistry = observableArrayList;
 	}
 
-	public final LocalDate getVotingDate() {
-		return votingDate;
+	public final LocalDate getElectionsDate() {
+		return electionsDate;
 	}
 
 	private void setVotingDate(LocalDate votingDate) throws Exception {
 		if (votingDate.compareTo(LocalDate.now()) > 0)
 			throw new Exception("Time paradox prevented.");
-		this.votingDate = votingDate;
+		this.electionsDate = votingDate;
 	}
 
 	public final ObservableValue<Number> getObservableVotersPercentage() {
@@ -82,9 +83,13 @@ public class BallotModel {
 				(voterRegistry.size() > 0) ? (100 * numOfVoters) / voterRegistry.size() : 0);
 	}
 
-//	public final TreeMap<String, Number> getResults() {
-//		return results;
-//	}
+	public TreeMap<String, Integer> getResults() {
+		return results;
+	}
+
+	public void setResults(TreeMap<String, Integer> results) {
+		this.results = results;
+	}
 
 	public ObservableValue<String> getObservableType() {
 		return new SimpleStringProperty(getTextualType());
@@ -156,9 +161,9 @@ public class BallotModel {
 		if (voterRegistry.isEmpty())
 			return sb.append("Nothing else to See here..").toString();
 
-		sb.append("\tDate of voting: " + votingDate + "\n\tVoter list:");
+		sb.append("\tDate of voting: " + electionsDate + "\n\tVoter list:");
 		for (CitizenModel c : voterRegistry) {
-			c.calculateAge(votingDate);
+			c.calculateAge(electionsDate);
 			sb.append("\n\t\t" + c.toString());
 		}
 

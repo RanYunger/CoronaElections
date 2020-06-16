@@ -134,8 +134,10 @@ public class AddCitizenController {
 							CitizenModel citizen = TBN.createCitizen((int) ID, fullName, (int) yearOfBirth,
 									(int) daysOfSickness, associatedBallot, isIsolated, isWearingSuit, isSoldier,
 									isCarryingWeapon);
-
+							
 							tabView.addCitizen(citizen);
+							UIHandler.showSuccess("A new citizen was added successfully!");
+							
 							addView.close();
 						}
 					}
