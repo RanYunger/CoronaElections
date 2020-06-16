@@ -92,7 +92,6 @@ public class AddCitizenView extends View {
 
 	// Methods
 	protected void buildScene() {
-		LocalDate electionsDate = UIHandler.getElectionsDate();
 		int maxBorderYear = LocalDate.now().getYear() - 18, minBorderYear = maxBorderYear - 82;
 		ArrayList<Integer> years = new ArrayList<Integer>(), daysOfSickness = new ArrayList<Integer>();
 		double sceneWidth = 950, sceneHeight = 500, fontSize = 50;

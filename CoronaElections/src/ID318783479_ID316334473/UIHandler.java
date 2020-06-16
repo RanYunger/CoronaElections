@@ -2,6 +2,8 @@ package ID318783479_ID316334473;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Optional;
 
 import ID318783479_ID316334473.Controllers.MainController;
 import ID318783479_ID316334473.Models.PartyModel;
@@ -19,8 +21,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogEvent;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
@@ -54,7 +55,6 @@ public class UIHandler {
 	private static Media media;
 
 	// Properties
-
 	public static LocalDate getElectionsDate() {
 		return electionsDate;
 	}
@@ -118,59 +118,41 @@ public class UIHandler {
 
 	public static String vote(CitizenModel voter, ObservableList<PartyModel> allParties) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-		ComboBox<String> partiesComboBox = new ComboBox<String>();
+		ArrayList<String> partyNames = new ArrayList<String>();
+		Optional<String> chosenParty;
+		Stage stage = mainView.getStage();
 
 		try {
 			// Validations
-			if (voter.getActualAssociatedBallot().isCoronaBallot() && voter.isIsolated() && !voter.isWearingSuit())
-				throw new IllegalStateException(
-						String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.",
-								voter.getTextualFullName()));
+			if (voter.getActualAssociatedBallot().isCoronaBallot() && voter.isIsolated() && !voter.isWearingSuit()) {
+				showWarning(String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.",
+						voter.getTextualFullName()));
+				
+				return "<UNKNOWN>";
+			}
 
 			for (PartyModel partyModel : allParties)
-				partiesComboBox.getItems().add(partyModel.getTextualName());
+				partyNames.add(partyModel.getTextualName());
 
-			setIcon(stage);
-			alert.setTitle("Corona Elections");
+			alert.initOwner(stage);
+			setGeneralFeatures(stage);
 			alert.getDialogPane().setExpandableContent(null);
 			alert.getDialogPane().setExpanded(false);
 			alert.setHeaderText(String.format("Greetings, %s. Do you want to vote?", voter.getTextualFullName()));
 			alert.getButtonTypes().clear();
 			alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
-			EventHandler<DialogEvent> onCloseRequestEventHandler = new EventHandler<DialogEvent>() {
-				@Override
-				public void handle(DialogEvent event) {
-					ButtonType alertResult = alert.getResult();
+			alert.showAndWait();
+			
+			if (alert.getResult() == ButtonType.YES) {
+				ChoiceDialog<String> choiceDialog = new ChoiceDialog<String>("<UNKNOWN>", partyNames);
 
-					if (alertResult == ButtonType.YES) {
-						event.consume();
+				choiceDialog.initOwner(stage);
+				choiceDialog.setHeaderText("Who do you vote for");				
+				chosenParty = choiceDialog.showAndWait();
 
-						stage.setOnCloseRequest(e -> e.consume());
-
-						alert.setAlertType(AlertType.NONE);
-						alert.setHeaderText("Vote for your chosen party");
-						alert.getButtonTypes().clear();
-						alert.getButtonTypes().add(ButtonType.FINISH);
-						alert.getDialogPane().setExpandableContent(partiesComboBox);
-						alert.getDialogPane().setExpanded(true);
-					} else if (alertResult == alert.getButtonTypes().get(0)) {
-						if (partiesComboBox.getSelectionModel().getSelectedIndex() == -1) {
-							event.consume();
-
-							showError("You've come this far. Just choose a party!");
-						}
-					} else
-						alert.close();
-				}
-			};
-
-			alert.setOnCloseRequest(onCloseRequestEventHandler);
-
-			alert.show();
-
-			return partiesComboBox.getSelectionModel().getSelectedItem();
+				return chosenParty.isPresent() ? chosenParty.get() : "<UNKNOWN>";
+			}
 		} catch (IllegalStateException ex) {
 			UIHandler.showError(ex.getMessage());
 		} catch (Exception ex) {

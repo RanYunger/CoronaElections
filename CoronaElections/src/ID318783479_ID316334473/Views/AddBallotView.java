@@ -1,7 +1,5 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.LocalDate;
-
 import ID318783479_ID316334473.UIHandler;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -51,7 +49,6 @@ public class AddBallotView extends View {
 
 	// Methods
 	protected void buildScene() {
-		LocalDate electionsDate = UIHandler.getElectionsDate();
 		String[] ballotTypes = { "Regular (Citizens / Candidates)", "Military (Soldiers)", "Sick Citizens",
 				"Sick Soldiers" };
 		double sceneWidth = 600, sceneHeight = 260, fontSize = 30;

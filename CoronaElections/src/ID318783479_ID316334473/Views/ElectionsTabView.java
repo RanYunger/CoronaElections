@@ -34,7 +34,23 @@ public class ElectionsTabView extends View {
 	public Button getShowResultsButton() {
 		return showResultsButton;
 	}
+	
+	public PieChart getFinalResultsPieChart() {
+		return finalResultsPieChart;
+	}
+
+	public BarChart<String, Number> getResultsByBallotBarChart() {
+		return resultsByBallotBarChart;
+	}
+	
+	public void setResultsByBallotBarChart(BarChart<String, Number> resultsByBallotBarChart) {
+		this.resultsByBallotBarChart = resultsByBallotBarChart;
 		
+		gridPane.add(resultsByBallotBarChart, 1, 1, 2, 1);
+
+		GridPane.setMargin(resultsByBallotBarChart, new Insets(10, 0, 145, 0));
+	}
+
 	// Constructors
 	public ElectionsTabView(Stage stage) {
 		super(stage);
@@ -54,6 +70,7 @@ public class ElectionsTabView extends View {
 
 		runElectionsButton.setMinWidth(100);
 		showResultsButton.setMinWidth(100);
+		resultsByBallotBarChart.setOpacity(0); // invisible at first
 
 		gridPane.getRowConstraints().add(new RowConstraints());
 		gridPane.getRowConstraints().get(0).setPercentHeight(20);
@@ -72,14 +89,8 @@ public class ElectionsTabView extends View {
 		HBox.setMargin(runElectionsButton, new Insets(0, 10, 0, 0));
 		HBox.setMargin(showResultsButton, new Insets(0, 0, 0, 10));
 
-		finalResultsPieChart.setTitle("Final Results");
 		finalResultsPieChart.setOpacity(0.8);
 		finalResultsPieChart.setOpacity(0.8);
-
-		resultsByBallotBarChart.setTitle("Votes by Ballots");
-		resultsByBallotBarChart.getXAxis().setLabel("Ballot IDs");
-		resultsByBallotBarChart.getYAxis().setLabel("Votes");
-		resultsByBallotBarChart.setOpacity(0.8);
 
 		gridPane.add(hBox, 0, 0, 3, 1);
 		gridPane.add(finalResultsPieChart, 0, 1, 1, 1);

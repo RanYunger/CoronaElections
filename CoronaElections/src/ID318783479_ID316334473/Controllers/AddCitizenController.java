@@ -123,7 +123,7 @@ public class AddCitizenController {
 						addView.refreshAssociatedBallotComboBox(isIsolated, isSoldier);
 						if (citizenAssociatedBallotComboBox.getItems().isEmpty())
 							UIHandler
-									.showError("Be sure there's at least one ballot that matches this citizen's type!");
+									.showWarning("Make sure there's at least one ballot that matches this citizen's type!");
 						else {
 							associatedBallotID = associatedBallotID == null
 									? citizenAssociatedBallotComboBox.getItems().get(0)

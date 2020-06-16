@@ -29,6 +29,10 @@ public class MainView extends View {
 	private AboutTabView aboutTabView;
 
 	// Properties (Getters and Setters)
+	public Stage getStage() {
+		return stage;
+	}
+	
 	public Button getFileAComplaintButton() {
 		return fileAComplaintButton;
 	}

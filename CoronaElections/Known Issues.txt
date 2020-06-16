@@ -6,6 +6,7 @@ TODOs Shy:
 TODOs Ran:
 1. Implement THE RED SHINY BUTTON ("File a Complaint") XD
 2. Implement some kind of EE
+3. Set ResultsByBallots bar chart visible only when showing results
 
 TODOs BOTH:
 1. Comment important code pieces
