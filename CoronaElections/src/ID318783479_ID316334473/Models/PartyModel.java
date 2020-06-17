@@ -113,7 +113,6 @@ public class PartyModel implements Comparable<PartyModel> {
 	public boolean addCandidate(CandidateModel candidate, int rank) {
 		int lastRank = getNumericLastRank();
 
-		// TODO: FIX (something here makes the ranks start from 0
 		if (getCandidateByID(candidate.getNumericID()) != null)
 			return true;
 

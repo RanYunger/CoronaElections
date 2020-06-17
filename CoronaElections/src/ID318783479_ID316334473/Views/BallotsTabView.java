@@ -1,7 +1,12 @@
 package ID318783479_ID316334473.Views;
 
+import java.time.LocalDate;
+
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
+import ID318783479_ID316334473.Models.Ballots.CoronaBallotModel;
+import ID318783479_ID316334473.Models.Ballots.CoronaMilitaryBallotModel;
+import ID318783479_ID316334473.Models.Ballots.MilitaryBallotModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -68,7 +73,6 @@ public class BallotsTabView extends View {
 		TableColumn<CitizenModel, Number> voterIDTableColumn, voterYearOfBirthTableColumn;
 		TableColumn<CitizenModel, String> voterNameTableColumn;
 
-		allBallots = FXCollections.observableArrayList();
 		gridPane = new GridPane();
 		addBallotButton = new Button("Add Ballot");
 		vBox = new VBox();
@@ -132,6 +136,7 @@ public class BallotsTabView extends View {
 
 		ballotsTableView.getColumns().addAll(ballotIDTableColumn, ballotTypeTableColumn, ballotAddressTableColumn);
 		for (TableColumn<?, ?> tableColumn : ballotsTableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setSortable(false);
@@ -142,6 +147,7 @@ public class BallotsTabView extends View {
 		votersInBallotTableView.getColumns().addAll(voterIDTableColumn, voterNameTableColumn,
 				voterYearOfBirthTableColumn, UIHandler.buildStatusTableColumn(406));
 		for (TableColumn<?, ?> tableColumn : votersInBallotTableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setSortable(false);
@@ -156,6 +162,19 @@ public class BallotsTabView extends View {
 		GridPane.setMargin(vBox, new Insets(110, 0, 0, 0));
 		GridPane.setMargin(ballotsTableView, new Insets(0, 10, 373.5, 0));
 		GridPane.setMargin(votersInBallotTableView, new Insets(0, 0, 373.5, 10));
+	}
+
+	public void initBallots() {
+		LocalDate electionsDate = UIHandler.getElectionsDate();
+		
+		allBallots = FXCollections.observableArrayList();	
+		allBallots.add(new BallotModel("21st Road Street, Town City", electionsDate));
+		allBallots.add(new BallotModel("4 Miles Away, Go There", electionsDate));
+		allBallots.add(new CoronaMilitaryBallotModel(electionsDate));
+		allBallots.add(new MilitaryBallotModel(electionsDate));
+		allBallots.add(new CoronaBallotModel("1st Hospital You See, Your City", electionsDate));
+		
+		ballotsTableView.setItems(allBallots);
 	}
 
 	public Node asNode() {

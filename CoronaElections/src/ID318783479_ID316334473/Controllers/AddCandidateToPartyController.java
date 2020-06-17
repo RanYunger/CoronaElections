@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.PartyModel;
-import ID318783479_ID316334473.Models.Citizens.CandidateModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Views.AddCandidateToPartyView;
 import ID318783479_ID316334473.Views.CitizensTabView;
@@ -13,7 +12,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.TableView;
 
 public class AddCandidateToPartyController {
 	// Constants
@@ -25,7 +23,6 @@ public class AddCandidateToPartyController {
 	private FilteredList<CitizenModel> filteredCitizens;
 
 	// Properties (Getters and Setters)
-
 	public FilteredList<CitizenModel> getFilteredCitizens() {
 		return filteredCitizens;
 	}
@@ -81,34 +78,37 @@ public class AddCandidateToPartyController {
 		setCandidateIDPredicate(p -> true);
 		setCandidateIDPredicate(p -> true);
 		setFilteredCitizens(new FilteredList<CitizenModel>(citizensTabView.getAllCitizens(), unionPredicate));
+		refreshFilter("", "");
 
 		ChangeListener<String> candidateIDTextFieldChangeListener = new ChangeListener<String>() {
 			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldCandidateIDText, String newCandidateIDText) {
-				refreshCitizensTableView(newCandidateIDText, addCandidateView.getCandidateNameTextField().getText());
+			public void changed(ObservableValue<? extends String> observable, String oldCandidateIDText,
+					String newCandidateIDText) {
+				refreshFilter(newCandidateIDText, addCandidateView.getCandidateNameTextField().getText());
 			}
 		};
 		ChangeListener<String> candidateNameTextFieldChangeListener = new ChangeListener<String>() {
 			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldCandidateNameText, String newCandidateNameText) {
-				refreshCitizensTableView(addCandidateView.getCandidateIDTextField().getText(), newCandidateNameText);
+			public void changed(ObservableValue<? extends String> observable, String oldCandidateNameText,
+					String newCandidateNameText) {
+				refreshFilter(addCandidateView.getCandidateIDTextField().getText(), newCandidateNameText);
 			}
 		};
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				TableView<CitizenModel> citizensTableView = addCandidateView.getCitizensTableView();
-				CitizenModel selectedCitizen = citizensTableView.getSelectionModel().getSelectedItem();
+				CitizenModel selectedCitizen = addView.getCitizensTableView().getSelectionModel().getSelectedItem();
 
-				if (selectedCitizen == null)
-					UIHandler.showError("Choose a citizen to add to the party");
-				else {
-					CandidateModel candidate = citizensTabView.morphCitizenToCandidate(selectedCitizen);
-
-					selectedParty.addCandidate(candidate);
-					UIHandler.showSuccess("A new candidate was added successfully!");
-					addCandidateView.close();
+				// Validations
+				if ((filteredCitizens.size() > 1) && (selectedCitizen == null)) {
+					UIHandler.showError("Choose a citizen to add to the party.");
+					return;
 				}
+
+				selectedCitizen = filteredCitizens.size() == 1 ? filteredCitizens.get(0) : selectedCitizen;
+				selectedParty.addCandidate(citizensTabView.morphCitizenToCandidate(selectedCitizen));
+				UIHandler.showSuccess("A new candidate was added successfully!");
+				addCandidateView.close();
 			}
 		};
 
@@ -118,17 +118,6 @@ public class AddCandidateToPartyController {
 	}
 
 	// Methods
-	private void refreshCitizensTableView(String candidateIDText, String candidateNameText) {
-//		 TODO: COMPLETE
-//		ObservableList<CitizenModel> citizens = tabView.getAllCitizens();
-//
-//		for (CitizenModel citizen : citizens)
-//			filteredCitizens.add(e)
-//			citizensStringDetails.add(String.format("%d|%s", citizen.getNumericID(), citizen.getTextualFullName()));
-
-		addView.refreshCitizensTableView(filteredCitizens);
-	}
-
 	public void refreshFilter(String newCandidateIDStr, String newCandidateNameStr) {
 		setCandidateIDPredicate(new Predicate<CitizenModel>() {
 			@Override
@@ -160,5 +149,6 @@ public class AddCandidateToPartyController {
 		});
 
 		filteredCitizens.setPredicate(unionPredicate);
+		addView.getCitizensTableView().setItems(filteredCitizens);
 	}
 }

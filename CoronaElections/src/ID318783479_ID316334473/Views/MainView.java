@@ -1,7 +1,5 @@
 package ID318783479_ID316334473.Views;
 
-import java.time.LocalDate;
-
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
@@ -125,7 +123,6 @@ public class MainView extends View {
 	// Methods
 	@Override
 	protected void buildScene() {
-		LocalDate electionsDate = UIHandler.getElectionsDate();
 		String[] tabNames = new String[] { "Elections", "Ballots", "Citizens", "Parties", "About" };
 		Node[] tabContents = { electionsTabView.asNode(), ballotsTabView.asNode(), citizensTabView.asNode(),
 				partiesTabView.asNode(), aboutTabView.asNode() };

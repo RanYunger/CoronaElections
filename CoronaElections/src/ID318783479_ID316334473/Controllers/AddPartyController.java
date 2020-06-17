@@ -41,31 +41,35 @@ public class AddPartyController {
 			@Override
 			public void handle(ActionEvent event) {
 				TextField partyNameTextField = addView.getPartyNameTextField();
+				ComboBox<String> partyWingComboBox = addView.getPartyWingComboBox();
+				DatePicker partyFoundationDatePicker = addView.getPartyFoundationDatePicker();
+				String partyName = partyNameTextField.getText(),
+						partyWing = partyWingComboBox.getSelectionModel().selectedItemProperty().getValue();
+				LocalDate foundationDate = partyFoundationDatePicker.getValue();
 
-				String name = partyNameTextField.getText();
-				if (!name.matches(TBN.VALID_PARTY_NAME_PATTERN)) {
-					UIHandler.showError("Invalid Party Name!", partyNameTextField.getTooltip().getText());
-				} else {
-					ComboBox<String> partyWingComboBox = addView.getPartyWingComboBox();
-					DatePicker partyFoundationDatePicker = addView.getPartyFoundationDatePicker();
-					String partyWing = partyWingComboBox.getSelectionModel().selectedItemProperty().getValue();
-					LocalDate foundationDate = partyFoundationDatePicker.getValue();
-
-					partyWing = partyWing == null ? partyWingComboBox.getItems().get(0) : partyWing;
-					foundationDate = foundationDate == null ? LocalDate.now() : foundationDate;
-
-					// TODO: set default value to wing combobox as to not mess with nulls
-					tabView.addParty(
-							new PartyModel(name, PartyModel.PartyAssociation.valueOf(partyWing), foundationDate));
-					UIHandler.showSuccess("A new party was added successfully!");
-					
-					addView.close();
+				// Validations
+				if (!partyName.matches(TBN.VALID_PARTY_NAME_PATTERN)) {
+					UIHandler.showError("Invalid name!", partyNameTextField.getTooltip().getText());
+					return;
 				}
+				if (TBN.getPartyByName(partyName) != null) {
+					UIHandler.showError("This name already taken. Try a different name.");
+					return;
+				}
+
+				partyWing = partyWing == null ? partyWingComboBox.getItems().get(0) : partyWing;
+				foundationDate = foundationDate == null ? UIHandler.getElectionsDate() : foundationDate;
+
+				tabView.addParty(
+						new PartyModel(partyName, PartyModel.PartyAssociation.valueOf(partyWing), foundationDate));
+				UIHandler.showSuccess("A new party was added successfully!");
+
+				addView.close();
 			}
 		};
 
 		addPartyView.getSubmitButton().setOnAction(submitButtonEventHandler);
 	}
 
-	// Methods
+// Methods
 }

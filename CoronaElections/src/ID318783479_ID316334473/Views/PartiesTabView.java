@@ -1,5 +1,8 @@
 package ID318783479_ID316334473.Views;
 
+import java.time.LocalDate;
+
+import ID318783479_ID316334473.TBN;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
@@ -32,13 +35,13 @@ public class PartiesTabView extends View {
 	private VBox vBox;
 	private HBox row1HBox, row2HBox;
 	private Label partiesLabel, candidatesInPartyLabel;
-	private ObservableList<PartyModel> parties;
+	private ObservableList<PartyModel> allParties;
 	private TableView<PartyModel> partiesTableView;
 	private TableView<CandidateModel> candidatesInPartyTableView;
 
 	// Properties (Getters and Setters)
 	public ObservableList<PartyModel> getAllParties() {
-		return parties;
+		return allParties;
 	}
 
 	public TableView<CandidateModel> getCandidatesInPartyTableView() {
@@ -80,7 +83,6 @@ public class PartiesTabView extends View {
 		TableColumn<CandidateModel, Number> candidateIDTableColumn;
 		TableColumn<CandidateModel, String> candidateNameTableColumn, candidateRankTableColumn;
 
-		parties = FXCollections.observableArrayList();
 		gridPane = new GridPane();
 		addPartyButton = new Button("Add Party");
 		addCandidateToPartyButton = new Button("Add Candidate to Party");
@@ -90,7 +92,7 @@ public class PartiesTabView extends View {
 		partiesLabel = new Label("Parties");
 		candidatesInPartyLabel = new Label("Candidates in Party");
 		partiesTableView = new TableView<PartyModel>();
-		partiesTableView.setItems(parties);
+		partiesTableView.setItems(allParties);
 		candidatesInPartyTableView = new TableView<CandidateModel>();
 
 		addPartyButton.setMinWidth(150);
@@ -148,6 +150,7 @@ public class PartiesTabView extends View {
 
 		partiesTableView.getColumns().addAll(partyNameTableColumn, partyWingTableColumn, partyFoundationTableColumn);
 		for (TableColumn<?, ?> tableColumn : partiesTableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setSortable(false);
@@ -157,6 +160,7 @@ public class PartiesTabView extends View {
 		candidatesInPartyTableView.getColumns().addAll(candidateIDTableColumn, candidateNameTableColumn,
 				candidateRankTableColumn, UIHandler.buildStatusTableColumn(406));
 		for (TableColumn<?, ?> tableColumn : candidatesInPartyTableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setSortable(false);
@@ -172,6 +176,28 @@ public class PartiesTabView extends View {
 		GridPane.setMargin(partiesTableView, new Insets(0, 10, 373.5, 0));
 		GridPane.setMargin(candidatesInPartyTableView, new Insets(0, 0, 373.5, 10));
 	}
+	
+	public void initParties() {		
+		allParties = FXCollections.observableArrayList();
+		
+		// Initiates 4 parties
+		allParties.add(new PartyModel("Halikud", PartyModel.PartyAssociation.Right, LocalDate.of(1973, 9, 13)));
+		allParties.add(new PartyModel("Blue and White", PartyModel.PartyAssociation.Center, LocalDate.of(2019, 2, 21)));
+		allParties.add(new PartyModel("Israel is Our Home", PartyModel.PartyAssociation.Center, LocalDate.of(1999, 3, 29)));
+		allParties.add(new PartyModel("Israeli Labor Party", PartyModel.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
+		
+		// Adds the candidates to their parties
+		allParties.get(0).addCandidate((CandidateModel) TBN.getCitizenByID(678901234));
+		allParties.get(0).addCandidate((CandidateModel) TBN.getCitizenByID(789012345));
+		allParties.get(1).addCandidate((CandidateModel) TBN.getCitizenByID(890123456));
+		allParties.get(1).addCandidate((CandidateModel) TBN.getCitizenByID(901234567));
+		allParties.get(2).addCandidate((CandidateModel) TBN.getCitizenByID(901234568));
+		allParties.get(2).addCandidate((CandidateModel) TBN.getCitizenByID(901234566));
+		allParties.get(3).addCandidate((CandidateModel) TBN.getCitizenByID(901234569));
+		allParties.get(3).addCandidate((CandidateModel) TBN.getCitizenByID(901234565));
+		
+		partiesTableView.setItems(allParties);
+	}
 
 	public Node asNode() {
 		return (Node) gridPane;
@@ -185,7 +211,7 @@ public class PartiesTabView extends View {
 	}
 
 	public void addParty(PartyModel party) {
-		parties.add(party);
+		allParties.add(party);
 	}
 
 	@Override

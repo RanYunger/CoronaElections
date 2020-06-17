@@ -94,54 +94,60 @@ public class AddCitizenController {
 			@Override
 			public void handle(ActionEvent event) {
 				TextField citizenIDTextField = addView.getCitizenIDTextField();
-				String IDText = citizenIDTextField.getText();
-				if (!IDText.matches(TBN.VALID_CITIZEN_ID_PATTERN))
-					UIHandler.showError("Invalid ID", citizenIDTextField.getTooltip().getText());
-				else {
-					int ID = Integer.parseInt(IDText);
-					TextField citizenFullNameTextField = addView.getCitizenFullNameTextField();
-					String fullName = citizenFullNameTextField.getText();
-					if (!fullName.matches(TBN.VALID_CITIZEN_FULL_NAME_PATTERN))
-						UIHandler.showError("Invalid citizen name", citizenFullNameTextField.getTooltip().getText());
-					else {
-						ComboBox<Number> citizenYearOfBirthComboBox = addView.getCitizenYearOfBirthComboBox(),
-								citizenDaysOfSicknessComboBox = addView.getCitizenDaysOfSicknessComboBox(),
-								citizenAssociatedBallotComboBox = addView.getCitizenAssociatedBallotComboBox();
-						Number yearOfBirth = citizenYearOfBirthComboBox.getSelectionModel().getSelectedItem(),
-								daysOfSickness = citizenDaysOfSicknessComboBox.getSelectionModel().getSelectedItem(),
-								associatedBallotID = citizenAssociatedBallotComboBox.getSelectionModel()
-										.getSelectedItem();
-						boolean isIsolated = addView.getCitizenIsIsolatedCheckBox().isSelected(),
-								isWearingSuit = addView.getCitizenIsWearingSuitCheckBox().isSelected(),
-								isSoldier = addView.getCitizenIsSoldierCheckBox().isSelected(),
-								isCarryingWeapon = addView.getCitizenIsCarryingWeaponCheckBox().isSelected();
+				TextField citizenFullNameTextField = addView.getCitizenFullNameTextField();
+				ComboBox<Number> citizenYearOfBirthComboBox = addView.getCitizenYearOfBirthComboBox(),
+						citizenDaysOfSicknessComboBox = addView.getCitizenDaysOfSicknessComboBox(),
+						citizenAssociatedBallotComboBox = addView.getCitizenAssociatedBallotComboBox();
 
-						yearOfBirth = yearOfBirth == null ? (int) citizenYearOfBirthComboBox.getItems().get(0)
-								: yearOfBirth;
-						daysOfSickness = daysOfSickness == null ? 0 : daysOfSickness;
+				BallotModel associatedBallot;
+				CitizenModel citizen;
+				String IDText = citizenIDTextField.getText(), citizenName = citizenFullNameTextField.getText();
+				Number yearOfBirth = citizenYearOfBirthComboBox.getSelectionModel().getSelectedItem(),
+						daysOfSickness = citizenDaysOfSicknessComboBox.getSelectionModel().getSelectedItem(),
+						associatedBallotID = citizenAssociatedBallotComboBox.getSelectionModel().getSelectedItem();
+				boolean isIsolated = addView.getCitizenIsIsolatedCheckBox().isSelected(),
+						isWearingSuit = addView.getCitizenIsWearingSuitCheckBox().isSelected(),
+						isSoldier = addView.getCitizenIsSoldierCheckBox().isSelected(),
+						isCarryingWeapon = addView.getCitizenIsCarryingWeaponCheckBox().isSelected();
+				int citizenID;
 
-						addView.refreshAssociatedBallotComboBox(isIsolated, isSoldier);
-						if (citizenAssociatedBallotComboBox.getItems().isEmpty())
-							UIHandler
-									.showWarning("Make sure there's at least one ballot that matches this citizen's type!");
-						else {
-							associatedBallotID = associatedBallotID == null
-									? citizenAssociatedBallotComboBox.getItems().get(0)
-									: associatedBallotID;
-
-							// TODO: fix this shit
-							BallotModel associatedBallot = TBN.getBallotByID((int) associatedBallotID);
-							CitizenModel citizen = TBN.createCitizen((int) ID, fullName, (int) yearOfBirth,
-									(int) daysOfSickness, associatedBallot, isIsolated, isWearingSuit, isSoldier,
-									isCarryingWeapon);
-							
-							tabView.addCitizen(citizen);
-							UIHandler.showSuccess("A new citizen was added successfully!");
-							
-							addView.close();
-						}
-					}
+				// Validations
+				if (!IDText.matches(TBN.VALID_CITIZEN_ID_PATTERN)) {
+					UIHandler.showError("Invalid ID!", citizenIDTextField.getTooltip().getText());
+					return;
 				}
+				citizenID = Integer.parseInt(IDText);
+				if (TBN.getCitizenByID(citizenID) != null) {
+					UIHandler.showError("This citizen already exists. Try a different ID.");
+					return;
+				}
+				if (!citizenName.matches(TBN.VALID_CITIZEN_FULL_NAME_PATTERN)) {
+					UIHandler.showError("Invalid name!", citizenFullNameTextField.getTooltip().getText());
+					return;
+				}
+				if (yearOfBirth == null) {
+					UIHandler.showError("Choose the citizen's year of birth.");
+					return;
+				}
+				if (daysOfSickness == null)
+					daysOfSickness = isIsolated ? citizenDaysOfSicknessComboBox.getItems().get(0) : 0;
+
+				addView.refreshAssociatedBallotComboBox(isIsolated, isSoldier);
+				if (citizenAssociatedBallotComboBox.getItems().isEmpty()) {
+					UIHandler.showWarning("Make sure there's at least one ballot that matches this citizen's type!");
+					return;
+				}
+				associatedBallotID = associatedBallotID == null ? citizenAssociatedBallotComboBox.getItems().get(0)
+						: associatedBallotID;
+
+				associatedBallot = TBN.getBallotByID((int) associatedBallotID);
+				citizen = TBN.createCitizen((int) citizenID, citizenName, (int) yearOfBirth, (int) daysOfSickness,
+						associatedBallot, isIsolated, isWearingSuit, isSoldier, isCarryingWeapon);
+
+				tabView.addCitizen(citizen);
+				UIHandler.showSuccess("A new citizen was added successfully!");
+
+				addView.close();
 			}
 		};
 
@@ -152,5 +158,4 @@ public class AddCitizenController {
 	}
 
 	// Methods
-
 }

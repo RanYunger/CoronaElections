@@ -37,7 +37,7 @@ public class CitizensTabController {
 
 					TableView<BallotModel> ballotsTableView = ballotsTabView.getBallotsTableView();
 					if (ballotsTableView.getItems().isEmpty())
-						UIHandler.showError("Make sure to have at least 1 ballot before creating a new citizen");
+						UIHandler.showWarning("Make sure to have at least 1 ballot before creating a new citizen!");
 					else {
 						AddCitizenView addView = new AddCitizenView();
 						AddCitizenController controller = new AddCitizenController(tabView, addView);

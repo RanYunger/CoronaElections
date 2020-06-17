@@ -41,20 +41,21 @@ public class AddBallotController {
 			@Override
 			public void handle(ActionEvent event) {
 				TextField ballotAddressTextField = addView.getBallotAddressTextField();
-				String address = ballotAddressTextField.getText();
+				String address = ballotAddressTextField.getText(),
+						ballotType = addView.getBallotTypeComboBox().getValue();
+
+				// Validations
 				if (!address.matches(TBN.VALID_BALLOT_ADDRESS_PATTERN)) {
 					UIHandler.showError("Invalid address!", ballotAddressTextField.getTooltip().getText());
-				} else {
-					String ballotType = addView.getBallotTypeComboBox().getValue();
-					if (ballotType == null)
-						UIHandler.showError("Choose a ballot type");
-					else {
-						tabView.addBallot(TBN.createBallotByType(ballotType, address, UIHandler.getElectionsDate()));
-						UIHandler.showSuccess("A new ballot was added successfully!");
-
-						addView.close();
-					}
+					return;
 				}
+
+				ballotType = ballotType == null ? addView.getBallotTypeComboBox().getItems().get(0) : ballotType;
+
+				tabView.addBallot(TBN.createBallotByType(ballotType, address, UIHandler.getElectionsDate()));
+				UIHandler.showSuccess("A new ballot was added successfully!");
+
+				addView.close();
 			}
 		};
 

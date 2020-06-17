@@ -9,6 +9,7 @@ import ID318783479_ID316334473.Models.Citizens.CandidateModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SickCandidateModel;
 import ID318783479_ID316334473.Models.Citizens.SickCitizenModel;
+import ID318783479_ID316334473.Models.Citizens.SoldierModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -32,18 +33,18 @@ public class CitizensTabView extends View {
 	private Button addCitizenButton;
 	private HBox hBox;
 
-	private ObservableList<CitizenModel> citizens;
+	private ObservableList<CitizenModel> allCitizens;
 	private TableView<CitizenModel> citizensTableView;
 
 	// Properties (Getters and Setters)
 	public ObservableList<CitizenModel> getAllCitizens() {
-		return citizens;
+		return allCitizens;
 	}
 
 	public TableView<CitizenModel> getCitizensTableView() {
 		return citizensTableView;
 	}
-	
+
 	public Button getAddCitizenButton() {
 		return addCitizenButton;
 	}
@@ -51,7 +52,7 @@ public class CitizensTabView extends View {
 	// Constructors
 	public CitizensTabView(Stage stage) {
 		super(stage);
-		
+
 		buildScene();
 	}
 
@@ -63,12 +64,11 @@ public class CitizensTabView extends View {
 				citizenAssociatedBallotTableColumn;
 		TableColumn<CitizenModel, String> citizenNameTableColumn;
 
-		citizens = FXCollections.observableArrayList();
 		gridPane = new GridPane();
 		addCitizenButton = new Button("Add Citizen");
 		hBox = new HBox();
 		citizensTableView = new TableView<CitizenModel>();
-		citizensTableView.setItems(citizens);
+		citizensTableView.setItems(allCitizens);
 
 		addCitizenButton.setMinWidth(100);
 
@@ -104,6 +104,7 @@ public class CitizensTabView extends View {
 				citizenYearOfBirthTableColumn, citizenAssociatedBallotTableColumn,
 				UIHandler.buildStatusTableColumn(745));
 		for (TableColumn<?, ?> tableColumn : citizensTableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setSortable(false);
@@ -118,6 +119,29 @@ public class CitizensTabView extends View {
 		GridPane.setMargin(citizensTableView, new Insets(10, 0, 145, 0));
 	}
 
+	public void initCitizens() {
+		allCitizens = FXCollections.observableArrayList();
+
+		// Initiates 5 citizen
+		allCitizens.add(new CitizenModel(123456789, "Charles Foster Kane", 1941, 0, TBN.getBallotByID(1), false, false));
+		allCitizens.add(new CitizenModel(234567890, "Donald John Trump", 1946, 1, TBN.getBallotByID(4), true, true));
+		allCitizens.add(new CitizenModel(345678901, "Tonny Stark", 1970, 0, TBN.getBallotByID(1), false, false));
+		allCitizens.add(new SickCitizenModel(456789012, "Steve Rogers", 1918, 1, TBN.getBallotByID(1), true, true));
+		allCitizens.add(new SoldierModel(567890123, "Childish Gambino", 2001, 1, TBN.getBallotByID(3), false, false, true));
+
+		// Initiates 8 candidates (2 per party)
+		allCitizens.add(new CandidateModel(678901234, "Benjamin Netanyahu", 1949, 50, TBN.getBallotByID(5), true, false));
+		allCitizens.add(new SickCandidateModel(789012345, "Miri Regev", 1965, 38, TBN.getBallotByID(5), true, false));
+		allCitizens.add(new SickCandidateModel(890123456, "Benny Gantz", 1959, 40, TBN.getBallotByID(4), true, true));
+		allCitizens.add(new SickCandidateModel(901234567, "Yair Lapid", 1963, 1, TBN.getBallotByID(4), true, true));
+		allCitizens.add(new SickCandidateModel(901234568, "Avigdor Lieberman", 1958, 1, TBN.getBallotByID(3), true, true));
+		allCitizens.add(new CandidateModel(901234566, "Oded Forer", 1977, 1, TBN.getBallotByID(2), false, true));
+		allCitizens.add(new CandidateModel(901234569, "Tamar Zandberg", 1976, 1, TBN.getBallotByID(2), false, false));
+		allCitizens.add(new CandidateModel(901234565, "Nitzan Horowitz", 1965, 1, TBN.getBallotByID(2), false, false));
+		
+		citizensTableView.setItems(allCitizens);
+	}
+
 	public Node asNode() {
 		return (Node) gridPane;
 	}
@@ -129,17 +153,17 @@ public class CitizensTabView extends View {
 	}
 
 	public void addCitizen(CitizenModel citizen) {
-		citizens.add(citizen);
+		allCitizens.add(citizen);
 	}
 
 	public CitizenModel getCitizenByID(int citizenID) {
-		ArrayList<CitizenModel> sortedVoters = new ArrayList<CitizenModel>(citizens);
+		ArrayList<CitizenModel> sortedVoters = new ArrayList<CitizenModel>(allCitizens);
 		Collections.sort(sortedVoters);
 		return TBN.binarySearch(sortedVoters, citizenID);
 	}
 
 	public CandidateModel morphCitizenToCandidate(CitizenModel citizen) {
-		int index = citizens.indexOf(getCitizenByID(citizen.getNumericID()));
+		int index = allCitizens.indexOf(getCitizenByID(citizen.getNumericID()));
 
 		if (index != -1) {
 			CandidateModel candidate;
@@ -147,14 +171,14 @@ public class CitizensTabView extends View {
 				candidate = new CandidateModel(citizen.getNumericID(), citizen.getTextualFullName(),
 						citizen.getNumericYearOfBirth(), citizen.getNumericDaysOfSickness(),
 						citizen.getActualAssociatedBallot(), citizen.isIsolated(), citizen.isWearingSuit());
-				citizens.set(index, candidate);
+				allCitizens.set(index, candidate);
 
 				return candidate;
 			} else if (citizen instanceof SickCitizenModel) {
 				candidate = new SickCandidateModel(citizen.getNumericID(), citizen.getTextualFullName(),
 						citizen.getNumericYearOfBirth(), citizen.getNumericDaysOfSickness(),
 						citizen.getActualAssociatedBallot(), citizen.isIsolated(), citizen.isWearingSuit());
-				citizens.set(index, candidate);
+				allCitizens.set(index, candidate);
 
 				return candidate;
 			} else if (citizen instanceof CandidateModel)

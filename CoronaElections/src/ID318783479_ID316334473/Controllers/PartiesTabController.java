@@ -48,34 +48,36 @@ public class PartiesTabController {
 		EventHandler<ActionEvent> addCandidateToPartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					CitizensTabView citizensTabView = (CitizensTabView) UIHandler.getViewByName("CitizensTabView");
-					PartyModel selectedParty = tabView.getPartiesTableView().getSelectionModel().getSelectedItem();
+				CitizensTabView citizensTabView = (CitizensTabView) UIHandler.getViewByName("CitizensTabView");
+				PartyModel selectedParty = tabView.getPartiesTableView().getSelectionModel().getSelectedItem();
 
-					if (citizensTabView.getAllCitizens().isEmpty())
-						UIHandler.showError("Make sure to have at least 1 citizen before adding a new candidate");
-					else if (selectedParty == null)
-						UIHandler.showError("Choose a party for adding a candidate");
-					else {
-						AddCandidateToPartyView addView = new AddCandidateToPartyView(new Stage(),
-								citizensTabView.getAllCitizens());
-						AddCandidateToPartyController controller = new AddCandidateToPartyController(selectedParty,
-								addView, citizensTabView);
-					}
-				} catch (Exception ex) {
-					UIHandler.showError("An unexpected error occured", ex.getMessage());
+				// Validations
+				if (citizensTabView.getAllCitizens().isEmpty()) {
+					UIHandler.showWarning("Make sure to have at least one citizen before adding a new candidate");
+					return;
 				}
+				if (selectedParty == null) {
+					UIHandler.showError("Choose a party for adding a candidate");
+					return;
+				}
+
+				AddCandidateToPartyView addView = new AddCandidateToPartyView(new Stage(),
+						citizensTabView.getAllCitizens());
+				AddCandidateToPartyController controller = new AddCandidateToPartyController(selectedParty, addView,
+						citizensTabView);
 			}
 		};
+
 		ChangeListener<? super Number> partiesTableViewEventHandler = new ChangeListener<>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSelectedIndex,
 					Number newSelectedIndex) {
 				TableView<CandidateModel> candidatesInPartyTableView = tabView.getCandidatesInPartyTableView();
-				if (newSelectedIndex.intValue() != -1) {
-					PartyModel selectedParty = tabView.getAllParties().get((int) newSelectedIndex);
+				PartyModel selectedParty;
 
+				if (newSelectedIndex.intValue() != -1) {
+					selectedParty = tabView.getAllParties().get((int) newSelectedIndex);
 					candidatesInPartyTableView.setItems(selectedParty.getCandidates());
 				}
 			}
@@ -83,8 +85,9 @@ public class PartiesTabController {
 
 		tabView.getAddPartyButton().setOnAction(addPartyButtonEventHandler);
 		tabView.getAddCandidateToPartyButton().setOnAction(addCandidateToPartyButtonEventHandler);
-		tabView.getPartiesTableView().getSelectionModel().selectedIndexProperty().addListener(partiesTableViewEventHandler);
+		tabView.getPartiesTableView().getSelectionModel().selectedIndexProperty()
+				.addListener(partiesTableViewEventHandler);
 	}
 
-	// Methods
+// Methods
 }

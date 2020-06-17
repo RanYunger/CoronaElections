@@ -78,7 +78,7 @@ public class BallotModel {
 		return votersPercentage.getValue().doubleValue();
 	}
 
-	private void setVotersPercentage(int numOfVoters) {
+	public void setVotersPercentage(int numOfVoters) {
 		this.votersPercentage = new SimpleDoubleProperty(
 				(voterRegistry.size() > 0) ? (100 * numOfVoters) / voterRegistry.size() : 0);
 	}

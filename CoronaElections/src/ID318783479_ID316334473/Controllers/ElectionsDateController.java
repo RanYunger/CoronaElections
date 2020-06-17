@@ -43,6 +43,11 @@ public class ElectionsDateController {
 				
 				UIHandler.setMainController(mainController);
 				UIHandler.setMainView(mainView);
+				
+				mainView.getBallotsTabView().initBallots();
+				mainView.getCitizensTabView().initCitizens();
+				mainView.getPartiesTabView().initParties();
+				
 				electionsDateView.close();		
 			}
 		};

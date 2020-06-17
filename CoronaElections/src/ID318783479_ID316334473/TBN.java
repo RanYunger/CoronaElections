@@ -12,7 +12,7 @@ import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SickCitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SickSoldierModel;
 import ID318783479_ID316334473.Models.Citizens.SoldierModel;
-import ID318783479_ID316334473.Views.BallotsTabView;
+import javafx.collections.ObservableList;
 
 // This class contains methods which aren't necessarily related to UI
 public class TBN {
@@ -69,6 +69,7 @@ public class TBN {
 				return binarySearch(array, key, mid + 1, end);
 			}
 		}
+
 		return null;
 	}
 
@@ -104,7 +105,37 @@ public class TBN {
 	}
 
 	public static BallotModel getBallotByID(int ballotID) {
-		BallotsTabView btv = (BallotsTabView) UIHandler.getViewByName("BallotsTabView");
-		return btv.getAllBallots().get(ballotID - 1);
+		// TODO: FIX SO IT'LL USE BINARY SEARCH (WITHOUT THE ZERO BASED THING!)
+		ObservableList<BallotModel> allBallots = UIHandler.getMainView().getAllBallots();
+
+		for (int i = 0; i < allBallots.size(); i++)
+			if (allBallots.get(i).getNumericID() == ballotID)
+				return allBallots.get(i);
+
+		return null;
 	}
+
+	public static CitizenModel getCitizenByID(int citizenID) {
+		// TODO: FIX SO IT'LL USE BINARY SEARCH
+		ObservableList<CitizenModel> allCitizens = UIHandler.getMainView().getAllCitizens();
+
+		for (int i = 0; i < allCitizens.size(); i++)
+			if (allCitizens.get(i).getNumericID() == citizenID)
+				return allCitizens.get(i);
+
+		return null;
+	}
+
+	public static PartyModel getPartyByName(String partyName) {
+		// TODO: FIX SO IT'LL USE BINARY SEARCH
+		ObservableList<PartyModel> allParties = UIHandler.getMainView().getAllParties();
+
+		for (int i = 0; i < allParties.size(); i++) {
+			if (allParties.get(i).getTextualName().equals(partyName))
+				return allParties.get(i);
+		}
+
+		return null;
+	}
+
 }

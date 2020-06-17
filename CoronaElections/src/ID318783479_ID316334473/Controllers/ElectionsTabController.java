@@ -13,12 +13,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Series;
+import javafx.scene.chart.PieChart.Data;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class ElectionsTabController {
 	// Constants
@@ -26,6 +27,7 @@ public class ElectionsTabController {
 	// Fields
 	private ElectionsTabView tabView;
 	private boolean electionsOccoured;
+	private Label captionLabel;
 
 	// Properties (Getters and Setters)
 	public ElectionsTabView getElectionsTabView() {
@@ -44,10 +46,19 @@ public class ElectionsTabController {
 		this.electionsOccoured = electionsOccoured;
 	}
 
+	public Label getCaptionLabel() {
+		return captionLabel;
+	}
+	
+	public void setCaptionLabel(Label captionLabel) {
+		this.captionLabel = captionLabel;
+	}
+	
 	// Constructors
 	public ElectionsTabController(ElectionsTabView view) {
 		setElectionsTabView(view);
 		setElectionsOccoured(false);
+		setCaptionLabel(new Label());
 
 		EventHandler<ActionEvent> runElectionsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -68,16 +79,18 @@ public class ElectionsTabController {
 						int partyVotes;
 
 						if (allBallots.isEmpty()) {
-							UIHandler
-									.showWarning("Make sure to have at least one ballot before starting the elections");
+							UIHandler.showWarning(
+									"Make sure to have at least one ballot before starting the elections!");
 							return;
 						}
 						if (allVoters.isEmpty()) {
-							UIHandler.showWarning("Make sure to have at least one voter before starting the elections");
+							UIHandler
+									.showWarning("Make sure to have at least one voter before starting the elections!");
 							return;
 						}
 						if (allParties.isEmpty()) {
-							UIHandler.showWarning("Make sure to have at least one party before starting the elections");
+							UIHandler
+									.showWarning("Make sure to have at least one party before starting the elections!");
 							return;
 						}
 
@@ -95,6 +108,7 @@ public class ElectionsTabController {
 								partyVotes = resultsInBallot.get(chosenParty);
 
 								resultsInBallot.replace(chosenParty, ++partyVotes);
+								voterBallot.setVotersPercentage((int)voterBallot.getNumericVotersPercentage() + 1);
 							}
 						}
 
@@ -107,13 +121,36 @@ public class ElectionsTabController {
 				}
 			}
 		};
+		EventHandler<MouseEvent> movePieChartEventHandler = new EventHandler<MouseEvent>() {
+			
+			@Override
+			public void handle(MouseEvent event) {				
+				Region region = (Region) event.getTarget();
+				String str = region.getUserData().toString();
+				
+				// TODO: FIX
+				captionLabel.setTranslateX(event.getX());
+				captionLabel.setTranslateY(event.getY());
+				captionLabel.setFont(new Font(15));
+				captionLabel.setText(str);
+				captionLabel.setVisible(true);
+			}
+		};
+		EventHandler<MouseEvent> exitPieChartEventHandler = new EventHandler<MouseEvent>() {
+			
+			@Override
+			public void handle(MouseEvent event) {
+				captionLabel.setVisible(false);
+				
+			}
+		};
 		EventHandler<ActionEvent> showResultsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
 					// Validations
 					if (!electionsOccoured) {
-						UIHandler.showError("Elections results will be visible once the process is complete");
+						UIHandler.showError("Elections results will be visible once the process is complete.");
 
 						return;
 					}
@@ -121,18 +158,32 @@ public class ElectionsTabController {
 					ObservableList<BallotModel> allBallots = UIHandler.getMainView().getAllBallots();
 					ObservableList<PartyModel> allParties = UIHandler.getMainView().getAllParties();
 
+					final Label captionLabel = new Label();
 					PieChart finalResultsPieChart = tabView.getFinalResultsPieChart();
 					TreeMap<String, Integer> finalResults = getFinalResults(allBallots);
 					ArrayList<PieChart.Data> finalResultsPieChartData = new ArrayList<PieChart.Data>();
+					PieChart.Data currentPieChartData;
+
+					captionLabel.setTextFill(Color.DARKORANGE);
+					captionLabel.setFont(new Font(15));
 
 					// Displays the final results
 					finalResultsPieChart.setTitle("Final Results");
-					for (Map.Entry<String, Integer> resultEntry : finalResults.entrySet())
-						finalResultsPieChartData.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
+					for (Map.Entry<String, Integer> resultEntry : finalResults.entrySet()) {
+						currentPieChartData = new PieChart.Data(resultEntry.getKey(),
+								resultEntry.getValue());
+						
+						finalResultsPieChartData.add(currentPieChartData);
+					}
 					finalResultsPieChart.setData(FXCollections.observableList(finalResultsPieChartData));
+					
+					for (Data data : finalResultsPieChart.getData()) {
+						data.getNode().setUserData(String.valueOf(data.getPieValue())); // pass parameter to event handlers
+						data.getNode().setOnMouseMoved(movePieChartEventHandler); 
+						data.getNode().setOnMouseExited(exitPieChartEventHandler);
+					}
 
-					// Displays the results by ballots
-					tabView.setResultsByBallotBarChart(buildResultsByBallotBarChart(allBallots, allParties));
+					tabView.buildResultsByBallotBarChart(allBallots, allParties);
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
@@ -144,14 +195,6 @@ public class ElectionsTabController {
 	}
 
 	// Methods
-	private ObservableList<String> getAllBallotIDs(ObservableList<BallotModel> allBallots) {
-		ArrayList<String> ballotIDs = new ArrayList<String>();
-
-		for (int i = 1; i <= allBallots.size(); i++)
-			ballotIDs.add(String.format("#%d", i));
-
-		return FXCollections.observableList(ballotIDs);
-	}
 
 	private TreeMap<String, Integer> getFinalResults(ObservableList<BallotModel> allBallots) {
 		TreeMap<String, Integer> finalResults = new TreeMap<String, Integer>(), currentBallotResults;
@@ -172,40 +215,5 @@ public class ElectionsTabController {
 		}
 
 		return finalResults;
-	}
-
-	private BarChart<String, Number> buildResultsByBallotBarChart(ObservableList<BallotModel> allBallots,
-			ObservableList<PartyModel> allParties) {
-		CategoryAxis xAxis = new CategoryAxis();
-		NumberAxis yAxis = new NumberAxis();
-		BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-		ArrayList<Series<String, Number>> partySeries = new ArrayList<XYChart.Series<String, Number>>();
-		Series<String, Number> currentPartySeries;
-		String currentPartyName, currentBallotTextualID;
-
-		// Building the Bar chart
-		barChart.setTitle("Votes by Ballots");
-		barChart.setOpacity(0.8);
-
-		// Building the axis
-		xAxis.setCategories(getAllBallotIDs(allBallots));
-		xAxis.setLabel("Ballot IDs");
-		yAxis.setLabel("Votes");
-
-		// Setting the chart data
-		for (PartyModel party : allParties) {
-			currentPartySeries = new Series<String, Number>();
-			currentPartySeries.setName(currentPartyName = party.getTextualName());
-			for (BallotModel ballot : allBallots) {
-				currentBallotTextualID = String.format("#%d", ballot.getNumericID());
-				currentPartySeries.getData()
-						.add(new XYChart.Data<>(currentBallotTextualID, ballot.getResults().get(currentPartyName)));
-			}
-			partySeries.add(currentPartySeries);
-		}
-
-		barChart.getData().addAll(partySeries);
-
-		return barChart;
 	}
 }
