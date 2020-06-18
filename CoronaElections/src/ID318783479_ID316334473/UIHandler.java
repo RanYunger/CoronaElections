@@ -420,6 +420,6 @@ public class UIHandler {
 		montyPythonLegImageView.setX(0);
 		montyPythonLegImageView.setY(- (stageHeight + 10)); // Above MainView 
 		
-		// TODO: COMPLETE (run a task to lower the leg and remove any "smashed" node)
+		// TODO: COMPLETE (run a thread to lower the leg and remove any "smashed" node)
 	}
 }
