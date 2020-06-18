@@ -1,7 +1,5 @@
 package ID318783479_ID316334473.Controllers;
 
-import java.time.LocalDate;
-
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Views.ElectionsDateView;
 import ID318783479_ID316334473.Views.MainView;
@@ -31,11 +29,10 @@ public class ElectionsDateController {
 		EventHandler<ActionEvent> enterButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				LocalDate electionsDate = electionsDateView.getElectionsDate();
 				MainView mainView;
 				MainController mainController;
 
-				UIHandler.setElectionsDate(electionsDate);
+				UIHandler.setElectionsDate(electionsDateView.getElectionsDate());
 				
 				mainView = new MainView(new Stage());
 				mainController = new MainController(mainView, mainView.getElectionsTabView(),
@@ -43,6 +40,7 @@ public class ElectionsDateController {
 				
 				UIHandler.setMainController(mainController);
 				UIHandler.setMainView(mainView);
+				UIHandler.initViewStatuses();
 				
 				mainView.getBallotsTabView().initBallots();
 				mainView.getCitizensTabView().initCitizens();

@@ -176,16 +176,18 @@ public class PartiesTabView extends View {
 		GridPane.setMargin(partiesTableView, new Insets(0, 10, 373.5, 0));
 		GridPane.setMargin(candidatesInPartyTableView, new Insets(0, 0, 373.5, 10));
 	}
-	
-	public void initParties() {		
+
+	public void initParties() {
 		allParties = FXCollections.observableArrayList();
-		
+
 		// Initiates 4 parties
 		allParties.add(new PartyModel("Halikud", PartyModel.PartyAssociation.Right, LocalDate.of(1973, 9, 13)));
 		allParties.add(new PartyModel("Blue and White", PartyModel.PartyAssociation.Center, LocalDate.of(2019, 2, 21)));
-		allParties.add(new PartyModel("Israel is Our Home", PartyModel.PartyAssociation.Center, LocalDate.of(1999, 3, 29)));
-		allParties.add(new PartyModel("Israeli Labor Party", PartyModel.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
-		
+		allParties.add(
+				new PartyModel("Israel is Our Home", PartyModel.PartyAssociation.Center, LocalDate.of(1999, 3, 29)));
+		allParties.add(
+				new PartyModel("Israeli Labor Party", PartyModel.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
+
 		// Adds the candidates to their parties
 		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(678901234));
 		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(789012345));
@@ -195,7 +197,7 @@ public class PartiesTabView extends View {
 		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234566));
 		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234569));
 		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234565));
-		
+
 		partiesTableView.setItems(allParties);
 	}
 
@@ -217,9 +219,8 @@ public class PartiesTabView extends View {
 	@Override
 	protected void addEffects() {
 		Scene scene = stage.getScene();
-		
+
 		UIHandler.addCursorEffectsToNode(scene, addPartyButton);
 		UIHandler.addCursorEffectsToNode(scene, addCandidateToPartyButton);
-
 	}
 }

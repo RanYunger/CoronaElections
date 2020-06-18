@@ -4,16 +4,20 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import ID318783479_ID316334473.Controllers.MainController;
+import ID318783479_ID316334473.Models.MontyPythonThread;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SoldierModel;
 import ID318783479_ID316334473.Views.MainView;
+import ID318783479_ID316334473.Views.View;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -37,40 +41,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-/*
- * Helper class which contains all UI methods, plus extra helpful
- * methods.
- * Most of the methods here will be changed when switching to GUI, so there will
- * be no need to change anything in the main method.
- */
+// Helper class which contains all UI methods, plus extra helpful methods.
 public class UIHandler {
 	// Constants
 
 	// Fields
-	private static boolean isAudioOn = true;
 	private static LocalDate electionsDate;
 	private static MainController mainController;
 	private static MainView mainView;
+
+	private static boolean isAudioOn = true;
 	private static MediaPlayer mediaPlayer;
 	private static Media media;
+
+	private static TreeMap<String, Boolean> viewDamageStatuses;
 
 	// Properties
 	public static LocalDate getElectionsDate() {
 		return electionsDate;
-	}
-
-	public static boolean isAudioOn() {
-		return isAudioOn;
-	}
-
-	public static void toggleAudio() {
-		isAudioOn = !isAudioOn;
-		
-		// Validations
-		if ((!isAudioOn) && (mediaPlayer != null))
-			mediaPlayer.stop();
-		else if ((isAudioOn) && (mediaPlayer != null))
-			mediaPlayer.play();
 	}
 
 	public static void setElectionsDate(LocalDate electionsDate) {
@@ -93,18 +81,25 @@ public class UIHandler {
 		UIHandler.mainView = mainView;
 	}
 
-	// Methods
-	// First Letter in controllerName must be capital!
-	public static Object getControllerByName(String controllerName) {
-		try {
-			return mainController.getClass().getMethod(String.format("get%s", controllerName)).invoke(mainController);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
+	public static boolean isAudioOn() {
+		return isAudioOn;
 	}
 
+	public static void toggleAudio() {
+		isAudioOn = !isAudioOn;
+
+		// Validations
+		if ((!isAudioOn) && (mediaPlayer != null))
+			mediaPlayer.stop();
+		else if ((isAudioOn) && (mediaPlayer != null))
+			mediaPlayer.play();
+	}
+
+	public static TreeMap<String, Boolean> getViewDamageStatuses() {
+		return viewDamageStatuses;
+	}
+
+	// Methods
 	// First Letter in controllerName must be capital!
 	public static Object getViewByName(String viewName) {
 		try {
@@ -124,11 +119,11 @@ public class UIHandler {
 
 		try {
 			// Validations
-			// TODO: FIX THIS (continue when the used clicks the OK button) 
-			if ((voter.getActualAssociatedBallot().isCoronaBallot()) && (voter.isIsolated()) && (!voter.isWearingSuit())) {
+			if ((voter.getActualAssociatedBallot().isCoronaBallot()) && (voter.isIsolated())
+					&& (!voter.isWearingSuit())) {
 				showWarning(String.format("Greetings, %s. You can't vote without a suit, so we have to turn you back.",
 						voter.getTextualFullName()));
-				
+
 				return "<UNKNOWN>";
 			}
 
@@ -144,13 +139,13 @@ public class UIHandler {
 			alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
 			alert.showAndWait();
-			
+
 			if (alert.getResult() == ButtonType.YES) {
 				ChoiceDialog<String> choiceDialog = new ChoiceDialog<String>("<UNKNOWN>", partyNames);
 
 				choiceDialog.initOwner(stage);
 				choiceDialog.setTitle("Vote for your chosen party");
-				choiceDialog.setHeaderText("Who do you vote for");				
+				choiceDialog.setHeaderText("Who do you vote for");
 				chosenParty = choiceDialog.showAndWait();
 
 				return chosenParty.isPresent() ? chosenParty.get() : "<UNKNOWN>";
@@ -214,6 +209,16 @@ public class UIHandler {
 			mediaPlayer.play();
 	}
 
+	public static void initViewStatuses() {
+		viewDamageStatuses = new TreeMap<String, Boolean>();
+
+		viewDamageStatuses.put("About", false);
+		viewDamageStatuses.put("Ballots", false);
+		viewDamageStatuses.put("Citizens", false);
+		viewDamageStatuses.put("Elections", false);
+		viewDamageStatuses.put("Parties", false);
+	}
+
 	public static ButtonType showConfirmation(String message) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
@@ -235,7 +240,7 @@ public class UIHandler {
 		setIcon(stage);
 		alert.setTitle("Success");
 		alert.setHeaderText(message);
-		
+
 		playAudio("Yayyy.mp3");
 
 		alert.showAndWait();
@@ -248,7 +253,7 @@ public class UIHandler {
 		setIcon(stage);
 		alert.setTitle("Warning");
 		alert.setHeaderText(message);
-		
+
 		playAudio("UhOh.mp3");
 
 		alert.showAndWait();
@@ -261,7 +266,7 @@ public class UIHandler {
 		setIcon(stage);
 		alert.setTitle("Error");
 		alert.setHeaderText(message);
-		
+
 		playAudio("Awww.mp3");
 
 		alert.showAndWait();
@@ -278,15 +283,16 @@ public class UIHandler {
 		alert.setHeaderText(header);
 		if (message.trim().length() != 0)
 			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
-		
+
 		playAudio("Awww.mp3");
 
 		alert.showAndWait();
 	}
-	
-	public static void setGeneralFeatures(Stage stage) {	
+
+	public static void setGeneralFeatures(Stage stage) {
 		setIcon(stage);
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(), electionsDate.getYear()));
+		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
+				electionsDate.getYear()));
 		stage.setResizable(false);
 	}
 
@@ -391,35 +397,18 @@ public class UIHandler {
 		return new ImageView(image);
 	}
 
-	public static void MontyPython(String selectedViewName) {
-		double stageWidth = mainView.getStage().getWidth(), stageHeight = mainView.getStage().getHeight();
-		ImageView montyPythonLegImageView = buildImage("MontyPythonLeg.png", stageWidth, stageHeight);
-		ID318783479_ID316334473.Views.View selectedView = null;
-		ObservableList<Node> allNodesInView;
-		
-		// TODO: COMPLETE
-		switch (selectedViewName) {
-		case "About":
-			selectedView = mainView.getAboutTabView();
-			break;
-		case "Ballots":
-			selectedView = mainView.getBallotsTabView();
-			break;
-		case "Citizens":
-			selectedView = mainView.getCitizensTabView();
-			break;
-		case "Elections":
-			selectedView = mainView.getElectionsTabView();
-			break;
-		case "Parties":
-			selectedView = mainView.getPartiesTabView();
-			break;
-		}
-		
-		allNodesInView = selectedView.getAllNodesInView();
-		montyPythonLegImageView.setX(0);
-		montyPythonLegImageView.setY(- (stageHeight + 10)); // Above MainView 
-		
-		// TODO: COMPLETE (run a thread to lower the leg and remove any "smashed" node)
+	public static void MontyPython(String viewName) {
+		new MontyPythonThread().run();
+	}
+
+	public static boolean isPointInRectangle(Point2D point, Point2D rectanglePosition, double rectangleWidth,
+			double rectangleHeight) {
+		// Validations
+		if ((point.getX() < rectanglePosition.getX()) || (point.getX() > (rectanglePosition.getX() + rectangleWidth)))
+			return false;
+		if ((point.getY() < rectanglePosition.getY()) || (point.getY() > (rectanglePosition.getY() + rectangleHeight)))
+			return false;
+
+		return true;
 	}
 }

@@ -18,6 +18,7 @@ public class MainView extends View {
 
 	// Fields
 	private TabPane tabPane;
+	private Tab selectedTab;
 	private Button fileAComplaintButton;
 	private ImageView audioImageView;
 	private ElectionsTabView electionsTabView;
@@ -30,7 +31,22 @@ public class MainView extends View {
 	public Stage getStage() {
 		return stage;
 	}
-	
+
+	public TabPane getTabPane() {
+		return tabPane;
+	}
+
+	public Tab getSelectedTab() {
+		return tabPane.getSelectionModel().getSelectedItem();
+	}
+
+	public void setSelectedTab(Tab tab) {
+		selectedTab = tab;
+
+		if ((tab.getContent().isVisible()) && (UIHandler.getViewDamageStatuses().get(tab.getText())))
+			UIHandler.MontyPython(tab.getText());
+	}
+
 	public Button getFileAComplaintButton() {
 		return fileAComplaintButton;
 	}
@@ -111,7 +127,6 @@ public class MainView extends View {
 
 		buildScene();
 
-		// the addEffects methods for each tab is invoked externally (cannot be invoked during buildScene)
 		addEffects();
 		electionsTabView.addEffects();
 		ballotsTabView.addEffects();

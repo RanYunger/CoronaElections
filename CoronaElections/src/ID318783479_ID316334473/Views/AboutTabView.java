@@ -42,7 +42,7 @@ public class AboutTabView extends View {
 		madeByLabel = new Label("Developed by: Ran Yunger, Shy Ohev Zion");
 		sponseredByLabel = new Label("Sponsered by: ");
 		dateLabel = new Label("June 2020");
-		
+
 		madeByLabel.setFont(new Font(30));
 		sponseredByLabel.setFont(new Font(30));
 		dateLabel.setFont(new Font(30));
@@ -68,9 +68,9 @@ public class AboutTabView extends View {
 	@Override
 	protected void addEffects() {
 		Scene scene = stage.getScene();
-		
+
 		UIHandler.addAudioToImageView(scene, dorAlonImageView, "DorAlonSlogan.mp3");
 		UIHandler.addAudioToImageView(scene, tnuvaImageView, "TnuvaSlogan.mp3");
-		UIHandler.addAudioToImageView(scene, ramiLeviImageView, "RamiLeviSlogan.mp3");	
+		UIHandler.addAudioToImageView(scene, ramiLeviImageView, "RamiLeviSlogan.mp3");
 	}
 }

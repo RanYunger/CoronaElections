@@ -60,7 +60,7 @@ public class BallotsTabView extends View {
 	// Constructors
 	public BallotsTabView(Stage stage) {
 		super(stage);
-		
+
 		buildScene();
 	}
 
@@ -166,14 +166,14 @@ public class BallotsTabView extends View {
 
 	public void initBallots() {
 		LocalDate electionsDate = UIHandler.getElectionsDate();
-		
-		allBallots = FXCollections.observableArrayList();	
+
+		allBallots = FXCollections.observableArrayList();
 		allBallots.add(new BallotModel("21st Road Street, Town City", electionsDate));
 		allBallots.add(new BallotModel("4 Miles Away, Go There", electionsDate));
 		allBallots.add(new CoronaMilitaryBallotModel(electionsDate));
 		allBallots.add(new MilitaryBallotModel(electionsDate));
 		allBallots.add(new CoronaBallotModel("1st Hospital You See, Your City", electionsDate));
-		
+
 		ballotsTableView.setItems(allBallots);
 	}
 
@@ -188,7 +188,7 @@ public class BallotsTabView extends View {
 	@Override
 	protected void addEffects() {
 		Scene scene = stage.getScene();
-		
+
 		UIHandler.addCursorEffectsToNode(scene, addBallotButton);
 	}
 }

@@ -7,8 +7,11 @@ import ID318783479_ID316334473.Views.ComplaintView;
 import ID318783479_ID316334473.Views.ElectionsTabView;
 import ID318783479_ID316334473.Views.MainView;
 import ID318783479_ID316334473.Views.PartiesTabView;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
@@ -72,6 +75,12 @@ public class MainController {
 		setCitizensTabController(new CitizensTabController(citizensTabView));
 		setPartiesTabController(new PartiesTabController(partiesTabView));
 
+		ChangeListener<Tab> tabPaneChangeListener = new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+				mainView.setSelectedTab(newValue);
+			}
+		};
 		EventHandler<ActionEvent> fileAComplaintButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -87,13 +96,14 @@ public class MainController {
 			@Override
 			public void handle(MouseEvent event) {
 				ImageView audioImageView = mainView.getAudioImageView(), newImageView;
-				
+
 				UIHandler.toggleAudio();
-				newImageView = UIHandler.buildImage(UIHandler.isAudioOn() ?  "AudioOn.png" : "AudioOff.png", 30, 30);
+				newImageView = UIHandler.buildImage(UIHandler.isAudioOn() ? "AudioOn.png" : "AudioOff.png", 30, 30);
 				audioImageView.setImage(newImageView.getImage());
 			}
 		};
 
+		mainView.getTabPane().getSelectionModel().selectedItemProperty().addListener(tabPaneChangeListener);
 		mainView.getFileAComplaintButton().setOnAction(fileAComplaintButtonEventHandler);
 		mainView.getAudioImageView().setOnMouseClicked(audioImageViewEventHandler);
 	}

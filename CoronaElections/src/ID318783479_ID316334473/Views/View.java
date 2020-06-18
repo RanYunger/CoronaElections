@@ -1,5 +1,6 @@
 package ID318783479_ID316334473.Views;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.stage.Stage;
@@ -30,18 +31,28 @@ public abstract class View {
 
 	protected abstract void addEffects();
 
-	public ObservableList<Node> getAllNodesInView() {
-		return stage.getScene().getRoot().getChildrenUnmodifiable();
+	public ObservableList<Node> getChildren(){
+		ObservableList<Node> childrenUnmodifiable = stage.getScene().getRoot().getChildrenUnmodifiable();
+		ObservableList<Node> allNodes = FXCollections.observableArrayList();
+		
+		for (Node node : childrenUnmodifiable)
+			allNodes.add(node);
+		
+		return allNodes;
 	}
 
 	public Node getHighestNodeInView() {
-		ObservableList<Node> allNodes = getAllNodesInView();
+		ObservableList<Node> allNodes = getChildren();
 		Node highestNode = allNodes.get(0);
 
-		for (int i = 1; i <= allNodes.size(); i++)
+		for (int i = 1; i < allNodes.size(); i++)
 			highestNode = allNodes.get(i).getTranslateY() < highestNode.getTranslateY() ? allNodes.get(i) : highestNode;
 
 		return highestNode;
+	}
+	
+	public void removeNode(Node node) {
+		stage.getScene().getRoot().getChildrenUnmodifiable().remove(node);
 	}
 
 	public void close() {

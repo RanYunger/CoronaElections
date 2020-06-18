@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 
 public class ComplaintController {
 	// Constants
@@ -32,12 +31,27 @@ public class ComplaintController {
 			@Override
 			public void handle(ActionEvent event) {
 				ComboBox<String> windowNameComboBox = complaintView.getWindowNameComboBox();
-				
+				TextArea descriptionTextArea = complaintView.getDescriptionTextArea();
+				String selectedViewName;
+				int selectedViewIndex;
+
 				try {
+					// Validations
+					selectedViewIndex = windowNameComboBox.getSelectionModel().getSelectedIndex();
+					if (selectedViewIndex == -1)
+						throw new Exception("Select a view to complain about.");
+					selectedViewName = windowNameComboBox.getSelectionModel().getSelectedItem();
+
+					if (descriptionTextArea.getText().trim().length() == 0)
+						throw new Exception("Tell us what you'd like us to fix.");
+
 					Thread.sleep(3000);
+					if (!UIHandler.getViewDamageStatuses().get(selectedViewName))
+						UIHandler.getViewDamageStatuses().replace(selectedViewName, true);
 					UIHandler.showSuccess("Your complaint has processed in our servers.\nstay tuned for updates.");
-					UIHandler.MontyPython(windowNameComboBox.getSelectionModel().getSelectedItem());
-				} catch (InterruptedException ex) {
+					view.close();
+				} catch (Exception ex) {
+					UIHandler.showError(ex.getMessage());
 				}
 			}
 		};
@@ -47,17 +61,8 @@ public class ComplaintController {
 
 	// Methods
 	public boolean isFormValid() {
-		ComboBox<?> windowNameComboBox = complaintView.getWindowNameComboBox();
-		TextField controlNameTextField = complaintView.getControlNameTextField();
-		TextArea descriptionTextArea = complaintView.getDescriptionTextArea();
 
 		try {
-			// Validations
-			if (windowNameComboBox.getSelectionModel().getSelectedIndex() == -1)
-				throw new Exception();
-			if ((controlNameTextField.getText().trim().length() == 0)
-					|| (descriptionTextArea.getText().trim().length() == 0))
-				throw new Exception();
 
 			return true;
 		} catch (Exception ex) {

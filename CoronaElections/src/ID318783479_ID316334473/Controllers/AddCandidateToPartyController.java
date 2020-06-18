@@ -106,6 +106,7 @@ public class AddCandidateToPartyController {
 				}
 
 				selectedCitizen = filteredCitizens.size() == 1 ? filteredCitizens.get(0) : selectedCitizen;
+				addView.getCitizensTableView().getSelectionModel().select(selectedCitizen);
 				selectedParty.addCandidate(citizensTabView.morphCitizenToCandidate(selectedCitizen));
 				UIHandler.showSuccess("A new candidate was added successfully!");
 				addCandidateView.close();
