@@ -15,11 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.PieChart.Data;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.control.Tooltip;
 
 public class ElectionsTabController {
 	// Constants
@@ -27,7 +23,6 @@ public class ElectionsTabController {
 	// Fields
 	private ElectionsTabView tabView;
 	private boolean electionsOccoured;
-	private Label captionLabel;
 
 	// Properties (Getters and Setters)
 	public ElectionsTabView getElectionsTabView() {
@@ -46,19 +41,10 @@ public class ElectionsTabController {
 		this.electionsOccoured = electionsOccoured;
 	}
 
-	public Label getCaptionLabel() {
-		return captionLabel;
-	}
-	
-	public void setCaptionLabel(Label captionLabel) {
-		this.captionLabel = captionLabel;
-	}
-	
 	// Constructors
 	public ElectionsTabController(ElectionsTabView view) {
 		setElectionsTabView(view);
 		setElectionsOccoured(false);
-		setCaptionLabel(new Label());
 
 		EventHandler<ActionEvent> runElectionsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -108,7 +94,7 @@ public class ElectionsTabController {
 								partyVotes = resultsInBallot.get(chosenParty);
 
 								resultsInBallot.replace(chosenParty, ++partyVotes);
-								voterBallot.setVotersPercentage((int)voterBallot.getNumericVotersPercentage() + 1);
+								voterBallot.setVotersPercentage((int) voterBallot.getNumericVotersPercentage() + 1);
 							}
 						}
 
@@ -119,29 +105,6 @@ public class ElectionsTabController {
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
-			}
-		};
-		EventHandler<MouseEvent> movePieChartEventHandler = new EventHandler<MouseEvent>() {
-			
-			@Override
-			public void handle(MouseEvent event) {				
-				Region region = (Region) event.getTarget();
-				String str = region.getUserData().toString();
-				
-				// TODO: FIX
-				captionLabel.setTranslateX(event.getX());
-				captionLabel.setTranslateY(event.getY());
-				captionLabel.setFont(new Font(15));
-				captionLabel.setText(str);
-				captionLabel.setVisible(true);
-			}
-		};
-		EventHandler<MouseEvent> exitPieChartEventHandler = new EventHandler<MouseEvent>() {
-			
-			@Override
-			public void handle(MouseEvent event) {
-				captionLabel.setVisible(false);
-				
 			}
 		};
 		EventHandler<ActionEvent> showResultsButtonEventHandler = new EventHandler<ActionEvent>() {
@@ -158,29 +121,22 @@ public class ElectionsTabController {
 					ObservableList<BallotModel> allBallots = UIHandler.getMainView().getAllBallots();
 					ObservableList<PartyModel> allParties = UIHandler.getMainView().getAllParties();
 
-					final Label captionLabel = new Label();
 					PieChart finalResultsPieChart = tabView.getFinalResultsPieChart();
 					TreeMap<String, Integer> finalResults = getFinalResults(allBallots);
 					ArrayList<PieChart.Data> finalResultsPieChartData = new ArrayList<PieChart.Data>();
-					PieChart.Data currentPieChartData;
-
-					captionLabel.setTextFill(Color.DARKORANGE);
-					captionLabel.setFont(new Font(15));
+					double totalPieValue = 0;
 
 					// Displays the final results
 					finalResultsPieChart.setTitle("Final Results");
 					for (Map.Entry<String, Integer> resultEntry : finalResults.entrySet()) {
-						currentPieChartData = new PieChart.Data(resultEntry.getKey(),
-								resultEntry.getValue());
-						
-						finalResultsPieChartData.add(currentPieChartData);
+						totalPieValue += resultEntry.getValue();
+						finalResultsPieChartData.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
 					}
 					finalResultsPieChart.setData(FXCollections.observableList(finalResultsPieChartData));
-					
+
 					for (Data data : finalResultsPieChart.getData()) {
-						data.getNode().setUserData(String.valueOf(data.getPieValue())); // pass parameter to event handlers
-						data.getNode().setOnMouseMoved(movePieChartEventHandler); 
-						data.getNode().setOnMouseExited(exitPieChartEventHandler);
+						Tooltip.install(data.getNode(),
+								new Tooltip(String.format("%.2f%%", (data.getPieValue() / totalPieValue) * 100)));
 					}
 
 					tabView.buildResultsByBallotBarChart(allBallots, allParties);

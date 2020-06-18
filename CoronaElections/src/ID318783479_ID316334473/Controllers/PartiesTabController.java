@@ -57,7 +57,7 @@ public class PartiesTabController {
 					return;
 				}
 				if (selectedParty == null) {
-					UIHandler.showError("Choose a party for adding a candidate");
+					UIHandler.showError("Choose a party for adding a candidate.");
 					return;
 				}
 

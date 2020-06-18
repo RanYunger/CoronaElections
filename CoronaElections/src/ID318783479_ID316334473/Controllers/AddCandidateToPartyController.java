@@ -77,7 +77,7 @@ public class AddCandidateToPartyController {
 		setUnionPredicate(p -> true);
 		setCandidateIDPredicate(p -> true);
 		setCandidateIDPredicate(p -> true);
-		setFilteredCitizens(new FilteredList<CitizenModel>(citizensTabView.getAllCitizens(), unionPredicate));
+		setFilteredCitizens(new FilteredList<CitizenModel>(citizensTabView.getOnlyCitizens(), unionPredicate));
 		refreshFilter("", "");
 
 		ChangeListener<String> candidateIDTextFieldChangeListener = new ChangeListener<String>() {

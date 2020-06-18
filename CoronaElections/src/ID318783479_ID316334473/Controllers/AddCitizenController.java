@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Controllers;
 
-import ID318783479_ID316334473.TBN;
+import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
@@ -112,16 +112,16 @@ public class AddCitizenController {
 				int citizenID;
 
 				// Validations
-				if (!IDText.matches(TBN.VALID_CITIZEN_ID_PATTERN)) {
+				if (!IDText.matches(SearchHandler.VALID_CITIZEN_ID_PATTERN)) {
 					UIHandler.showError("Invalid ID!", citizenIDTextField.getTooltip().getText());
 					return;
 				}
 				citizenID = Integer.parseInt(IDText);
-				if (TBN.getCitizenByID(citizenID) != null) {
+				if (SearchHandler.getCitizenByID(citizenID) != null) {
 					UIHandler.showError("This citizen already exists. Try a different ID.");
 					return;
 				}
-				if (!citizenName.matches(TBN.VALID_CITIZEN_FULL_NAME_PATTERN)) {
+				if (!citizenName.matches(SearchHandler.VALID_CITIZEN_FULL_NAME_PATTERN)) {
 					UIHandler.showError("Invalid name!", citizenFullNameTextField.getTooltip().getText());
 					return;
 				}
@@ -131,7 +131,8 @@ public class AddCitizenController {
 				}
 				if (daysOfSickness == null)
 					daysOfSickness = isIsolated ? citizenDaysOfSicknessComboBox.getItems().get(0) : 0;
-
+				citizenDaysOfSicknessComboBox.getSelectionModel().select(daysOfSickness);	
+					
 				addView.refreshAssociatedBallotComboBox(isIsolated, isSoldier);
 				if (citizenAssociatedBallotComboBox.getItems().isEmpty()) {
 					UIHandler.showWarning("Make sure there's at least one ballot that matches this citizen's type!");
@@ -139,9 +140,10 @@ public class AddCitizenController {
 				}
 				associatedBallotID = associatedBallotID == null ? citizenAssociatedBallotComboBox.getItems().get(0)
 						: associatedBallotID;
+				citizenAssociatedBallotComboBox.getSelectionModel().select(associatedBallotID);
 
-				associatedBallot = TBN.getBallotByID((int) associatedBallotID);
-				citizen = TBN.createCitizen((int) citizenID, citizenName, (int) yearOfBirth, (int) daysOfSickness,
+				associatedBallot = SearchHandler.getBallotByID((int) associatedBallotID);
+				citizen = SearchHandler.createCitizen((int) citizenID, citizenName, (int) yearOfBirth, (int) daysOfSickness,
 						associatedBallot, isIsolated, isWearingSuit, isSoldier, isCarryingWeapon);
 
 				tabView.addCitizen(citizen);

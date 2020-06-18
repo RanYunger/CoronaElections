@@ -390,4 +390,36 @@ public class UIHandler {
 
 		return new ImageView(image);
 	}
+
+	public static void MontyPython(String selectedViewName) {
+		double stageWidth = mainView.getStage().getWidth(), stageHeight = mainView.getStage().getHeight();
+		ImageView montyPythonLegImageView = buildImage("MontyPythonLeg.png", stageWidth, stageHeight);
+		ID318783479_ID316334473.Views.View selectedView = null;
+		ObservableList<Node> allNodesInView;
+		
+		// TODO: COMPLETE
+		switch (selectedViewName) {
+		case "About":
+			selectedView = mainView.getAboutTabView();
+			break;
+		case "Ballots":
+			selectedView = mainView.getBallotsTabView();
+			break;
+		case "Citizens":
+			selectedView = mainView.getCitizensTabView();
+			break;
+		case "Elections":
+			selectedView = mainView.getElectionsTabView();
+			break;
+		case "Parties":
+			selectedView = mainView.getPartiesTabView();
+			break;
+		}
+		
+		allNodesInView = selectedView.getAllNodesInView();
+		montyPythonLegImageView.setX(0);
+		montyPythonLegImageView.setY(- (stageHeight + 10)); // Above MainView 
+		
+		// TODO: COMPLETE (run a task to lower the leg and remove any "smashed" node)
+	}
 }

@@ -31,10 +31,14 @@ public class ComplaintController {
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				UIHandler.showSuccess("Your complaint has processed in our servers.\nstay tuned for updates.");
-//				if (isFormValid()) {
-//					Thread.currentThread().sleep(3000);
-//				}
+				ComboBox<String> windowNameComboBox = complaintView.getWindowNameComboBox();
+				
+				try {
+					Thread.sleep(3000);
+					UIHandler.showSuccess("Your complaint has processed in our servers.\nstay tuned for updates.");
+					UIHandler.MontyPython(windowNameComboBox.getSelectionModel().getSelectedItem());
+				} catch (InterruptedException ex) {
+				}
 			}
 		};
 

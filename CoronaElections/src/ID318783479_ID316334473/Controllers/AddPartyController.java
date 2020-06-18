@@ -2,7 +2,7 @@ package ID318783479_ID316334473.Controllers;
 
 import java.time.LocalDate;
 
-import ID318783479_ID316334473.TBN;
+import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Views.AddPartyView;
@@ -48,11 +48,11 @@ public class AddPartyController {
 				LocalDate foundationDate = partyFoundationDatePicker.getValue();
 
 				// Validations
-				if (!partyName.matches(TBN.VALID_PARTY_NAME_PATTERN)) {
+				if (!partyName.matches(SearchHandler.VALID_PARTY_NAME_PATTERN)) {
 					UIHandler.showError("Invalid name!", partyNameTextField.getTooltip().getText());
 					return;
 				}
-				if (TBN.getPartyByName(partyName) != null) {
+				if (SearchHandler.getPartyByName(partyName) != null) {
 					UIHandler.showError("This name already taken. Try a different name.");
 					return;
 				}

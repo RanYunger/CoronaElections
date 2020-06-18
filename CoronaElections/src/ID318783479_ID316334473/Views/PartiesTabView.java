@@ -2,7 +2,7 @@ package ID318783479_ID316334473.Views;
 
 import java.time.LocalDate;
 
-import ID318783479_ID316334473.TBN;
+import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
@@ -187,14 +187,14 @@ public class PartiesTabView extends View {
 		allParties.add(new PartyModel("Israeli Labor Party", PartyModel.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
 		
 		// Adds the candidates to their parties
-		allParties.get(0).addCandidate((CandidateModel) TBN.getCitizenByID(678901234));
-		allParties.get(0).addCandidate((CandidateModel) TBN.getCitizenByID(789012345));
-		allParties.get(1).addCandidate((CandidateModel) TBN.getCitizenByID(890123456));
-		allParties.get(1).addCandidate((CandidateModel) TBN.getCitizenByID(901234567));
-		allParties.get(2).addCandidate((CandidateModel) TBN.getCitizenByID(901234568));
-		allParties.get(2).addCandidate((CandidateModel) TBN.getCitizenByID(901234566));
-		allParties.get(3).addCandidate((CandidateModel) TBN.getCitizenByID(901234569));
-		allParties.get(3).addCandidate((CandidateModel) TBN.getCitizenByID(901234565));
+		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(678901234));
+		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(789012345));
+		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(890123456));
+		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234567));
+		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234568));
+		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234566));
+		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234569));
+		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234565));
 		
 		partiesTableView.setItems(allParties);
 	}

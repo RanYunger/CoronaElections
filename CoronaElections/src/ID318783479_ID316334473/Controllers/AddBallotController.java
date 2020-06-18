@@ -1,6 +1,6 @@
 package ID318783479_ID316334473.Controllers;
 
-import ID318783479_ID316334473.TBN;
+import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Views.AddBallotView;
 import ID318783479_ID316334473.Views.BallotsTabView;
@@ -45,14 +45,14 @@ public class AddBallotController {
 						ballotType = addView.getBallotTypeComboBox().getValue();
 
 				// Validations
-				if (!address.matches(TBN.VALID_BALLOT_ADDRESS_PATTERN)) {
+				if (!address.matches(SearchHandler.VALID_BALLOT_ADDRESS_PATTERN)) {
 					UIHandler.showError("Invalid address!", ballotAddressTextField.getTooltip().getText());
 					return;
 				}
 
 				ballotType = ballotType == null ? addView.getBallotTypeComboBox().getItems().get(0) : ballotType;
 
-				tabView.addBallot(TBN.createBallotByType(ballotType, address, UIHandler.getElectionsDate()));
+				tabView.addBallot(SearchHandler.createBallotByType(ballotType, address, UIHandler.getElectionsDate()));
 				UIHandler.showSuccess("A new ballot was added successfully!");
 
 				addView.close();

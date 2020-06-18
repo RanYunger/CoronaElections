@@ -84,14 +84,15 @@ public class AddCandidateToPartyView extends View {
 
 		citizenIDTableColumn = new TableColumn<CitizenModel, Number>("ID");
 		citizenIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
-		citizenIDTableColumn.setMinWidth(225);
+		citizenIDTableColumn.setMinWidth(225.5);
 
 		citizenNameTableColumn = new TableColumn<CitizenModel, String>("Full Name");
 		citizenNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableFullName());
-		citizenNameTableColumn.setMinWidth(225);
+		citizenNameTableColumn.setMinWidth(225.5);
 
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn);
 		for (TableColumn<?, ?> tableColumn : citizensTableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
 			tableColumn.setSortable(false);

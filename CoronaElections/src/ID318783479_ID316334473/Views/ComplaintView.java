@@ -20,7 +20,7 @@ public class ComplaintView extends View {
 	// Fields
 	private VBox vBox;
 	private HBox row1HBox, row2HBox, row3HBox;
-	private Label headerLabel, windowNameLabel, controlNameLabel, descriptionLabel;
+	private Label headerLabel, criticismLabel, windowNameLabel, controlNameLabel, descriptionLabel;
 	private ComboBox<String> windowNameComboBox;
 	private TextField controlNameTextField;
 	private TextArea descriptionTextArea;
@@ -46,7 +46,7 @@ public class ComplaintView extends View {
 	// Constructors
 	public ComplaintView() {
 		super();
-		
+
 		buildScene();
 	}
 
@@ -54,7 +54,7 @@ public class ComplaintView extends View {
 	@Override
 	protected void buildScene() {
 		String[] windowNames = { "About", "Ballots", "Citizens", "Elections", "Parties" };
-		double sceneWidth = 700, sceneHeight = 400;
+		double sceneWidth = 700, sceneHeight = 520;
 
 		vBox = new VBox();
 		row1HBox = new HBox();
@@ -62,6 +62,8 @@ public class ComplaintView extends View {
 		row3HBox = new HBox();
 
 		headerLabel = new Label("Complaint Form");
+		criticismLabel = new Label(
+				"Your criticism is important to us.\r\nTell us how we can improve so we can provide you with the best\r\nand highest quality software products.");
 		windowNameLabel = new Label("Window Name:");
 		controlNameLabel = new Label("Control/s Name:");
 		descriptionLabel = new Label("Describe the bug/s:");
@@ -71,6 +73,7 @@ public class ComplaintView extends View {
 		submitButton = new Button("Submit");
 
 		headerLabel.setFont(new Font(30));
+		criticismLabel.setFont(new Font(20));
 		windowNameLabel.setFont(new Font(20));
 		controlNameLabel.setFont(new Font(20));
 		descriptionLabel.setFont(new Font(20));
@@ -94,8 +97,9 @@ public class ComplaintView extends View {
 		HBox.setMargin(descriptionTextArea, new Insets(0, 10, 0, 10));
 
 		vBox.setAlignment(Pos.TOP_CENTER);
-		vBox.getChildren().addAll(headerLabel, row1HBox, row2HBox, row3HBox, submitButton);
-		VBox.setMargin(headerLabel, new Insets(2, 0, 30, 0));
+		vBox.getChildren().addAll(headerLabel, criticismLabel, row1HBox, row2HBox, row3HBox, submitButton);
+		VBox.setMargin(headerLabel, new Insets(2, 0, 8, 0));
+		VBox.setMargin(criticismLabel, new Insets(2, 0, 8, 0));
 		VBox.setMargin(row1HBox, new Insets(10, 0, 8, 0));
 		VBox.setMargin(row2HBox, new Insets(10, 0, 8, 0));
 		VBox.setMargin(row3HBox, new Insets(10, 0, 8, 0));

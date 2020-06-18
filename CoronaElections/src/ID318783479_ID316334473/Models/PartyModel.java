@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import ID318783479_ID316334473.TBN;
+import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -92,7 +92,7 @@ public class PartyModel implements Comparable<PartyModel> {
 
 			Collections.sort(candidatesArrayList);
 
-			return TBN.binarySearch(candidatesArrayList, candidateID);
+			return SearchHandler.binarySearch(candidatesArrayList, candidateID);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}

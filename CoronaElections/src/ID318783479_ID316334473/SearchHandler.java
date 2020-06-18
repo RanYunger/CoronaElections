@@ -15,7 +15,7 @@ import ID318783479_ID316334473.Models.Citizens.SoldierModel;
 import javafx.collections.ObservableList;
 
 // This class contains methods which aren't necessarily related to UI
-public class TBN {
+public class SearchHandler {
 	// Constants
 	public static final String VALID_CITIZEN_ID_PATTERN = "^[0-9]{9}$";
 	public static final String VALID_CITIZEN_FULL_NAME_PATTERN = "^([A-Z][a-z]+ ?){2}$";
