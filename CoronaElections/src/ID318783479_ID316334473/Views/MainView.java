@@ -18,7 +18,6 @@ public class MainView extends View {
 
 	// Fields
 	private TabPane tabPane;
-	private Tab selectedTab;
 	private Button fileAComplaintButton;
 	private ImageView audioImageView;
 	private ElectionsTabView electionsTabView;
@@ -38,13 +37,6 @@ public class MainView extends View {
 
 	public Tab getSelectedTab() {
 		return tabPane.getSelectionModel().getSelectedItem();
-	}
-
-	public void setSelectedTab(Tab tab) {
-		selectedTab = tab;
-
-		if ((tab.getContent().isVisible()) && (UIHandler.getViewDamageStatuses().get(tab.getText())))
-			UIHandler.MontyPython(tab.getText());
 	}
 
 	public Button getFileAComplaintButton() {

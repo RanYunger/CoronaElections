@@ -83,17 +83,19 @@ public class ElectionsTabController {
 						for (BallotModel ballot : allBallots) {
 							ballot.setResults(new TreeMap<String, Integer>());
 							for (PartyModel party : allParties)
-								ballot.getResults().put(party.getTextualName(), 0);
+								ballot.getResults().put(party.getTextualName(), 0); // TODO: FIX
 						}
 
 						for (CitizenModel voter : allVoters) {
 							chosenParty = UIHandler.vote(voter, allParties);
-							if (chosenParty != null && chosenParty != "<UNKNOWN>") {
+							if ((chosenParty != null) && (chosenParty != "<UNKNOWN>")
+									&& (chosenParty != "I don't want to vote")) {
 								voterBallot = voter.getActualAssociatedBallot();
 								resultsInBallot = voterBallot.getResults();
 								partyVotes = resultsInBallot.get(chosenParty);
 
 								resultsInBallot.replace(chosenParty, ++partyVotes);
+								// TODO: FIX
 								voterBallot.setVotersPercentage((int) voterBallot.getNumericVotersPercentage() + 1);
 							}
 						}
@@ -130,7 +132,9 @@ public class ElectionsTabController {
 					finalResultsPieChart.setTitle("Final Results");
 					for (Map.Entry<String, Integer> resultEntry : finalResults.entrySet()) {
 						totalPieValue += resultEntry.getValue();
-						finalResultsPieChartData.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
+						if (resultEntry.getValue() > 0)
+							finalResultsPieChartData
+									.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
 					}
 					finalResultsPieChart.setData(FXCollections.observableList(finalResultsPieChartData));
 

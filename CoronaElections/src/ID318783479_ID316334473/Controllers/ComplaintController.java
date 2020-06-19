@@ -32,7 +32,6 @@ public class ComplaintController {
 			public void handle(ActionEvent event) {
 				ComboBox<String> windowNameComboBox = complaintView.getWindowNameComboBox();
 				TextArea descriptionTextArea = complaintView.getDescriptionTextArea();
-				String selectedViewName;
 				int selectedViewIndex;
 
 				try {
@@ -40,14 +39,11 @@ public class ComplaintController {
 					selectedViewIndex = windowNameComboBox.getSelectionModel().getSelectedIndex();
 					if (selectedViewIndex == -1)
 						throw new Exception("Select a view to complain about.");
-					selectedViewName = windowNameComboBox.getSelectionModel().getSelectedItem();
 
 					if (descriptionTextArea.getText().trim().length() == 0)
 						throw new Exception("Tell us what you'd like us to fix.");
 
 					Thread.sleep(3000);
-					if (!UIHandler.getViewDamageStatuses().get(selectedViewName))
-						UIHandler.getViewDamageStatuses().replace(selectedViewName, true);
 					UIHandler.showSuccess("Your complaint has processed in our servers.\nstay tuned for updates.");
 					view.close();
 				} catch (Exception ex) {

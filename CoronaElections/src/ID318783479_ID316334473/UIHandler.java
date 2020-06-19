@@ -4,20 +4,16 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.TreeMap;
 
 import ID318783479_ID316334473.Controllers.MainController;
-import ID318783479_ID316334473.Models.MontyPythonThread;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SoldierModel;
 import ID318783479_ID316334473.Views.MainView;
-import ID318783479_ID316334473.Views.View;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -54,8 +50,6 @@ public class UIHandler {
 	private static MediaPlayer mediaPlayer;
 	private static Media media;
 
-	private static TreeMap<String, Boolean> viewDamageStatuses;
-
 	// Properties
 	public static LocalDate getElectionsDate() {
 		return electionsDate;
@@ -86,17 +80,8 @@ public class UIHandler {
 	}
 
 	public static void toggleAudio() {
+		mediaPlayer.setMute(isAudioOn);
 		isAudioOn = !isAudioOn;
-
-		// Validations
-		if ((!isAudioOn) && (mediaPlayer != null))
-			mediaPlayer.stop();
-		else if ((isAudioOn) && (mediaPlayer != null))
-			mediaPlayer.play();
-	}
-
-	public static TreeMap<String, Boolean> getViewDamageStatuses() {
-		return viewDamageStatuses;
 	}
 
 	// Methods
@@ -112,8 +97,8 @@ public class UIHandler {
 	}
 
 	public static String vote(CitizenModel voter, ObservableList<PartyModel> allParties) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
 		ArrayList<String> partyNames = new ArrayList<String>();
+		ChoiceDialog<String> choiceDialog;
 		Optional<String> chosenParty;
 		Stage stage = mainView.getStage();
 
@@ -130,26 +115,14 @@ public class UIHandler {
 			for (PartyModel partyModel : allParties)
 				partyNames.add(partyModel.getTextualName());
 
-			alert.initOwner(stage);
-			setGeneralFeatures(stage);
-			alert.getDialogPane().setExpandableContent(null);
-			alert.getDialogPane().setExpanded(false);
-			alert.setHeaderText(String.format("Greetings, %s. Do you want to vote?", voter.getTextualFullName()));
-			alert.getButtonTypes().clear();
-			alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+			choiceDialog = new ChoiceDialog<String>("I don't want to vote", partyNames);
+			choiceDialog.initOwner(stage);
+			choiceDialog.setTitle("Vote for your chosen party");
+			choiceDialog.setHeaderText(String.format("Greetings, %s. Who do you vote for", voter.getTextualFullName()));
+			chosenParty = choiceDialog.showAndWait();
 
-			alert.showAndWait();
+			return chosenParty.isPresent() ? chosenParty.get() : "<UNKNOWN>";
 
-			if (alert.getResult() == ButtonType.YES) {
-				ChoiceDialog<String> choiceDialog = new ChoiceDialog<String>("<UNKNOWN>", partyNames);
-
-				choiceDialog.initOwner(stage);
-				choiceDialog.setTitle("Vote for your chosen party");
-				choiceDialog.setHeaderText("Who do you vote for");
-				chosenParty = choiceDialog.showAndWait();
-
-				return chosenParty.isPresent() ? chosenParty.get() : "<UNKNOWN>";
-			}
 		} catch (IllegalStateException ex) {
 			UIHandler.showError(ex.getMessage());
 		} catch (Exception ex) {
@@ -207,16 +180,6 @@ public class UIHandler {
 
 		if (isAudioOn)
 			mediaPlayer.play();
-	}
-
-	public static void initViewStatuses() {
-		viewDamageStatuses = new TreeMap<String, Boolean>();
-
-		viewDamageStatuses.put("About", false);
-		viewDamageStatuses.put("Ballots", false);
-		viewDamageStatuses.put("Citizens", false);
-		viewDamageStatuses.put("Elections", false);
-		viewDamageStatuses.put("Parties", false);
 	}
 
 	public static ButtonType showConfirmation(String message) {
@@ -395,20 +358,5 @@ public class UIHandler {
 		Image image = new Image(imageName, height, width, false, false);
 
 		return new ImageView(image);
-	}
-
-	public static void MontyPython(String viewName) {
-		new MontyPythonThread().run();
-	}
-
-	public static boolean isPointInRectangle(Point2D point, Point2D rectanglePosition, double rectangleWidth,
-			double rectangleHeight) {
-		// Validations
-		if ((point.getX() < rectanglePosition.getX()) || (point.getX() > (rectanglePosition.getX() + rectangleWidth)))
-			return false;
-		if ((point.getY() < rectanglePosition.getY()) || (point.getY() > (rectanglePosition.getY() + rectangleHeight)))
-			return false;
-
-		return true;
 	}
 }

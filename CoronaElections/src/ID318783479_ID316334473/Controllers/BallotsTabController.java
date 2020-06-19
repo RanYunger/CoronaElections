@@ -38,7 +38,7 @@ public class BallotsTabController {
 		EventHandler<ActionEvent> addBallotButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try {
+				try {						
 					AddBallotView addView = new AddBallotView();
 					AddBallotController controller = new AddBallotController(tabView, addView);
 				} catch (Exception ex) {
