@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -28,8 +27,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class BallotsTabView extends View {
-	// Constants
-
 	// Fields
 	private GridPane gridPane;
 	private Button addBallotButton;
@@ -168,11 +165,11 @@ public class BallotsTabView extends View {
 		LocalDate electionsDate = UIHandler.getElectionsDate();
 
 		allBallots = FXCollections.observableArrayList();
-		allBallots.add(new BallotModel("21st Road Street, Town City", electionsDate));
-		allBallots.add(new BallotModel("4 Miles Away, Go There", electionsDate));
-		allBallots.add(new CoronaMilitaryBallotModel(electionsDate));
-		allBallots.add(new MilitaryBallotModel(electionsDate));
-		allBallots.add(new CoronaBallotModel("1st Hospital You See, Your City", electionsDate));
+		allBallots.add(new BallotModel("21 Road Street, Town City", electionsDate));
+		allBallots.add(new BallotModel("4 Miles Away, go There", electionsDate));
+		allBallots.add(new CoronaMilitaryBallotModel("Secret Base, Somewhere in the Desert", electionsDate));
+		allBallots.add(new MilitaryBallotModel("Another Secret Base, Other Side of the Desert", electionsDate));
+		allBallots.add(new CoronaBallotModel("First Hospital you see, Your City", electionsDate));
 
 		ballotsTableView.setItems(allBallots);
 	}
@@ -187,8 +184,6 @@ public class BallotsTabView extends View {
 
 	@Override
 	protected void addEffects() {
-		Scene scene = stage.getScene();
-
-		UIHandler.addCursorEffectsToNode(scene, addBallotButton);
+		UIHandler.addCursorEffectsToNode(addBallotButton);
 	}
 }

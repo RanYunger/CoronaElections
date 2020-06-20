@@ -1,7 +1,8 @@
 package ID318783479_ID316334473;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
@@ -12,26 +13,14 @@ import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SickCitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SickSoldierModel;
 import ID318783479_ID316334473.Models.Citizens.SoldierModel;
-import javafx.collections.ObservableList;
 
 // This class contains methods which aren't necessarily related to UI
 public class SearchHandler {
-	// Constants
-	public static final String VALID_CITIZEN_ID_PATTERN = "^[0-9]{9}$";
-	public static final String VALID_CITIZEN_FULL_NAME_PATTERN = "^([A-Z][a-z]+ ?){2}$";
-	public static final String VALID_PARTY_NAME_PATTERN = "^([A-Z][a-z]+ ?)+$";
-	public static final String VALID_BALLOT_ADDRESS_PATTERN = "^([0-9]{2} ([A-Z][a-z]+ ?){1,3}, ([A-Z][a-z]+ ?){1,2})$";
-
-	// Fields
-
-	// Properties
-
-	// Methods
-	public static <T, U> T binarySearch(ArrayList<T> array, U key) {
-		return binarySearch(array, key, 0, array.size() - 1);
+	private static <T, U> T binarySearch(List<T> collection, U key) {
+		return binarySearch(collection, key, 0, collection.size() - 1);
 	}
 
-	private static <T, U> T binarySearch(ArrayList<T> array, U key, int start, int end) {
+	private static <T, U> T binarySearch(List<T> array, U key, int start, int end) {
 		if (start <= end) {
 			int mid = (start + end) / 2;
 
@@ -104,38 +93,18 @@ public class SearchHandler {
 		}
 	}
 
-	public static BallotModel getBallotByID(int ballotID) {
-		// TODO: FIX SO IT'LL USE BINARY SEARCH (WITHOUT THE ZERO BASED THING!)
-		ObservableList<BallotModel> allBallots = UIHandler.getMainView().getAllBallots();
-
-		for (int i = 0; i < allBallots.size(); i++)
-			if (allBallots.get(i).getNumericID() == ballotID)
-				return allBallots.get(i);
-
-		return null;
+	public static BallotModel getBallotByID(int ballotID, List<? extends BallotModel> list) {
+		Collections.sort(list);
+		return binarySearch(list, ballotID);
 	}
 
-	public static CitizenModel getCitizenByID(int citizenID) {
-		// TODO: FIX SO IT'LL USE BINARY SEARCH
-		ObservableList<CitizenModel> allCitizens = UIHandler.getMainView().getAllCitizens();
-
-		for (int i = 0; i < allCitizens.size(); i++)
-			if (allCitizens.get(i).getNumericID() == citizenID)
-				return allCitizens.get(i);
-
-		return null;
+	public static CitizenModel getCitizenByID(int citizenID, List<? extends CitizenModel> list) {
+		Collections.sort(list);
+		return binarySearch(list, citizenID);
 	}
 
-	public static PartyModel getPartyByName(String partyName) {
-		// TODO: FIX SO IT'LL USE BINARY SEARCH
-		ObservableList<PartyModel> allParties = UIHandler.getMainView().getAllParties();
-
-		for (int i = 0; i < allParties.size(); i++) {
-			if (allParties.get(i).getTextualName().equals(partyName))
-				return allParties.get(i);
-		}
-
-		return null;
+	public static PartyModel getPartyByName(String partyName, List<PartyModel> list) {
+		Collections.sort(list);
+		return binarySearch(list, partyName);
 	}
-
 }

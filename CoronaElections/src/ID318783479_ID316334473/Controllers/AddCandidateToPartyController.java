@@ -17,53 +17,33 @@ public class AddCandidateToPartyController {
 	// Constants
 
 	// Fields
-	private CitizensTabView tabView;
 	private AddCandidateToPartyView addView;
+	private CitizensTabView tabView;
 	private Predicate<CitizenModel> unionPredicate, candidateIDPredicate, candidateNamePredicate;
 	private FilteredList<CitizenModel> filteredCitizens;
 
 	// Properties (Getters and Setters)
-	public FilteredList<CitizenModel> getFilteredCitizens() {
-		return filteredCitizens;
-	}
-
-	public void setFilteredCitizens(FilteredList<CitizenModel> filteredCitizens) {
+	private void setFilteredCitizens(FilteredList<CitizenModel> filteredCitizens) {
 		this.filteredCitizens = filteredCitizens;
 	}
 
-	public Predicate<CitizenModel> getCandidateIDPredicate() {
-		return candidateIDPredicate;
-	}
-
-	public void setCandidateIDPredicate(Predicate<CitizenModel> candidateIDPredicate) {
+	private void setCandidateIDPredicate(Predicate<CitizenModel> candidateIDPredicate) {
 		this.candidateIDPredicate = candidateIDPredicate;
 	}
 
-	public Predicate<CitizenModel> getCandidateNamePredicate() {
-		return candidateNamePredicate;
-	}
-
-	public void setCandidateNamePredicate(Predicate<CitizenModel> candidateNamePredicate) {
+	private void setCandidateNamePredicate(Predicate<CitizenModel> candidateNamePredicate) {
 		this.candidateNamePredicate = candidateNamePredicate;
 	}
 
-	public Predicate<CitizenModel> getUnionPredicate() {
-		return unionPredicate;
-	}
-
-	public void setUnionPredicate(Predicate<CitizenModel> unionCandidate) {
+	private void setUnionPredicate(Predicate<CitizenModel> unionCandidate) {
 		this.unionPredicate = unionCandidate;
 	}
 
-	public AddCandidateToPartyView getAddCandidateToPartyView() {
-		return addView;
-	}
-
-	public void setAddCandidateToPartyView(AddCandidateToPartyView view) {
+	private void setAddCandidateToPartyView(AddCandidateToPartyView view) {
 		this.addView = view;
 	}
 
-	public void setCitizensTabView(CitizensTabView view) {
+	private void setCitizensTabView(CitizensTabView view) {
 		this.tabView = view;
 	}
 
@@ -71,27 +51,26 @@ public class AddCandidateToPartyController {
 	public AddCandidateToPartyController(PartyModel selectedParty, AddCandidateToPartyView addCandidateView,
 			CitizensTabView citizensTabView) {
 
-		setCitizensTabView(citizensTabView);
 		setAddCandidateToPartyView(addCandidateView);
-
+		setCitizensTabView(citizensTabView);
 		setUnionPredicate(p -> true);
 		setCandidateIDPredicate(p -> true);
 		setCandidateIDPredicate(p -> true);
-		setFilteredCitizens(new FilteredList<CitizenModel>(citizensTabView.getOnlyCitizens(), unionPredicate));
+		setFilteredCitizens(new FilteredList<CitizenModel>(tabView.getOnlyCitizens(), unionPredicate));
 		refreshFilter("", "");
 
 		ChangeListener<String> candidateIDTextFieldChangeListener = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldCandidateIDText,
 					String newCandidateIDText) {
-				refreshFilter(newCandidateIDText, addCandidateView.getCandidateNameTextField().getText());
+				refreshFilter(newCandidateIDText, addView.getCandidateNameTextField().getText());
 			}
 		};
 		ChangeListener<String> candidateNameTextFieldChangeListener = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldCandidateNameText,
 					String newCandidateNameText) {
-				refreshFilter(addCandidateView.getCandidateIDTextField().getText(), newCandidateNameText);
+				refreshFilter(addView.getCandidateIDTextField().getText(), newCandidateNameText);
 			}
 		};
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
@@ -107,9 +86,9 @@ public class AddCandidateToPartyController {
 
 				selectedCitizen = filteredCitizens.size() == 1 ? filteredCitizens.get(0) : selectedCitizen;
 				addView.getCitizensTableView().getSelectionModel().select(selectedCitizen);
-				selectedParty.addCandidate(citizensTabView.morphCitizenToCandidate(selectedCitizen));
+				selectedParty.addCandidate(tabView.morphCitizenToCandidate(selectedCitizen));
+				addView.close();
 				UIHandler.showSuccess("A new candidate was added successfully!");
-				addCandidateView.close();
 			}
 		};
 
@@ -119,7 +98,7 @@ public class AddCandidateToPartyController {
 	}
 
 	// Methods
-	public void refreshFilter(String newCandidateIDStr, String newCandidateNameStr) {
+	private void refreshFilter(String newCandidateIDStr, String newCandidateNameStr) {
 		setCandidateIDPredicate(new Predicate<CitizenModel>() {
 			@Override
 			public boolean test(CitizenModel citizen) {

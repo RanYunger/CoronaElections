@@ -4,7 +4,6 @@ import ID318783479_ID316334473.UIHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -13,15 +12,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class AboutTabView extends View {
-	// Constants
-
 	// Fields
 	private HBox hBox;
 	private VBox vBox;
 	private Label madeByLabel, sponseredByLabel, dateLabel;
 	private ImageView dorAlonImageView, tnuvaImageView, ramiLeviImageView;
-
-	// Properties (Getters and Setters)
 
 	// Constructors
 	public AboutTabView(Stage stage) {
@@ -67,10 +62,8 @@ public class AboutTabView extends View {
 
 	@Override
 	protected void addEffects() {
-		Scene scene = stage.getScene();
-
-		UIHandler.addAudioToImageView(scene, dorAlonImageView, "DorAlonSlogan.mp3");
-		UIHandler.addAudioToImageView(scene, tnuvaImageView, "TnuvaSlogan.mp3");
-		UIHandler.addAudioToImageView(scene, ramiLeviImageView, "RamiLeviSlogan.mp3");
+		UIHandler.addAudioToImageView(dorAlonImageView, "DorAlonSlogan.mp3");
+		UIHandler.addAudioToImageView(tnuvaImageView, "TnuvaSlogan.mp3");
+		UIHandler.addAudioToImageView(ramiLeviImageView, "RamiLeviSlogan.mp3");
 	}
 }

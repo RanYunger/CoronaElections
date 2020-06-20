@@ -33,24 +33,22 @@ public class ElectionsDateController {
 				MainController mainController;
 
 				UIHandler.setElectionsDate(electionsDateView.getElectionsDate());
-				
+
 				mainView = new MainView(new Stage());
 				mainController = new MainController(mainView, mainView.getElectionsTabView(),
 						mainView.getBallotsTabView(), mainView.getCitizensTabView(), mainView.getPartiesTabView());
-				
+
 				UIHandler.setMainController(mainController);
 				UIHandler.setMainView(mainView);
-				
+
 				mainView.getBallotsTabView().initBallots();
 				mainView.getCitizensTabView().initCitizens();
 				mainView.getPartiesTabView().initParties();
-				
-				electionsDateView.close();		
+
+				electionsDateView.close();
 			}
 		};
-		
+
 		electionsDateView.getEnterButton().setOnAction(enterButtonEventHandler);
 	}
-
-	// Methods
 }

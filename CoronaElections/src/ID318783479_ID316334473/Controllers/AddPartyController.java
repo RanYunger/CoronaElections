@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.ValidPatterns;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Views.AddPartyView;
 import ID318783479_ID316334473.Views.PartiesTabView;
@@ -14,29 +15,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
 public class AddPartyController {
-	// Constants
-
-	// Fields
-	private AddPartyView addView;
-	private PartiesTabView tabView;
-
-	// Properties (Getters and Setters)
-	public AddPartyView getAddPartyView() {
-		return addView;
-	}
-
-	public void setAddPartyView(AddPartyView view) {
-		this.addView = view;
-	}
-
-	public void setPartiesTabView(PartiesTabView view) {
-		this.tabView = view;
-	}
-
-	// Constructors
-	public AddPartyController(PartiesTabView partiesTabView, AddPartyView addPartyView) {
-		setAddPartyView(addPartyView);
-		setPartiesTabView(partiesTabView);
+	public AddPartyController(PartiesTabView tabView, AddPartyView addView) {
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -48,11 +27,11 @@ public class AddPartyController {
 				LocalDate foundationDate = partyFoundationDatePicker.getValue();
 
 				// Validations
-				if (!partyName.matches(SearchHandler.VALID_PARTY_NAME_PATTERN)) {
+				if (!partyName.matches(ValidPatterns.PARTY_NAME.getPattern())) {
 					UIHandler.showError("Invalid name!", partyNameTextField.getTooltip().getText());
 					return;
 				}
-				if (SearchHandler.getPartyByName(partyName) != null) {
+				if (SearchHandler.getPartyByName(partyName, UIHandler.getMainView().getAllParties()) != null) {
 					UIHandler.showError("This name already taken. Try a different name.");
 					return;
 				}
@@ -62,14 +41,11 @@ public class AddPartyController {
 
 				tabView.addParty(
 						new PartyModel(partyName, PartyModel.PartyAssociation.valueOf(partyWing), foundationDate));
-				UIHandler.showSuccess("A new party was added successfully!");
-
 				addView.close();
+				UIHandler.showSuccess("A new party was added successfully!");
 			}
 		};
 
-		addPartyView.getSubmitButton().setOnAction(submitButtonEventHandler);
+		addView.getSubmitButton().setOnAction(submitButtonEventHandler);
 	}
-
-// Methods
 }

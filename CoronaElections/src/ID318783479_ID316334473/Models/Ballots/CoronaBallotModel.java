@@ -13,10 +13,6 @@ public class CoronaBallotModel extends BallotModel implements Sanitizable {
 	}
 
 	// Constructors
-	public CoronaBallotModel(LocalDate votingDate) {
-		super(votingDate);
-	}
-
 	public CoronaBallotModel(String address, LocalDate votingDate) {
 		super(address, votingDate);
 	}

@@ -1,9 +1,1 @@
-TODOs Shy:
-3. Fix all SearchHandler (Formerly TBN) getXBy methods to work with binarySearch
-
-TODOs Ran:
-1. Implement THE RED SHINY BUTTON ("File a Complaint") XD
-2. Implement some kind of EE
-
-TODOs BOTH:
-1. Comment important code pieces
+TODOs BOTH: Comment important code pieces and wrap all this shit up

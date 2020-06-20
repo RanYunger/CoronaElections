@@ -14,8 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class MainView extends View {
-	// Constants
-
 	// Fields
 	private TabPane tabPane;
 	private Button fileAComplaintButton;
@@ -159,11 +157,25 @@ public class MainView extends View {
 			currentNode = rootNodes.get(i);
 			if ((currentNode instanceof Button) && (((Button) currentNode).getText() == "התלונן עלינו!")) {
 				setFileAComplaintButton((Button) currentNode);
-				UIHandler.addCursorEffectsToNode(scene, fileAComplaintButton);
+				UIHandler.addCursorEffectsToNode(fileAComplaintButton);
 			} else if ((currentNode instanceof ImageView) && ((ImageView) currentNode).getImage().getWidth() == 30) {
 				setAudioImageView((ImageView) currentNode);
-				UIHandler.addAudioToImageView(scene, audioImageView, "Yayyy.mp3");
+				UIHandler.addAudioToImageView(audioImageView, "Yayyy.mp3");
 			}
 		}
+	}
+
+	public void AllButtonsAndTabsSetDisable(boolean value) {
+		tabPane.setDisable(value);
+		AllButtonsSetDisable(value);
+	}
+
+	public void AllButtonsSetDisable(boolean value) {
+		ballotsTabView.getAddBallotButton().setDisable(value);
+		citizensTabView.getAddCitizenButton().setDisable(value);
+		electionsTabView.getRunElectionsButton().setDisable(value);
+		electionsTabView.getShowResultsButton().setDisable(value);
+		partiesTabView.getAddPartyButton().setDisable(value);
+		partiesTabView.getAddCandidateToPartyButton().setDisable(value);
 	}
 }

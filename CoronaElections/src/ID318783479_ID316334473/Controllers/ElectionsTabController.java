@@ -18,23 +18,13 @@ import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.Tooltip;
 
 public class ElectionsTabController {
-	// Constants
-
 	// Fields
 	private ElectionsTabView tabView;
 	private boolean electionsOccoured;
 
 	// Properties (Getters and Setters)
-	public ElectionsTabView getElectionsTabView() {
-		return tabView;
-	}
-
 	public void setElectionsTabView(ElectionsTabView electionsTabView) {
 		this.tabView = electionsTabView;
-	}
-
-	public boolean isElectionsOccoured() {
-		return electionsOccoured;
 	}
 
 	public void setElectionsOccoured(boolean electionsOccoured) {
@@ -56,6 +46,8 @@ public class ElectionsTabController {
 
 						return;
 					} else {
+						UIHandler.getMainView().AllButtonsSetDisable(true);
+						boolean noOneHasVoted = true;
 						ObservableList<BallotModel> allBallots = UIHandler.getMainView().getAllBallots();
 						ObservableList<CitizenModel> allVoters = UIHandler.getMainView().getAllCitizens();
 						ObservableList<PartyModel> allParties = UIHandler.getMainView().getAllParties();
@@ -81,32 +73,38 @@ public class ElectionsTabController {
 						}
 
 						for (BallotModel ballot : allBallots) {
-							ballot.setResults(new TreeMap<String, Integer>());
 							for (PartyModel party : allParties)
-								ballot.getResults().put(party.getTextualName(), 0); // TODO: FIX
+								ballot.getResults().put(party.getTextualName(), 0);
 						}
 
 						for (CitizenModel voter : allVoters) {
 							chosenParty = UIHandler.vote(voter, allParties);
-							if ((chosenParty != null) && (chosenParty != "<UNKNOWN>")
-									&& (chosenParty != "I don't want to vote")) {
+							if (chosenParty != null && !chosenParty.equalsIgnoreCase("<UNKNOWN>")
+									&& !chosenParty.equalsIgnoreCase("I don't want to vote")) {
+								noOneHasVoted = false;
 								voterBallot = voter.getActualAssociatedBallot();
 								resultsInBallot = voterBallot.getResults();
 								partyVotes = resultsInBallot.get(chosenParty);
-
 								resultsInBallot.replace(chosenParty, ++partyVotes);
-								// TODO: FIX
-								voterBallot.setVotersPercentage((int) voterBallot.getNumericVotersPercentage() + 1);
+								voterBallot.voteConfirmed();
 							}
 						}
 
-						setElectionsOccoured(true);
-						UIHandler.showSuccess("The elections process has complete!");
+						if (noOneHasVoted) {
+							UIHandler.showWarning("No one has voted! please start the election process again..");
+							UIHandler.getMainView().AllButtonsSetDisable(false);
+						} else {
+							setElectionsOccoured(true);
+							UIHandler.showSuccess("The elections process has complete!");
+							UIHandler.getMainView().getTabPane().setDisable(false);
+							tabView.getShowResultsButton().setDisable(false);
+						}
 					}
 
 				} catch (Exception ex) {
 					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
+
 			}
 		};
 		EventHandler<ActionEvent> showResultsButtonEventHandler = new EventHandler<ActionEvent>() {
@@ -115,8 +113,7 @@ public class ElectionsTabController {
 				try {
 					// Validations
 					if (!electionsOccoured) {
-						UIHandler.showError("Elections results will be visible once the process is complete.");
-
+						UIHandler.showWarning("Elections results will be visible once the process is complete.");
 						return;
 					}
 
@@ -132,9 +129,7 @@ public class ElectionsTabController {
 					finalResultsPieChart.setTitle("Final Results");
 					for (Map.Entry<String, Integer> resultEntry : finalResults.entrySet()) {
 						totalPieValue += resultEntry.getValue();
-						if (resultEntry.getValue() > 0)
-							finalResultsPieChartData
-									.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
+						finalResultsPieChartData.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
 					}
 					finalResultsPieChart.setData(FXCollections.observableList(finalResultsPieChartData));
 
@@ -144,7 +139,9 @@ public class ElectionsTabController {
 					}
 
 					tabView.buildResultsByBallotBarChart(allBallots, allParties);
+					tabView.getShowResultsButton().setDisable(true);
 				} catch (Exception ex) {
+					ex.printStackTrace();
 					UIHandler.showError("An unexpected error occured.", ex.getMessage());
 				}
 			}

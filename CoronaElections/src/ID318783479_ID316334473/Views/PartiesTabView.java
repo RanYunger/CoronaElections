@@ -1,17 +1,18 @@
 package ID318783479_ID316334473.Views;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.PartyModel;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
+import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -27,8 +28,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class PartiesTabView extends View {
-	// Constants
-
 	// Fields
 	private GridPane gridPane;
 	private Button addPartyButton, addCandidateToPartyButton;
@@ -189,14 +188,15 @@ public class PartiesTabView extends View {
 				new PartyModel("Israeli Labor Party", PartyModel.PartyAssociation.Left, LocalDate.of(1968, 1, 21)));
 
 		// Adds the candidates to their parties
-		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(678901234));
-		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(789012345));
-		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(890123456));
-		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234567));
-		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234568));
-		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234566));
-		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234569));
-		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234565));
+		List<CitizenModel> allCitizens = UIHandler.getMainView().getAllCitizens();
+		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(678901234, allCitizens));
+		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(789012345, allCitizens));
+		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(890123456, allCitizens));
+		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234567, allCitizens));
+		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234568, allCitizens));
+		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234566, allCitizens));
+		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234569, allCitizens));
+		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234565, allCitizens));
 
 		partiesTableView.setItems(allParties);
 	}
@@ -205,22 +205,13 @@ public class PartiesTabView extends View {
 		return (Node) gridPane;
 	}
 
-	public void addEffects(Stage stage) {
-		Scene scene = stage.getScene();
-
-		UIHandler.addCursorEffectsToNode(scene, addPartyButton);
-		UIHandler.addCursorEffectsToNode(scene, addCandidateToPartyButton);
-	}
-
 	public void addParty(PartyModel party) {
 		allParties.add(party);
 	}
 
 	@Override
 	protected void addEffects() {
-		Scene scene = stage.getScene();
-
-		UIHandler.addCursorEffectsToNode(scene, addPartyButton);
-		UIHandler.addCursorEffectsToNode(scene, addCandidateToPartyButton);
+		UIHandler.addCursorEffectsToNode(addPartyButton);
+		UIHandler.addCursorEffectsToNode(addCandidateToPartyButton);
 	}
 }

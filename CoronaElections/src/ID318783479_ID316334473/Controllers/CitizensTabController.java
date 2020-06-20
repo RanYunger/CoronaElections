@@ -10,46 +10,23 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
 
 public class CitizensTabController {
-	// Constants
-
-	// Fields
-	private CitizensTabView tabView;
-
-	// Properties (Getters and Setters)
-
-	public CitizensTabView getCitizensTabView() {
-		return tabView;
-	}
-
-	public void setCitizensTabView(CitizensTabView citizensTabView) {
-		this.tabView = citizensTabView;
-	}
-
-	// Constructors
-	public CitizensTabController(CitizensTabView view) {
-		setCitizensTabView(view);
-
+	public CitizensTabController(CitizensTabView tabView) {
 		EventHandler<ActionEvent> addCitizenButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
+			@SuppressWarnings("unused")
 			public void handle(ActionEvent event) {
-				try {
-					BallotsTabView ballotsTabView = (BallotsTabView) UIHandler.getViewByName("BallotsTabView");
-
-					TableView<BallotModel> ballotsTableView = ballotsTabView.getBallotsTableView();
-					if (ballotsTableView.getItems().isEmpty())
-						UIHandler.showWarning("Make sure to have at least 1 ballot before creating a new citizen!");
-					else {
-						AddCitizenView addView = new AddCitizenView();
-						AddCitizenController controller = new AddCitizenController(tabView, addView);
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+				UIHandler.getMainView().AllButtonsAndTabsSetDisable(true);
+				BallotsTabView ballotsTabView = UIHandler.getMainView().getBallotsTabView();
+				TableView<BallotModel> ballotsTableView = ballotsTabView.getBallotsTableView();
+				if (ballotsTableView.getItems().isEmpty())
+					UIHandler.showWarning("Make sure to have at least 1 ballot before creating a new citizen!");
+				else {
+					AddCitizenView addView = new AddCitizenView();
+					AddCitizenController controller = new AddCitizenController(tabView, addView);
 				}
 			}
 		};
 
 		tabView.getAddCitizenButton().setOnAction(addCitizenButtonEventHandler);
 	}
-
-	// Methods
 }

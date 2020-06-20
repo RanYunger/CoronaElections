@@ -25,8 +25,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class AddCitizenView extends View {
-	// Constants
-
 	// Fields
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox, row4HBox, row5HBox, row6HBox;
@@ -84,7 +82,7 @@ public class AddCitizenView extends View {
 	// Constructors
 	public AddCitizenView() {
 		super();
-		
+
 		buildScene();
 
 		addEffects();
@@ -130,10 +128,6 @@ public class AddCitizenView extends View {
 		submitButton = new Button("Submit");
 
 		refreshAssociatedBallotComboBox(false, false);
-		// TODO: FIX THIS
-//		citizenYearOfBirthComboBox.getSelectionModel().selectFirst();
-//		citizenAssociatedBallotComboBox.getSelectionModel().selectFirst();
-//		citizenIsSoldierCheckBox.setSelected(true);
 
 		headerLabel.setFont(new Font(30));
 		IDLabel.setFont(new Font(20));
@@ -213,8 +207,7 @@ public class AddCitizenView extends View {
 
 	public void refreshAssociatedBallotComboBox(boolean isIsolated, boolean isSoldier) {
 		ArrayList<Integer> ballotIDs = new ArrayList<Integer>();
-		ObservableList<BallotModel> allBallots = ((BallotsTabView) UIHandler.getViewByName("BallotsTabView"))
-				.getAllBallots();
+		ObservableList<BallotModel> allBallots = UIHandler.getMainView().getBallotsTabView().getAllBallots();
 
 		for (BallotModel ballotModel : allBallots) {
 			int currentBallotID = ballotModel.getNumericID();
@@ -230,7 +223,8 @@ public class AddCitizenView extends View {
 
 	@Override
 	protected void addEffects() {
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
-		UIHandler.addAudioToImageView(stage.getScene(), citizenImageView, "ToiletFlush.mp3");
+		stage.setOnCloseRequest(closing -> UIHandler.getMainView().AllButtonsAndTabsSetDisable(false));
+		UIHandler.addCursorEffectsToNode(submitButton);
+		UIHandler.addAudioToImageView(citizenImageView, "ToiletFlush.mp3");
 	}
 }

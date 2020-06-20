@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 
 public class CitizenModel implements Comparable<CitizenModel> {
 	// Constants
@@ -15,22 +14,22 @@ public class CitizenModel implements Comparable<CitizenModel> {
 	public static final int SOLDIER_AGE = 21;
 
 	// Fields
-	protected ObservableValue<Number> ID;
-	protected ObservableValue<String> fullName;
-	protected ObservableValue<Number> yearOfBirth, age;
-	protected ObservableValue<Number> daysOfSickness;
-	protected ObservableValue<BallotModel> associatedBallot;
-	protected ObservableValue<Boolean> isIsolated;
-	protected ObservableValue<Boolean> isWearingSuit;
-	protected ObservableValue<Boolean> isSoldier;
+	protected SimpleIntegerProperty ID;
+	protected SimpleStringProperty fullName;
+	protected SimpleIntegerProperty yearOfBirth, age;
+	protected SimpleIntegerProperty daysOfSickness;
+	protected SimpleObjectProperty<BallotModel> associatedBallot;
+	protected SimpleBooleanProperty isIsolated;
+	protected SimpleBooleanProperty isWearingSuit;
+	protected SimpleBooleanProperty isSoldier;
 
 	// Properties (Getters and Setters)
-	public ObservableValue<Number> getObservableID() {
+	public SimpleIntegerProperty getObservableID() {
 		return ID;
 	}
 
 	public int getNumericID() {
-		return ID.getValue().intValue();
+		return ID.get();
 	}
 
 	private void setID(int ID) throws Exception {
@@ -39,12 +38,12 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		this.ID = new SimpleIntegerProperty(ID);
 	}
 
-	public ObservableValue<String> getObservableFullName() {
+	public SimpleStringProperty getObservableFullName() {
 		return fullName;
 	}
 
 	public String getTextualFullName() {
-		return fullName.getValue();
+		return fullName.get();
 	}
 
 	private void setFullName(String fullName) throws Exception {
@@ -53,12 +52,12 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		this.fullName = new SimpleStringProperty(fullName);
 	}
 
-	public ObservableValue<Number> getObservableYearOfBirth() {
+	public SimpleIntegerProperty getObservableYearOfBirth() {
 		return yearOfBirth;
 	}
 
 	public int getNumericYearOfBirth() {
-		return yearOfBirth.getValue().intValue();
+		return yearOfBirth.get();
 	}
 
 	private void setYearOfBirth(int yearOfBirth) throws Exception {
@@ -67,12 +66,12 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		this.yearOfBirth = new SimpleIntegerProperty(yearOfBirth);
 	}
 
-	public ObservableValue<Number> getObservableAge() {
+	public SimpleIntegerProperty getObservableAge() {
 		return age;
 	}
 
 	public int getNumericAge() {
-		return age.getValue().intValue();
+		return age.get();
 	}
 
 	protected void setAge(int age) throws Exception {
@@ -81,12 +80,12 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		this.age = new SimpleIntegerProperty(age);
 	}
 
-	public ObservableValue<Number> getObservableDaysOfSickness() {
+	public SimpleIntegerProperty getObservableDaysOfSickness() {
 		return daysOfSickness;
 	}
 
 	public int getNumericDaysOfSickness() {
-		return daysOfSickness.getValue().intValue();
+		return daysOfSickness.get();
 	}
 
 	protected void setDaysOfSickness(int daysOfSickness) throws Exception {
@@ -97,12 +96,12 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		this.daysOfSickness = new SimpleIntegerProperty(daysOfSickness);
 	}
 
-	public ObservableValue<BallotModel> getObservableAssociatedBallot() {
+	public SimpleObjectProperty<BallotModel> getObservableAssociatedBallot() {
 		return associatedBallot;
 	}
 
 	public BallotModel getActualAssociatedBallot() {
-		return associatedBallot.getValue();
+		return associatedBallot.get();
 	}
 
 	public void setAssociatedBallot(BallotModel associatedBallot) throws NullPointerException {
@@ -110,36 +109,36 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		getActualAssociatedBallot().addVoter(this);
 	}
 
-	public ObservableValue<Boolean> observableIsolationStatus() {
+	public SimpleBooleanProperty observableIsolationStatus() {
 		return isIsolated;
 	}
 
 	public boolean isIsolated() {
-		return isIsolated.getValue();
+		return isIsolated.get();
 	}
 
 	private void setIsIsolated(boolean isIsolated) {
 		this.isIsolated = new SimpleBooleanProperty(isIsolated);
 	}
 
-	public ObservableValue<Boolean> observableWearingSuitStatus() {
+	public SimpleBooleanProperty observableWearingSuitStatus() {
 		return isWearingSuit;
 	}
 
 	public boolean isWearingSuit() {
-		return isWearingSuit.getValue();
+		return isWearingSuit.get();
 	}
 
 	private void setIswearingSuit(boolean iswearingSuit) {
 		this.isWearingSuit = new SimpleBooleanProperty(iswearingSuit);
 	}
 
-	public ObservableValue<Boolean> observableSoldierStatus() {
+	public SimpleBooleanProperty observableSoldierStatus() {
 		return isSoldier;
 	}
 
 	public boolean isSoldier() {
-		return isSoldier.getValue();
+		return isSoldier.get();
 	}
 
 	private void setIsSoldier(boolean isSoldier) {
@@ -159,21 +158,21 @@ public class CitizenModel implements Comparable<CitizenModel> {
 			setIswearingSuit(isWearingSuit);
 			setAssociatedBallot(associatedBallot);
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			System.err.println(ex.getMessage());
 		}
 	}
 
 	public void calculateAge(LocalDate votingDate) {
 		try {
-			setAge(votingDate.getYear() - yearOfBirth.getValue().intValue());
+			setAge(votingDate.getYear() - yearOfBirth.get());
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			System.err.println(ex.getMessage());
 		}
 	}
 
 	@Override
 	public int compareTo(CitizenModel other) {
-		return Integer.compare(ID.getValue().intValue(), other.ID.getValue().intValue());
+		return Integer.compare(ID.get(), other.ID.get());
 	}
 
 	@Override
@@ -183,19 +182,6 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		if (!(obj instanceof CitizenModel))
 			return false;
 		CitizenModel other = (CitizenModel) obj;
-		return ID == other.ID;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(String.format("Citizen [ID:%d | Full name: %s | Born: %s | Status: ", getNumericID(),
-				getTextualFullName(), getNumericYearOfBirth()));
-		sb.append(isIsolated() ? String.format("Isolated (%d Day(s) so far), ", getNumericDaysOfSickness())
-				: "Not isolated, ");
-		sb.append(isWearingSuit() ? "Wearing suit]" : "Not wearing suit]");
-
-		return sb.toString();
+		return ID == other.ID; // Two citizens can't have the same ID
 	}
 }

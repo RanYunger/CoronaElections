@@ -18,8 +18,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class AddCandidateToPartyView extends View {
-	// Constants
-
 	// Fields
 	private VBox vBox;
 	private HBox mainHBox, row1HBox;
@@ -127,7 +125,8 @@ public class AddCandidateToPartyView extends View {
 
 	@Override
 	protected void addEffects() {
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		stage.setOnCloseRequest(closing -> UIHandler.getMainView().AllButtonsAndTabsSetDisable(false));
+		UIHandler.addCursorEffectsToNode(submitButton);
 	}
 
 	public void refreshCitizensTableView(ObservableList<CitizenModel> citizens) {

@@ -15,40 +15,21 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 public class PartiesTabController {
-	// Constants
-
-	// Fields
-	private PartiesTabView tabView;
-
-	// Properties (Getters and Setters)
-
-	public PartiesTabView getPartiesTabView() {
-		return tabView;
-	}
-
-	public void setPartiesTabView(PartiesTabView partiesTabView) {
-		this.tabView = partiesTabView;
-	}
-
-	// Constructors
-	public PartiesTabController(PartiesTabView view) {
-		setPartiesTabView(view);
+	@SuppressWarnings("unused")
+	public PartiesTabController(PartiesTabView tabView) {
 
 		EventHandler<ActionEvent> addPartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					AddPartyView view = new AddPartyView();
-					AddPartyController controller = new AddPartyController(tabView, view);
-				} catch (Exception ex) {
-					UIHandler.showError("An unexpected error occured", ex.getMessage());
-				}
+				UIHandler.getMainView().AllButtonsAndTabsSetDisable(true);
+				AddPartyView view = new AddPartyView();
+				AddPartyController controller = new AddPartyController(tabView, view);
 			}
 		};
 		EventHandler<ActionEvent> addCandidateToPartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				CitizensTabView citizensTabView = (CitizensTabView) UIHandler.getViewByName("CitizensTabView");
+				CitizensTabView citizensTabView = UIHandler.getMainView().getCitizensTabView();
 				PartyModel selectedParty = tabView.getPartiesTableView().getSelectionModel().getSelectedItem();
 
 				// Validations
@@ -60,7 +41,7 @@ public class PartiesTabController {
 					UIHandler.showError("Choose a party for adding a candidate.");
 					return;
 				}
-
+				UIHandler.getMainView().AllButtonsAndTabsSetDisable(true);
 				AddCandidateToPartyView addView = new AddCandidateToPartyView(new Stage(),
 						citizensTabView.getAllCitizens());
 				AddCandidateToPartyController controller = new AddCandidateToPartyController(selectedParty, addView,
@@ -88,6 +69,4 @@ public class PartiesTabController {
 		tabView.getPartiesTableView().getSelectionModel().selectedIndexProperty()
 				.addListener(partiesTableViewEventHandler);
 	}
-
-// Methods
 }

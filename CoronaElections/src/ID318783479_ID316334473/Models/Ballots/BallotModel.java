@@ -7,30 +7,30 @@ import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class BallotModel {
+public class BallotModel implements Comparable<BallotModel> {
 	// Constants
 
 	// Fields
 	private static int IDGenerator = 1;
 
-	protected ObservableValue<Number> ID;
-	protected ObservableValue<String> address;
+	protected SimpleIntegerProperty ID;
+	protected int numOfVoters = 0;
+	protected SimpleStringProperty address;
 	protected ObservableList<CitizenModel> voterRegistry;
 	protected LocalDate electionsDate;
-	protected ObservableValue<Number> votersPercentage;
+	protected SimpleDoubleProperty votersPercentage;
 	protected TreeMap<String, Integer> results;
 
 	// Properties (Getters and Setters)
-	public final ObservableValue<Number> getObservableID() {
+	public final SimpleIntegerProperty getObservableID() {
 		return ID;
 	}
 
 	public int getNumericID() {
-		return ID.getValue().intValue();
+		return ID.get();
 	}
 
 	private void setID(int id) {
@@ -38,7 +38,7 @@ public class BallotModel {
 
 	}
 
-	public final ObservableValue<String> getObservableAddress() {
+	public final SimpleStringProperty getObservableAddress() {
 		return address;
 	}
 
@@ -70,28 +70,33 @@ public class BallotModel {
 		this.electionsDate = votingDate;
 	}
 
-	public final ObservableValue<Number> getObservableVotersPercentage() {
+	public final SimpleDoubleProperty getObservableVotersPercentage() {
 		return votersPercentage;
 	}
 
 	public final double getNumericVotersPercentage() {
-		return votersPercentage.getValue().doubleValue();
+		return votersPercentage.get();
 	}
 
-	public void setVotersPercentage(int numOfVoters) {
+	private void setVotersPercentage() {
 		this.votersPercentage = new SimpleDoubleProperty(
 				(voterRegistry.size() > 0) ? (100 * numOfVoters) / voterRegistry.size() : 0);
+	}
+
+	public void voteConfirmed() {
+		numOfVoters++;
+		setVotersPercentage();
 	}
 
 	public TreeMap<String, Integer> getResults() {
 		return results;
 	}
 
-	public void setResults(TreeMap<String, Integer> results) {
+	private void setResults(TreeMap<String, Integer> results) {
 		this.results = results;
 	}
 
-	public ObservableValue<String> getObservableType() {
+	public SimpleStringProperty getObservableType() {
 		return new SimpleStringProperty(getTextualType());
 	}
 
@@ -112,17 +117,14 @@ public class BallotModel {
 	}
 
 	// Constructors
-	public BallotModel(LocalDate votingDate) {
-		this("<UNKNOWN>", votingDate);
-	}
-
 	public BallotModel(String address, LocalDate votingDate) {
 		try {
 			setID(IDGenerator++);
 			setAddress(address);
 			setVotingDate(votingDate);
 			setVoterRegistry(FXCollections.observableArrayList());
-			setVotersPercentage(0);
+			setVotersPercentage();
+			setResults(new TreeMap<String, Integer>());
 		} catch (Exception ex) {
 			System.err.println("error!\n" + ex.getMessage());
 		}
@@ -143,6 +145,11 @@ public class BallotModel {
 	}
 
 	@Override
+	public int compareTo(BallotModel other) {
+		return Integer.compare(getNumericID(), other.getNumericID());
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -150,23 +157,6 @@ public class BallotModel {
 			return false;
 		BallotModel other = (BallotModel) obj;
 
-		return ID.equals(other.ID);
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder(
-				String.format("%s [ID: %d | Address: %s]\n", getTextualType(), getNumericID(), getTextualAddress()));
-
-		if (voterRegistry.isEmpty())
-			return sb.append("Nothing else to See here..").toString();
-
-		sb.append("\tDate of voting: " + electionsDate + "\n\tVoter list:");
-		for (CitizenModel c : voterRegistry) {
-			c.calculateAge(electionsDate);
-			sb.append("\n\t\t" + c.toString());
-		}
-
-		return sb.toString();
+		return ID.equals(other.ID); // Two ballots can't have the same ID
 	}
 }

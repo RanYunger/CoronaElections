@@ -3,12 +3,10 @@ package ID318783479_ID316334473.Models;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -19,13 +17,13 @@ public class PartyModel implements Comparable<PartyModel> {
 	}
 
 	// Fields
-	private ObservableValue<String> name;
+	private SimpleStringProperty name;
 	private PartyAssociation wing;
 	private LocalDate foundationDate;
 	private ObservableList<CandidateModel> candidates;
 
 	// Properties (Getters and Setters)
-	public ObservableValue<String> getObservableName() {
+	public SimpleStringProperty getObservableName() {
 		return name;
 	}
 
@@ -47,7 +45,7 @@ public class PartyModel implements Comparable<PartyModel> {
 		this.wing = wing;
 	}
 
-	public ObservableValue<String> getObservableFoundationDate() {
+	public SimpleStringProperty getObservableFoundationDate() {
 		return new SimpleStringProperty(foundationDate.format(DateTimeFormatter.ofPattern("MM/dd/uuuu")));
 	}
 
@@ -88,11 +86,7 @@ public class PartyModel implements Comparable<PartyModel> {
 	// Methods
 	public CandidateModel getCandidateByID(int candidateID) {
 		try {
-			ArrayList<CandidateModel> candidatesArrayList = new ArrayList<CandidateModel>(candidates);
-
-			Collections.sort(candidatesArrayList);
-
-			return SearchHandler.binarySearch(candidatesArrayList, candidateID);
+			return (CandidateModel) SearchHandler.getCitizenByID(candidateID, candidates);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
@@ -158,22 +152,5 @@ public class PartyModel implements Comparable<PartyModel> {
 			return false;
 		PartyModel other = (PartyModel) obj;
 		return getTextualName().equalsIgnoreCase(other.getTextualName()); // Two parties can't have the same name
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(String.format("PartyModel [Name: %s | Association: %s | Foundation: %s]\n", name, wing.toString(),
-				foundationDate.toString()));
-		sb.append("\tCandidates:");
-		if (candidates.size() == 0)
-			sb.append("\n\t\tNothing to see here...");
-		else {
-			sb.append(String.format("\n\t\tParty leader: %s", candidates.get(0).toString()));
-			for (int i = 1; i < candidates.size(); i++)
-				sb.append(String.format("\n\t\t%s runner: %s", ordinal(i), candidates.get(i).toString()));
-		}
-		return sb.toString();
 	}
 }

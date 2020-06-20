@@ -21,8 +21,6 @@ import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 public class AddPartyView extends View {
-	// Constants
-
 	// Fields
 	private VBox vBox;
 	private HBox mainHBox, row1HBox, row2HBox, row3HBox;
@@ -133,12 +131,13 @@ public class AddPartyView extends View {
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
 		addEffects();
-		
+
 		stage.show();
 	}
 
 	@Override
 	protected void addEffects() {
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		stage.setOnCloseRequest(closing -> UIHandler.getMainView().AllButtonsAndTabsSetDisable(false));
+		UIHandler.addCursorEffectsToNode(submitButton);
 	}
 }

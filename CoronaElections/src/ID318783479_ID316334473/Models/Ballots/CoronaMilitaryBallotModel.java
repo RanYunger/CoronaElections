@@ -13,10 +13,6 @@ public class CoronaMilitaryBallotModel extends BallotModel implements Militariza
 	}
 
 	// Constructors
-	public CoronaMilitaryBallotModel(LocalDate votingDate) {
-		super(votingDate);
-	}
-
 	public CoronaMilitaryBallotModel(String address, LocalDate votingDate) {
 		super(address, votingDate);
 	}

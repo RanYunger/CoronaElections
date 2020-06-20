@@ -30,22 +30,16 @@ public class ComplaintController {
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				ComboBox<String> windowNameComboBox = complaintView.getWindowNameComboBox();
-				TextArea descriptionTextArea = complaintView.getDescriptionTextArea();
-				int selectedViewIndex;
-
 				try {
-					// Validations
-					selectedViewIndex = windowNameComboBox.getSelectionModel().getSelectedIndex();
-					if (selectedViewIndex == -1)
-						throw new Exception("Select a view to complain about.");
-
-					if (descriptionTextArea.getText().trim().length() == 0)
-						throw new Exception("Tell us what you'd like us to fix.");
+					ComboBox<?> windowNameComboBox = complaintView.getWindowNameComboBox();
+					TextArea descriptionTextArea = complaintView.getDescriptionTextArea();
+					if (windowNameComboBox.getSelectionModel().getSelectedIndex() == -1)
+						throw new Exception("Choose a window to complain about");
+					if (descriptionTextArea.getText().isBlank())
+						throw new Exception("No trolling around - this is our job, not yours.");
 
 					Thread.sleep(3000);
 					UIHandler.showSuccess("Your complaint has processed in our servers.\nstay tuned for updates.");
-					view.close();
 				} catch (Exception ex) {
 					UIHandler.showError(ex.getMessage());
 				}
@@ -53,18 +47,5 @@ public class ComplaintController {
 		};
 
 		complaintView.getSubmitButton().setOnAction(submitButtonEventHandler);
-	}
-
-	// Methods
-	public boolean isFormValid() {
-
-		try {
-
-			return true;
-		} catch (Exception ex) {
-			UIHandler.showError("Please make sure to fill all fields");
-		}
-
-		return false;
 	}
 }

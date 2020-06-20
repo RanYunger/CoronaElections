@@ -64,6 +64,7 @@ public class MainController {
 	}
 
 	// Constructors
+	@SuppressWarnings("unused")
 	public MainController(MainView mainView, ElectionsTabView electionsTabView, BallotsTabView ballotsTabView,
 			CitizensTabView citizensTabView, PartiesTabView partiesTabView) {
 		setMainView(mainView);

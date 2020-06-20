@@ -2,6 +2,7 @@ package ID318783479_ID316334473.Controllers;
 
 import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.UIHandler;
+import ID318783479_ID316334473.ValidPatterns;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Views.AddCitizenView;
@@ -13,26 +14,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 public class AddCitizenController {
-	// Constants
-
-	// Fields
-	private CitizensTabView tabView;
-	private AddCitizenView addView;
-	// Properties (Getters and Setters)
-
-	private void setAddCitizenView(AddCitizenView addView) {
-		this.addView = addView;
-	}
-
-	private void setCitizensTabView(CitizensTabView tabView) {
-		this.tabView = tabView;
-	}
-
-	// Constructors
-	public AddCitizenController(CitizensTabView citizentabView, AddCitizenView addCitizenView) {
-		setCitizensTabView(citizentabView);
-		setAddCitizenView(addCitizenView);
-
+	public AddCitizenController(CitizensTabView tabView, AddCitizenView addView) {
 		EventHandler<ActionEvent> yearOfBirthComboBoxEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -112,16 +94,16 @@ public class AddCitizenController {
 				int citizenID;
 
 				// Validations
-				if (!IDText.matches(SearchHandler.VALID_CITIZEN_ID_PATTERN)) {
+				if (!IDText.matches(ValidPatterns.CITIZEN_ID.getPattern())) {
 					UIHandler.showError("Invalid ID!", citizenIDTextField.getTooltip().getText());
 					return;
 				}
 				citizenID = Integer.parseInt(IDText);
-				if (SearchHandler.getCitizenByID(citizenID) != null) {
+				if (SearchHandler.getCitizenByID(citizenID, tabView.getAllCitizens()) != null) {
 					UIHandler.showError("This citizen already exists. Try a different ID.");
 					return;
 				}
-				if (!citizenName.matches(SearchHandler.VALID_CITIZEN_FULL_NAME_PATTERN)) {
+				if (!citizenName.matches(ValidPatterns.CITIZEN_FULL_NAME.getPattern())) {
 					UIHandler.showError("Invalid name!", citizenFullNameTextField.getTooltip().getText());
 					return;
 				}
@@ -131,8 +113,8 @@ public class AddCitizenController {
 				}
 				if (daysOfSickness == null)
 					daysOfSickness = isIsolated ? citizenDaysOfSicknessComboBox.getItems().get(0) : 0;
-				citizenDaysOfSicknessComboBox.getSelectionModel().select(daysOfSickness);	
-					
+				citizenDaysOfSicknessComboBox.getSelectionModel().select(daysOfSickness);
+
 				addView.refreshAssociatedBallotComboBox(isIsolated, isSoldier);
 				if (citizenAssociatedBallotComboBox.getItems().isEmpty()) {
 					UIHandler.showWarning("Make sure there's at least one ballot that matches this citizen's type!");
@@ -142,14 +124,14 @@ public class AddCitizenController {
 						: associatedBallotID;
 				citizenAssociatedBallotComboBox.getSelectionModel().select(associatedBallotID);
 
-				associatedBallot = SearchHandler.getBallotByID((int) associatedBallotID);
-				citizen = SearchHandler.createCitizen((int) citizenID, citizenName, (int) yearOfBirth, (int) daysOfSickness,
-						associatedBallot, isIsolated, isWearingSuit, isSoldier, isCarryingWeapon);
+				associatedBallot = SearchHandler.getBallotByID((int) associatedBallotID,
+						UIHandler.getMainView().getAllBallots());
+				citizen = SearchHandler.createCitizen((int) citizenID, citizenName, (int) yearOfBirth,
+						(int) daysOfSickness, associatedBallot, isIsolated, isWearingSuit, isSoldier, isCarryingWeapon);
 
 				tabView.addCitizen(citizen);
-				UIHandler.showSuccess("A new citizen was added successfully!");
-
 				addView.close();
+				UIHandler.showSuccess("A new citizen was added successfully!");
 			}
 		};
 
@@ -158,6 +140,4 @@ public class AddCitizenController {
 		addView.getCitizenIsSoldierCheckBox().setOnAction(soldierCheckBoxEventHandler);
 		addView.getSubmitButton().setOnAction(submitButtonEventHandler);
 	}
-
-	// Methods
 }

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import ID318783479_ID316334473.UIHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
@@ -18,24 +17,17 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class ElectionsDateView extends View {
-	// Constants
-
 	// Fields
-	private Group root;
 	private VBox vBox;
 	private Label electionsDateLabel;
 	private DatePicker electionsDateDatePicker;
 	private Button enterButton;
 
 	// Properties
-	public void setRoot(Group root) {
-		this.root = root;
-	}
-
 	public LocalDate getElectionsDate() {
 		return electionsDateDatePicker.getValue();
 	}
-	
+
 	public Button getEnterButton() {
 		return enterButton;
 	}
@@ -43,9 +35,7 @@ public class ElectionsDateView extends View {
 	// Constructors
 	public ElectionsDateView(Stage stage) {
 		super(stage);
-		
-		setRoot(new Group());
-		
+
 		buildScene();
 	}
 
@@ -91,6 +81,7 @@ public class ElectionsDateView extends View {
 		stage.setTitle("Welcome to our system!");
 		UIHandler.setIcon(stage);
 		stage.setScene(new Scene(vBox, sceneWidth, sceneHeight));
+		stage.setResizable(false);
 		addEffects();
 
 		stage.show();
@@ -98,6 +89,6 @@ public class ElectionsDateView extends View {
 
 	@Override
 	protected void addEffects() {
-		UIHandler.addCursorEffectsToNode(stage.getScene(), enterButton);
+		UIHandler.addCursorEffectsToNode(enterButton);
 	}
 }

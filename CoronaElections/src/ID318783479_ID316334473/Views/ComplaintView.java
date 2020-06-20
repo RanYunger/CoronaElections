@@ -16,8 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class ComplaintView extends View {
-	// Constants
-
 	// Fields
 	private VBox vBox;
 	private HBox criticismHBox, windowNameHBox, controlNameHBox, dscriptionHBox;
@@ -89,7 +87,7 @@ public class ComplaintView extends View {
 		criticismHBox.getChildren().addAll(criticismLabel, bugsImageView);
 		HBox.setMargin(criticismLabel, new Insets(0, 10, 0, 10));
 		HBox.setMargin(bugsImageView, new Insets(0, 10, 0, 45));
-		
+
 		windowNameHBox.setAlignment(Pos.CENTER_LEFT);
 		windowNameHBox.getChildren().addAll(windowNameLabel, windowNameComboBox);
 		HBox.setMargin(windowNameLabel, new Insets(0, 10, 0, 10));
@@ -106,7 +104,8 @@ public class ComplaintView extends View {
 		HBox.setMargin(descriptionTextArea, new Insets(0, 10, 0, 10));
 
 		vBox.setAlignment(Pos.TOP_CENTER);
-		vBox.getChildren().addAll(headerLabel, criticismHBox, windowNameHBox, controlNameHBox, dscriptionHBox, submitButton);
+		vBox.getChildren().addAll(headerLabel, criticismHBox, windowNameHBox, controlNameHBox, dscriptionHBox,
+				submitButton);
 		VBox.setMargin(headerLabel, new Insets(2, 0, 8, 0));
 		VBox.setMargin(criticismHBox, new Insets(10, 0, 8, 0));
 		VBox.setMargin(windowNameHBox, new Insets(10, 0, 8, 0));
@@ -123,6 +122,6 @@ public class ComplaintView extends View {
 
 	@Override
 	protected void addEffects() {
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		UIHandler.addCursorEffectsToNode(submitButton);
 	}
 }

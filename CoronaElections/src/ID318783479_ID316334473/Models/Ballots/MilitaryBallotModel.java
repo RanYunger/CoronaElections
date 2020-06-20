@@ -13,10 +13,6 @@ public class MilitaryBallotModel extends BallotModel implements Militarizable {
 	}
 
 	// Constructors
-	public MilitaryBallotModel(LocalDate votingDate) {
-		super(votingDate);
-	}
-
 	public MilitaryBallotModel(String address, LocalDate votingDate) {
 		super(address, votingDate);
 	}

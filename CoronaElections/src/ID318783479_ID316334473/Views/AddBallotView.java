@@ -16,8 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class AddBallotView extends View {
-	// Constants
-
 	// Fields
 	private VBox vBox;
 	private HBox mainHBox, ballotAddressHBox, ballotTypeHBox;
@@ -69,7 +67,8 @@ public class AddBallotView extends View {
 		addressLabel.setFont(new Font(20));
 		typeLabel.setFont(new Font(20));
 		ballotAddressTextField.setMinWidth(210);
-		ballotAddressTextField.setTooltip(new Tooltip("Format: number street, city (capitalized) (i.e. 21 Jump Street, Metropolis)"));
+		ballotAddressTextField
+				.setTooltip(new Tooltip("Format: number street, city (capitalized) (i.e. 21 Jump Street, Metropolis)"));
 		submitButton.setFont(new Font(20));
 		ballotTypeComboBox.getSelectionModel().selectFirst();
 
@@ -87,7 +86,7 @@ public class AddBallotView extends View {
 
 		mainHBox.getChildren().addAll(vBox, ballotImageView);
 		HBox.setMargin(ballotImageView, new Insets(sceneHeight * 0.2, 0, sceneHeight * 0.2, sceneHeight * 0.3));
-		
+
 		UIHandler.setGeneralFeatures(stage);
 		stage.setScene(new Scene(UIHandler.buildBackground(mainHBox, sceneWidth, sceneHeight, fontSize, false),
 				sceneWidth, sceneHeight));
@@ -98,6 +97,7 @@ public class AddBallotView extends View {
 
 	@Override
 	protected void addEffects() {
-		UIHandler.addCursorEffectsToNode(stage.getScene(), submitButton);
+		stage.setOnCloseRequest(closing -> UIHandler.getMainView().AllButtonsAndTabsSetDisable(false));
+		UIHandler.addCursorEffectsToNode(submitButton);
 	}
 }

@@ -2,6 +2,7 @@ package ID318783479_ID316334473;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -12,15 +13,12 @@ import ID318783479_ID316334473.Models.Citizens.SoldierModel;
 import ID318783479_ID316334473.Views.MainView;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -29,7 +27,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -86,16 +83,6 @@ public class UIHandler {
 
 	// Methods
 	// First Letter in controllerName must be capital!
-	public static Object getViewByName(String viewName) {
-		try {
-			return mainView.getClass().getDeclaredMethod(String.format("get%s", viewName)).invoke(mainView);
-		} catch (Exception ex) {
-			UIHandler.showError("An unexpected error occured", ex.getMessage());
-		}
-
-		return null;
-	}
-
 	public static String vote(CitizenModel voter, ObservableList<PartyModel> allParties) {
 		ArrayList<String> partyNames = new ArrayList<String>();
 		ChoiceDialog<String> choiceDialog;
@@ -132,40 +119,14 @@ public class UIHandler {
 		return "<UNKNOWN>";
 	}
 
-	public static void addCursorEffectsToNode(Scene scene, Node node) {
-		EventHandler<MouseEvent> nodeMouseEnteredEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				scene.setCursor(Cursor.HAND);
-			}
-		};
-		EventHandler<MouseEvent> nodeMouseExitedEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				scene.setCursor(Cursor.DEFAULT);
-			}
-		};
-
-		node.setOnMouseEntered(nodeMouseEnteredEventHandler);
-		node.setOnMouseExited(nodeMouseExitedEventHandler);
+	public static void addCursorEffectsToNode(Node node) {
+		node.setOnMouseEntered(entered -> node.getScene().setCursor(Cursor.HAND));
+		node.setOnMouseExited(entered -> node.getScene().setCursor(Cursor.DEFAULT));
 	}
 
-	public static void addAudioToImageView(Scene scene, ImageView imageView, String audioFileName) {
-
-		EventHandler<MouseEvent> imageViewMouseClickedEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				try {
-					playAudio(audioFileName);
-				} catch (Exception ex) {
-					showError(ex.getMessage());
-				}
-			}
-		};
-
-		imageView.setOnMouseClicked(imageViewMouseClickedEventHandler);
-
-		addCursorEffectsToNode(scene, imageView);
+	public static void addAudioToImageView(ImageView imageView, String audioFileName) {
+		imageView.setOnMouseClicked(click -> playAudio(audioFileName));
+		addCursorEffectsToNode(imageView);
 	}
 
 	public static void playAudio(String audioFileName) {
@@ -182,80 +143,46 @@ public class UIHandler {
 			mediaPlayer.play();
 	}
 
-	public static ButtonType showConfirmation(String message) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+	private static void showAlert(AlertType alertType, String title, String header, String message, String audio) {
+		Alert alert = new Alert(alertType);
+		alert.initOwner(mainView.getStage());
+		alert.setX(alert.getOwner().getX() + alert.getOwner().getWidth() - alert.getWidth());
+		alert.setY(alert.getOwner().getY() + alert.getOwner().getHeight() - alert.getHeight());
 
-		setIcon(stage);
-		alert.setTitle("Confirmation");
-		alert.setHeaderText(message);
-		alert.getButtonTypes().clear();
-		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+
+		if (message != null && !message.isBlank()) {
+			TextArea textArea = new TextArea(message);
+			textArea.setEditable(false);
+			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
+		}
+
+		playAudio(audio);
+
 		alert.showAndWait();
-
-		return alert.getResult();
 	}
 
 	public static void showSuccess(String message) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-
-		setIcon(stage);
-		alert.setTitle("Success");
-		alert.setHeaderText(message);
-
-		playAudio("Yayyy.mp3");
-
-		alert.showAndWait();
+		showAlert(AlertType.INFORMATION, "Success", message, "", "Yayyy.mp3");
 	}
 
 	public static void showWarning(String message) {
-		Alert alert = new Alert(AlertType.WARNING);
-		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-
-		setIcon(stage);
-		alert.setTitle("Warning");
-		alert.setHeaderText(message);
-
-		playAudio("UhOh.mp3");
-
-		alert.showAndWait();
+		showAlert(AlertType.WARNING, "Warning", message, "", "UhOh.mp3");
 	}
 
 	public static void showError(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-
-		setIcon(stage);
-		alert.setTitle("Error");
-		alert.setHeaderText(message);
-
-		playAudio("Awww.mp3");
-
-		alert.showAndWait();
+		showAlert(AlertType.ERROR, "Error", message, "", "Awww.mp3");
 	}
 
 	public static void showError(String header, String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-		TextArea textArea = new TextArea(message);
-
-		setIcon(stage);
-		textArea.setEditable(false);
-		alert.setTitle("Error");
-		alert.setHeaderText(header);
-		if (message.trim().length() != 0)
-			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
-
-		playAudio("Awww.mp3");
-
-		alert.showAndWait();
+		showAlert(AlertType.ERROR, "Error", header, message, "Awww.mp3");
 	}
 
 	public static void setGeneralFeatures(Stage stage) {
 		setIcon(stage);
-		stage.setTitle(String.format("Corona Elections [%s %d]", electionsDate.getMonth().toString(),
-				electionsDate.getYear()));
+		stage.setTitle(
+				String.format("Corona Elections - %s", electionsDate.format(DateTimeFormatter.ofPattern("LLLL yyyy"))));
 		stage.setResizable(false);
 	}
 
@@ -264,6 +191,7 @@ public class UIHandler {
 	}
 
 	@SuppressWarnings("unchecked")
+
 	public static <S extends CitizenModel> TableColumn<S, ImageView> buildStatusTableColumn(double statusColumnWidth) {
 		TableColumn<S, ImageView> statusTableColumn;
 		TableColumn<S, ImageView> isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
@@ -274,35 +202,25 @@ public class UIHandler {
 
 		nestedStatusTableColumns = statusTableColumn.getColumns();
 		isolatedTableColumn = new TableColumn<S, ImageView>("Isolated");
-		isolatedTableColumn.setCellValueFactory(cell -> {
-			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
-
-			return new SimpleObjectProperty<ImageView>(cell.getValue().isIsolated() ? vImageView : xImageView);
-		});
+		isolatedTableColumn.setCellValueFactory(cell -> new SimpleObjectProperty<ImageView>(
+				cell.getValue().isIsolated() ? buildImage("V.png", 10, 10) : buildImage("X.png", 10, 10)));
 
 		wearingSuitTableColumn = new TableColumn<S, ImageView>("Wearing Suit");
-		wearingSuitTableColumn.setCellValueFactory(cell -> {
-			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
-
-			return new SimpleObjectProperty<ImageView>(cell.getValue().isWearingSuit() ? vImageView : xImageView);
-		});
+		wearingSuitTableColumn.setCellValueFactory(cell -> new SimpleObjectProperty<ImageView>(
+				cell.getValue().isWearingSuit() ? buildImage("V.png", 10, 10) : buildImage("X.png", 10, 10)));
 
 		soldierTableColumn = new TableColumn<S, ImageView>("Soldier");
-		soldierTableColumn.setCellValueFactory(cell -> {
-			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
-
-			return new SimpleObjectProperty<ImageView>(cell.getValue().isSoldier() ? vImageView : xImageView);
-		});
+		soldierTableColumn.setCellValueFactory(cell -> new SimpleObjectProperty<ImageView>(
+				cell.getValue().isSoldier() ? buildImage("V.png", 10, 10) : buildImage("X.png", 10, 10)));
 
 		carryingWeaponTableColumn = new TableColumn<S, ImageView>("Armed");
 		carryingWeaponTableColumn.setCellValueFactory(cell -> {
-			ImageView vImageView = buildImage("V.png", 10, 10), xImageView = buildImage("X.png", 10, 10);
-
 			if (cell.getValue() instanceof SoldierModel)
 				return new SimpleObjectProperty<ImageView>(
-						((SoldierModel) cell.getValue()).isCarryingWeapon() ? vImageView : xImageView);
+						((SoldierModel) cell.getValue()).isCarryingWeapon() ? buildImage("V.png", 10, 10)
+								: buildImage("X.png", 10, 10));
 
-			return new SimpleObjectProperty<ImageView>(xImageView);
+			return new SimpleObjectProperty<ImageView>(buildImage("X.png", 10, 10));
 		});
 
 		nestedStatusTableColumns.addAll(isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,

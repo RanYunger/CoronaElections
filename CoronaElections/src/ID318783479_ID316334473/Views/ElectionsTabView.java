@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -26,8 +25,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class ElectionsTabView extends View {
-	// Constants
-
 	// Fields
 	private GridPane gridPane;
 	private Button runElectionsButton, showResultsButton;
@@ -116,14 +113,11 @@ public class ElectionsTabView extends View {
 
 	@Override
 	protected void addEffects() {
-		Scene scene = stage.getScene();
-
-		UIHandler.addCursorEffectsToNode(scene, runElectionsButton);
-		UIHandler.addCursorEffectsToNode(scene, showResultsButton);
+		UIHandler.addCursorEffectsToNode(runElectionsButton);
+		UIHandler.addCursorEffectsToNode(showResultsButton);
 	}
 
-	public void buildResultsByBallotBarChart(ObservableList<BallotModel> allBallots,
-			ObservableList<PartyModel> allParties) {
+	public void buildResultsByBallotBarChart(ObservableList<BallotModel> ballots, ObservableList<PartyModel> parties) {
 		CategoryAxis xAxis = new CategoryAxis();
 		NumberAxis yAxis = new NumberAxis();
 		BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
@@ -136,19 +130,19 @@ public class ElectionsTabView extends View {
 		barChart.setOpacity(0.6);
 
 		// Building the axis
-		xAxis.setCategories(getAllBallotIDs(allBallots));
+		xAxis.setCategories(getAllBallotIDs(ballots));
 		xAxis.setLabel("Ballot IDs");
 		xAxis.setTickLabelFont(new Font(15));
 		yAxis.setLabel("Votes");
 		yAxis.setTickLabelFont(new Font(15));
 
 		// Setting the chart data
-		for (PartyModel party : allParties) {
+		for (PartyModel party : parties) {
 			currentPartySeries = new Series<String, Number>();
 			currentPartySeries.setName(currentPartyName = party.getTextualName());
-			for (int i = 0; i < allBallots.size(); i++) {
+			for (int i = 0; i < ballots.size(); i++) {
 				currentPartySeries.getData().add(new XYChart.Data<>(xAxis.getCategories().get(i),
-						allBallots.get(i).getResults().get(currentPartyName)));
+						ballots.get(i).getResults().get(currentPartyName)));
 			}
 			partySeries.add(currentPartySeries);
 		}
