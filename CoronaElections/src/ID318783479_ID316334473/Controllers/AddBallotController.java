@@ -30,6 +30,7 @@ public class AddBallotController {
 						.addBallot(SearchHandler.createBallotByType(ballotType, address, UIHandler.getElectionsDate()));
 				addView.close();
 				UIHandler.showSuccess("A new ballot was added successfully!");
+				UIHandler.getMainView().disableAllButtons(false);
 			}
 		};
 

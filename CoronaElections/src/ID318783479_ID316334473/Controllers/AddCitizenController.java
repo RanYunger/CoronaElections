@@ -132,6 +132,8 @@ public class AddCitizenController {
 				tabView.addCitizen(citizen);
 				addView.close();
 				UIHandler.showSuccess("A new citizen was added successfully!");
+				
+				UIHandler.getMainView().disableAllButtons(false);
 			}
 		};
 

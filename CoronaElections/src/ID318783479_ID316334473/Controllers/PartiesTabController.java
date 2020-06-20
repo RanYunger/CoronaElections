@@ -9,6 +9,7 @@ import ID318783479_ID316334473.Views.CitizensTabView;
 import ID318783479_ID316334473.Views.PartiesTabView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
@@ -21,7 +22,7 @@ public class PartiesTabController {
 		EventHandler<ActionEvent> addPartyButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				UIHandler.getMainView().AllButtonsAndTabsSetDisable(true);
+				UIHandler.getMainView().disableAllButtons(true);
 				AddPartyView view = new AddPartyView();
 				AddPartyController controller = new AddPartyController(tabView, view);
 			}
@@ -41,7 +42,7 @@ public class PartiesTabController {
 					UIHandler.showError("Choose a party for adding a candidate.");
 					return;
 				}
-				UIHandler.getMainView().AllButtonsAndTabsSetDisable(true);
+				UIHandler.getMainView().disableAllButtons(true);
 				AddCandidateToPartyView addView = new AddCandidateToPartyView(new Stage(),
 						citizensTabView.getAllCitizens());
 				AddCandidateToPartyController controller = new AddCandidateToPartyController(selectedParty, addView,
@@ -55,6 +56,7 @@ public class PartiesTabController {
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSelectedIndex,
 					Number newSelectedIndex) {
 				TableView<CandidateModel> candidatesInPartyTableView = tabView.getCandidatesInPartyTableView();
+				ObservableList<CandidateModel> candidatesInParty;
 				PartyModel selectedParty;
 
 				if (newSelectedIndex.intValue() != -1) {

@@ -17,7 +17,7 @@ public class BallotsTabController {
 		EventHandler<ActionEvent> addBallotButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				UIHandler.getMainView().AllButtonsAndTabsSetDisable(true);
+				UIHandler.getMainView().disableAllButtons(true);
 				AddBallotView addView = new AddBallotView();
 				AddBallotController controller = new AddBallotController(tabView, addView);
 			}

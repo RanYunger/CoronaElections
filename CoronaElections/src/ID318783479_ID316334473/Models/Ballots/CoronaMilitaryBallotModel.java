@@ -13,14 +13,14 @@ public class CoronaMilitaryBallotModel extends BallotModel implements Militariza
 	}
 
 	// Constructors
-	public CoronaMilitaryBallotModel(String address, LocalDate votingDate) {
-		super(address, votingDate);
+	public CoronaMilitaryBallotModel(String address, LocalDate electionsDate) {
+		super(address, electionsDate);
 	}
 
 	// Methods
 	@Override
 	public boolean addVoter(CitizenModel voter) {
-		if (checkMilitaryStatus(voter))
+		if ((checkMilitaryStatus(voter)) && (checkIsolationStatus(voter)))
 			return super.addVoter(voter);
 		return false;
 	}

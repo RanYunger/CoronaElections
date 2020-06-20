@@ -142,7 +142,7 @@ public class BallotsTabView extends View {
 		ballotsTableView.setOpacity(0.8);
 
 		votersInBallotTableView.getColumns().addAll(voterIDTableColumn, voterNameTableColumn,
-				voterYearOfBirthTableColumn, UIHandler.buildStatusTableColumn(406));
+				voterYearOfBirthTableColumn, UIHandler.buildStatusTableColumn(392));
 		for (TableColumn<?, ?> tableColumn : votersInBallotTableView.getColumns()) {
 			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
@@ -166,7 +166,6 @@ public class BallotsTabView extends View {
 
 		allBallots = FXCollections.observableArrayList();
 		allBallots.add(new BallotModel("21 Road Street, Town City", electionsDate));
-		allBallots.add(new BallotModel("4 Miles Away, go There", electionsDate));
 		allBallots.add(new CoronaMilitaryBallotModel("Secret Base, Somewhere in the Desert", electionsDate));
 		allBallots.add(new MilitaryBallotModel("Another Secret Base, Other Side of the Desert", electionsDate));
 		allBallots.add(new CoronaBallotModel("First Hospital you see, Your City", electionsDate));

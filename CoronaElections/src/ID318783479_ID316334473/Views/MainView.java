@@ -165,17 +165,12 @@ public class MainView extends View {
 		}
 	}
 
-	public void AllButtonsAndTabsSetDisable(boolean value) {
-		tabPane.setDisable(value);
-		AllButtonsSetDisable(value);
-	}
-
-	public void AllButtonsSetDisable(boolean value) {
-		ballotsTabView.getAddBallotButton().setDisable(value);
-		citizensTabView.getAddCitizenButton().setDisable(value);
-		electionsTabView.getRunElectionsButton().setDisable(value);
-		electionsTabView.getShowResultsButton().setDisable(value);
-		partiesTabView.getAddPartyButton().setDisable(value);
-		partiesTabView.getAddCandidateToPartyButton().setDisable(value);
+	public void disableAllButtons(boolean disabled) {
+		ballotsTabView.getAddBallotButton().setDisable(disabled);
+		citizensTabView.getAddCitizenButton().setDisable(disabled);
+		electionsTabView.getRunElectionsButton().setDisable(disabled);
+		electionsTabView.getShowResultsButton().setDisable(disabled);
+		partiesTabView.getAddPartyButton().setDisable(disabled);
+		partiesTabView.getAddCandidateToPartyButton().setDisable(disabled);
 	}
 }

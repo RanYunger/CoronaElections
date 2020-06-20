@@ -2,6 +2,7 @@ package ID318783479_ID316334473.Models.Citizens;
 
 import java.time.LocalDate;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Ballots.BallotModel;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -16,12 +17,13 @@ public class CitizenModel implements Comparable<CitizenModel> {
 	// Fields
 	protected SimpleIntegerProperty ID;
 	protected SimpleStringProperty fullName;
-	protected SimpleIntegerProperty yearOfBirth, age;
+	protected SimpleIntegerProperty yearOfBirth;
 	protected SimpleIntegerProperty daysOfSickness;
 	protected SimpleObjectProperty<BallotModel> associatedBallot;
 	protected SimpleBooleanProperty isIsolated;
 	protected SimpleBooleanProperty isWearingSuit;
 	protected SimpleBooleanProperty isSoldier;
+	protected SimpleBooleanProperty isCarryingWeapon;
 
 	// Properties (Getters and Setters)
 	public SimpleIntegerProperty getObservableID() {
@@ -32,9 +34,9 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return ID.get();
 	}
 
-	private void setID(int ID) throws Exception {
+	private void setID(int ID) {
 		if (String.valueOf(ID).length() != 9)
-			throw new Exception("CitizenModel's ID must contain exactly 9 digits.");
+			UIHandler.showError("CitizenModel's ID must contain exactly 9 digits.");
 		this.ID = new SimpleIntegerProperty(ID);
 	}
 
@@ -46,9 +48,9 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return fullName.get();
 	}
 
-	private void setFullName(String fullName) throws Exception {
+	private void setFullName(String fullName) {
 		if (fullName.isBlank())
-			throw new Exception("CitizenModel's name must contain at least 1 letter.");
+			UIHandler.showError("CitizenModel's name must contain at least 1 letter.");
 		this.fullName = new SimpleStringProperty(fullName);
 	}
 
@@ -60,24 +62,10 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return yearOfBirth.get();
 	}
 
-	private void setYearOfBirth(int yearOfBirth) throws Exception {
+	private void setYearOfBirth(int yearOfBirth) {
 		if (yearOfBirth > LocalDate.now().getYear())
-			throw new Exception("Time paradox prevented - I mean, come on");
+			UIHandler.showError("Time paradox prevented - I mean, come on");
 		this.yearOfBirth = new SimpleIntegerProperty(yearOfBirth);
-	}
-
-	public SimpleIntegerProperty getObservableAge() {
-		return age;
-	}
-
-	public int getNumericAge() {
-		return age.get();
-	}
-
-	protected void setAge(int age) throws Exception {
-		if (age <= 0)
-			throw new Exception("Time paradox prevented - I mean, come on");
-		this.age = new SimpleIntegerProperty(age);
 	}
 
 	public SimpleIntegerProperty getObservableDaysOfSickness() {
@@ -88,11 +76,11 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return daysOfSickness.get();
 	}
 
-	protected void setDaysOfSickness(int daysOfSickness) throws Exception {
+	protected void setDaysOfSickness(int daysOfSickness) {
 		if (daysOfSickness < 0)
-			throw new Exception("CitizenModel can only have non-negative amount of sickness days.");
-		if ((isIsolated.getValue()) && (daysOfSickness < 1))
-			throw new Exception("An Isolated CitizenModel must've been sick for at least 1 day.");
+			UIHandler.showError("Citizen can only have non-negative amount of sickness days.");
+		if ((isIsolated()) && (daysOfSickness < 1))
+			UIHandler.showError("An Isolated citizen must've been sick for at least 1 day.");
 		this.daysOfSickness = new SimpleIntegerProperty(daysOfSickness);
 	}
 
@@ -104,7 +92,7 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return associatedBallot.get();
 	}
 
-	public void setAssociatedBallot(BallotModel associatedBallot) throws NullPointerException {
+	public void setAssociatedBallot(BallotModel associatedBallot) {
 		this.associatedBallot = new SimpleObjectProperty<BallotModel>(associatedBallot);
 		getActualAssociatedBallot().addVoter(this);
 	}
@@ -117,7 +105,7 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return isIsolated.get();
 	}
 
-	private void setIsIsolated(boolean isIsolated) {
+	protected void setIsIsolated(boolean isIsolated) {
 		this.isIsolated = new SimpleBooleanProperty(isIsolated);
 	}
 
@@ -129,7 +117,7 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return isWearingSuit.get();
 	}
 
-	private void setIswearingSuit(boolean iswearingSuit) {
+	protected void setIswearingSuit(boolean iswearingSuit) {
 		this.isWearingSuit = new SimpleBooleanProperty(iswearingSuit);
 	}
 
@@ -141,33 +129,42 @@ public class CitizenModel implements Comparable<CitizenModel> {
 		return isSoldier.get();
 	}
 
-	private void setIsSoldier(boolean isSoldier) {
+	protected void setIsSoldier(boolean isSoldier) {
 		this.isSoldier = new SimpleBooleanProperty(isSoldier);
 	}
 
+	public SimpleBooleanProperty observableCarryingWeaponStatus() {
+		return isCarryingWeapon;
+	}
+
+	public boolean isCarryingWeapon() {
+		return isCarryingWeapon.get();
+	}
+
+	protected void setIsCarryingWeapon(boolean isCarryingWeapon) {
+		this.isCarryingWeapon = new SimpleBooleanProperty(isCarryingWeapon);
+	}
+
 	// Constructors
-	public CitizenModel(int ID, String fullName, int yearOfBirth, int daysOfSickness, BallotModel associatedBallot,
-			boolean isIsolated, boolean isWearingSuit) {
+	protected CitizenModel(int ID, String fullName, int yearOfBirth, BallotModel associatedBallot, boolean isIsolated,
+			boolean isWearingSuit, int daysOfSickness, boolean isSoldier, boolean isCarryingWeapon) {
 		try {
 			setID(ID);
 			setFullName(fullName);
 			setYearOfBirth(yearOfBirth);
 			setIsIsolated(isIsolated);
-			setDaysOfSickness(daysOfSickness);
-			setIsSoldier(this instanceof SoldierModel);
 			setIswearingSuit(isWearingSuit);
+			setIsSoldier(isSoldier);
+			setIsCarryingWeapon(isCarryingWeapon);
 			setAssociatedBallot(associatedBallot);
+			setDaysOfSickness(daysOfSickness);
 		} catch (Exception ex) {
-			System.err.println(ex.getMessage());
+			UIHandler.showError("An unexpected error occoured.", ex.getStackTrace());
 		}
 	}
 
-	public void calculateAge(LocalDate votingDate) {
-		try {
-			setAge(votingDate.getYear() - yearOfBirth.get());
-		} catch (Exception ex) {
-			System.err.println(ex.getMessage());
-		}
+	public CitizenModel(int ID, String fullName, int yearOfBirth, BallotModel associatedBallot) {
+		this(ID, fullName, yearOfBirth, associatedBallot, false, false, 0, false, false);
 	}
 
 	@Override

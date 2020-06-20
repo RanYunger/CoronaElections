@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 
 import ID318783479_ID316334473.Controllers.MainController;
@@ -19,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -106,6 +108,8 @@ public class UIHandler {
 			choiceDialog.initOwner(stage);
 			choiceDialog.setTitle("Vote for your chosen party");
 			choiceDialog.setHeaderText(String.format("Greetings, %s. Who do you vote for", voter.getTextualFullName()));
+			choiceDialog.getDialogPane().getButtonTypes().clear();
+			choiceDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
 			chosenParty = choiceDialog.showAndWait();
 
 			return chosenParty.isPresent() ? chosenParty.get() : "<UNKNOWN>";
@@ -179,10 +183,20 @@ public class UIHandler {
 		showAlert(AlertType.ERROR, "Error", header, message, "Awww.mp3");
 	}
 
+	public static void showError(String header, StackTraceElement[] stackTrace) {
+		StringBuilder fullMessage = new StringBuilder();
+
+		for (StackTraceElement stackTraceElement : stackTrace) {
+			fullMessage.append(stackTraceElement.toString() + "\n");
+		}
+
+		showError(header, fullMessage.toString());
+	}
+
 	public static void setGeneralFeatures(Stage stage) {
 		setIcon(stage);
-		stage.setTitle(
-				String.format("Corona Elections - %s", electionsDate.format(DateTimeFormatter.ofPattern("LLLL yyyy"))));
+		stage.setTitle(String.format("Corona Elections - %s",
+				electionsDate.format(DateTimeFormatter.ofPattern("LLLL yyyy", Locale.ENGLISH))));
 		stage.setResizable(false);
 	}
 
@@ -191,7 +205,6 @@ public class UIHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-
 	public static <S extends CitizenModel> TableColumn<S, ImageView> buildStatusTableColumn(double statusColumnWidth) {
 		TableColumn<S, ImageView> statusTableColumn;
 		TableColumn<S, ImageView> isolatedTableColumn, wearingSuitTableColumn, soldierTableColumn,
@@ -277,4 +290,5 @@ public class UIHandler {
 
 		return new ImageView(image);
 	}
+
 }

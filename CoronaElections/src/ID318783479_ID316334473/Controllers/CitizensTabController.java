@@ -15,7 +15,7 @@ public class CitizensTabController {
 			@Override
 			@SuppressWarnings("unused")
 			public void handle(ActionEvent event) {
-				UIHandler.getMainView().AllButtonsAndTabsSetDisable(true);
+				UIHandler.getMainView().disableAllButtons(true);
 				BallotsTabView ballotsTabView = UIHandler.getMainView().getBallotsTabView();
 				TableView<BallotModel> ballotsTableView = ballotsTabView.getBallotsTableView();
 				if (ballotsTableView.getItems().isEmpty())

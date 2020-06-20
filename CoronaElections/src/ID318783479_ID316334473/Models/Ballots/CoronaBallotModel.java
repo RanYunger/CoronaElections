@@ -13,14 +13,14 @@ public class CoronaBallotModel extends BallotModel implements Sanitizable {
 	}
 
 	// Constructors
-	public CoronaBallotModel(String address, LocalDate votingDate) {
-		super(address, votingDate);
+	public CoronaBallotModel(String address, LocalDate electionsDate) {
+		super(address, electionsDate);
 	}
 
 	// Methods
 	@Override
 	public boolean addVoter(CitizenModel voter) {
-		if (checkSuitStatus(voter))
+		if (checkIsolationStatus(voter))
 			return super.addVoter(voter);
 		return false;
 	}

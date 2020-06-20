@@ -3,6 +3,7 @@ package ID318783479_ID316334473.Models.Ballots;
 import java.time.LocalDate;
 import java.util.TreeMap;
 
+import ID318783479_ID316334473.UIHandler;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -46,9 +47,9 @@ public class BallotModel implements Comparable<BallotModel> {
 		return address.getValue();
 	}
 
-	private void setAddress(String address) throws Exception {
+	private void setAddress(String address) {
 		if (address.isBlank())
-			throw new Exception("BallotModel's address must contain at least 1 letter.");
+			UIHandler.showError("Ballot's address must contain at least 1 letter.");
 		this.address = new SimpleStringProperty(address);
 	}
 
@@ -64,10 +65,10 @@ public class BallotModel implements Comparable<BallotModel> {
 		return electionsDate;
 	}
 
-	private void setVotingDate(LocalDate votingDate) throws Exception {
-		if (votingDate.compareTo(LocalDate.now()) > 0)
-			throw new Exception("Time paradox prevented.");
-		this.electionsDate = votingDate;
+	private void setElectionsDate(LocalDate electionsDate) {
+		if (electionsDate.compareTo(LocalDate.now()) > 0)
+			UIHandler.showError("Time paradox prevented.");
+		this.electionsDate = electionsDate;
 	}
 
 	public final SimpleDoubleProperty getObservableVotersPercentage() {
@@ -80,7 +81,7 @@ public class BallotModel implements Comparable<BallotModel> {
 
 	private void setVotersPercentage() {
 		this.votersPercentage = new SimpleDoubleProperty(
-				(voterRegistry.size() > 0) ? (100 * numOfVoters) / voterRegistry.size() : 0);
+				(voterRegistry.size() > 0) ? (double)(100 * numOfVoters) / voterRegistry.size() : 0);
 	}
 
 	public void voteConfirmed() {
@@ -121,7 +122,7 @@ public class BallotModel implements Comparable<BallotModel> {
 		try {
 			setID(IDGenerator++);
 			setAddress(address);
-			setVotingDate(votingDate);
+			setElectionsDate(votingDate);
 			setVoterRegistry(FXCollections.observableArrayList());
 			setVotersPercentage();
 			setResults(new TreeMap<String, Integer>());

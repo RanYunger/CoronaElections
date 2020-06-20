@@ -15,6 +15,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
 public class AddPartyController {
+	// Constants
+	
+	// Fields
+	
+	// Properties (Getters and Setters)
+	
+	// Constructors
 	public AddPartyController(PartiesTabView tabView, AddPartyView addView) {
 		EventHandler<ActionEvent> submitButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -43,6 +50,7 @@ public class AddPartyController {
 						new PartyModel(partyName, PartyModel.PartyAssociation.valueOf(partyWing), foundationDate));
 				addView.close();
 				UIHandler.showSuccess("A new party was added successfully!");
+				UIHandler.getMainView().disableAllButtons(false);
 			}
 		};
 

@@ -125,7 +125,7 @@ public class AddCandidateToPartyView extends View {
 
 	@Override
 	protected void addEffects() {
-		stage.setOnCloseRequest(closing -> UIHandler.getMainView().AllButtonsAndTabsSetDisable(false));
+		stage.setOnCloseRequest(closing -> UIHandler.getMainView().disableAllButtons(false));
 		UIHandler.addCursorEffectsToNode(submitButton);
 	}
 

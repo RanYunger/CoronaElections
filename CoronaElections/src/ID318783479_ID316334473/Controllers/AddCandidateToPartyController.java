@@ -89,6 +89,7 @@ public class AddCandidateToPartyController {
 				selectedParty.addCandidate(tabView.morphCitizenToCandidate(selectedCitizen));
 				addView.close();
 				UIHandler.showSuccess("A new candidate was added successfully!");
+				UIHandler.getMainView().disableAllButtons(false);
 			}
 		};
 

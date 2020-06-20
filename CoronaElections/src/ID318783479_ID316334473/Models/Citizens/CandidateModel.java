@@ -10,18 +10,14 @@ import javafx.beans.value.ObservableValue;
 public class CandidateModel extends CitizenModel {
 	// Fields
 	private PartyModel associatedParty;
-	private ObservableValue<String> rank;
+	private SimpleStringProperty rank;
 
 	// Properties (Getters and Setters)
 	public PartyModel getAssociatedParty() {
 		return associatedParty;
 	}
 
-	public boolean joinParty(PartyModel associatedParty) {
-		return setParty(associatedParty, -1);
-	}
-
-	private boolean setParty(PartyModel associatedParty, int rank) {
+	public boolean setParty(PartyModel associatedParty) {
 		if ((associatedParty == null) || (this.associatedParty != null))
 			return false;
 
@@ -36,7 +32,9 @@ public class CandidateModel extends CitizenModel {
 	}
 
 	public int getNumericRank() {
-		return Integer.parseInt(rank.getValue());
+		String rankWithOrdinal = rank.getValue();
+
+		return Integer.parseInt(rankWithOrdinal.substring(0, rankWithOrdinal.length() - 2)); // Removes the ordinal
 	}
 
 	private void setRank(String rank) {
@@ -44,9 +42,12 @@ public class CandidateModel extends CitizenModel {
 	}
 
 	// Constructors
-	public CandidateModel(int ID, String fullName, int yearOfBirth, int daysOfSickness, BallotModel associatedBallot,
-			boolean isIsolated, boolean isWearingSuit) {
-		super(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated, isWearingSuit);
+	protected CandidateModel(int ID, String fullName, int yearOfBirth, BallotModel associatedBallot, boolean isWearingSuit, int daysOfSickness) {
+		super(ID, fullName, yearOfBirth, associatedBallot, true, isWearingSuit, daysOfSickness, false, false);
+	}
+	
+	public CandidateModel(int ID, String fullName, int yearOfBirth, BallotModel associatedBallot) {
+		super(ID, fullName, yearOfBirth, associatedBallot);
 	}
 
 	@Override

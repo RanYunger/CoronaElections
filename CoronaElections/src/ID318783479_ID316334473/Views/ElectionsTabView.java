@@ -141,10 +141,12 @@ public class ElectionsTabView extends View {
 			currentPartySeries = new Series<String, Number>();
 			currentPartySeries.setName(currentPartyName = party.getTextualName());
 			for (int i = 0; i < ballots.size(); i++) {
-				currentPartySeries.getData().add(new XYChart.Data<>(xAxis.getCategories().get(i),
-						ballots.get(i).getResults().get(currentPartyName)));
+				if (ballots.get(i).getResults().get(currentPartyName) > 0)
+					currentPartySeries.getData().add(new XYChart.Data<>(xAxis.getCategories().get(i),
+							ballots.get(i).getResults().get(currentPartyName)));
 			}
-			partySeries.add(currentPartySeries);
+			if (!currentPartySeries.getData().isEmpty())
+				partySeries.add(currentPartySeries);
 		}
 
 		barChart.getData().addAll(partySeries);

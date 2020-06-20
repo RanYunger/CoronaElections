@@ -78,18 +78,15 @@ public class SearchHandler {
 			boolean isCarryingWeapon) {
 		if (isIsolated) {
 			if (isSoldier) {
-				return new SickSoldierModel(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
-						isWearingSuit, isCarryingWeapon);
+				return new SickSoldierModel(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isWearingSuit,
+						isCarryingWeapon);
 			} else
-				return new SickCitizenModel(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
-						isWearingSuit);
+				return new SickCitizenModel(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isWearingSuit);
 		} else {
 			if (isSoldier) {
-				return new SoldierModel(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
-						isWearingSuit, isCarryingWeapon);
+				return new SoldierModel(ID, fullName, yearOfBirth, associatedBallot, isCarryingWeapon);
 			} else
-				return new CitizenModel(ID, fullName, yearOfBirth, daysOfSickness, associatedBallot, isIsolated,
-						isWearingSuit);
+				return new CitizenModel(ID, fullName, yearOfBirth, associatedBallot);
 		}
 	}
 

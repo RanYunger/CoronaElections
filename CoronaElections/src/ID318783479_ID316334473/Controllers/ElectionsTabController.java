@@ -46,7 +46,7 @@ public class ElectionsTabController {
 
 						return;
 					} else {
-						UIHandler.getMainView().AllButtonsSetDisable(true);
+						UIHandler.getMainView().disableAllButtons(true);
 						boolean noOneHasVoted = true;
 						ObservableList<BallotModel> allBallots = UIHandler.getMainView().getAllBallots();
 						ObservableList<CitizenModel> allVoters = UIHandler.getMainView().getAllCitizens();
@@ -79,8 +79,8 @@ public class ElectionsTabController {
 
 						for (CitizenModel voter : allVoters) {
 							chosenParty = UIHandler.vote(voter, allParties);
-							if (chosenParty != null && !chosenParty.equalsIgnoreCase("<UNKNOWN>")
-									&& !chosenParty.equalsIgnoreCase("I don't want to vote")) {
+							if ((chosenParty != null) && (!chosenParty.equalsIgnoreCase("<UNKNOWN>"))
+									&& (!chosenParty.equalsIgnoreCase("I don't want to vote"))) {
 								noOneHasVoted = false;
 								voterBallot = voter.getActualAssociatedBallot();
 								resultsInBallot = voterBallot.getResults();
@@ -92,7 +92,7 @@ public class ElectionsTabController {
 
 						if (noOneHasVoted) {
 							UIHandler.showWarning("No one has voted! please start the election process again..");
-							UIHandler.getMainView().AllButtonsSetDisable(false);
+							UIHandler.getMainView().disableAllButtons(false);
 						} else {
 							setElectionsOccoured(true);
 							UIHandler.showSuccess("The elections process has complete!");
@@ -129,7 +129,9 @@ public class ElectionsTabController {
 					finalResultsPieChart.setTitle("Final Results");
 					for (Map.Entry<String, Integer> resultEntry : finalResults.entrySet()) {
 						totalPieValue += resultEntry.getValue();
-						finalResultsPieChartData.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
+						if (resultEntry.getValue() > 0)
+							finalResultsPieChartData
+									.add(new PieChart.Data(resultEntry.getKey(), resultEntry.getValue()));
 					}
 					finalResultsPieChart.setData(FXCollections.observableList(finalResultsPieChartData));
 

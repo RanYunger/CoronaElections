@@ -3,6 +3,7 @@ package ID318783479_ID316334473.Models;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import ID318783479_ID316334473.SearchHandler;
 import ID318783479_ID316334473.Models.Citizens.CandidateModel;
@@ -114,8 +115,17 @@ public class PartyModel implements Comparable<PartyModel> {
 			candidates.add(candidate);
 		else
 			candidates.add(rank, candidate);
+		candidate.setParty(this);
 
-		candidate.joinParty(this);
+		if (candidates.size() > 1) {
+			Comparator<CandidateModel> rankComparator = new Comparator<CandidateModel>() {
+				@Override
+				public int compare(CandidateModel candidate1, CandidateModel candidate2) {
+					return Integer.compare(candidate1.getNumericRank(), candidate2.getNumericRank());
+				}
+			};
+			candidates.sort(rankComparator);
+		}
 
 		return true;
 	}

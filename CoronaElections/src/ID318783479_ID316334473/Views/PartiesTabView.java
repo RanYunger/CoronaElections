@@ -157,7 +157,7 @@ public class PartiesTabView extends View {
 		}
 		partiesTableView.setOpacity(0.8);
 		candidatesInPartyTableView.getColumns().addAll(candidateIDTableColumn, candidateNameTableColumn,
-				candidateRankTableColumn, UIHandler.buildStatusTableColumn(406));
+				candidateRankTableColumn, UIHandler.buildStatusTableColumn(392));
 		for (TableColumn<?, ?> tableColumn : candidatesInPartyTableView.getColumns()) {
 			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
@@ -189,14 +189,14 @@ public class PartiesTabView extends View {
 
 		// Adds the candidates to their parties
 		List<CitizenModel> allCitizens = UIHandler.getMainView().getAllCitizens();
-		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(678901234, allCitizens));
-		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(789012345, allCitizens));
-		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(890123456, allCitizens));
-		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234567, allCitizens));
-		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234568, allCitizens));
-		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234566, allCitizens));
-		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234569, allCitizens));
-		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234565, allCitizens));
+		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(678901234, allCitizens)); // Halikud->Benjamin Netnyahu
+		allParties.get(0).addCandidate((CandidateModel) SearchHandler.getCitizenByID(789012345, allCitizens)); // Halikud->Miri Regev
+		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(890123456, allCitizens)); // Blue and White->Benny Gantz
+		allParties.get(1).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234567, allCitizens)); // Blue and White->Yait Lapid
+		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234568, allCitizens)); // IIOH->Avigdor Liberman
+		allParties.get(2).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234566, allCitizens)); // IIOH->Oded Forer
+		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234569, allCitizens)); // ILP->Tamar Zandberg
+		allParties.get(3).addCandidate((CandidateModel) SearchHandler.getCitizenByID(901234565, allCitizens)); // ILP->Nitzan Horowitz
 
 		partiesTableView.setItems(allParties);
 	}

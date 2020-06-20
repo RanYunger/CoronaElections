@@ -10,6 +10,7 @@ import ID318783479_ID316334473.Models.Citizens.CandidateModel;
 import ID318783479_ID316334473.Models.Citizens.CitizenModel;
 import ID318783479_ID316334473.Models.Citizens.SickCandidateModel;
 import ID318783479_ID316334473.Models.Citizens.SickCitizenModel;
+import ID318783479_ID316334473.Models.Citizens.SickSoldierModel;
 import ID318783479_ID316334473.Models.Citizens.SoldierModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,10 +41,9 @@ public class CitizensTabView extends View {
 	}
 
 	public ObservableList<CitizenModel> getOnlyCitizens() {
-		ObservableList<CitizenModel> onlyCitizens = allCitizens;
+		ObservableList<CitizenModel> onlyCitizens = FXCollections.observableArrayList(allCitizens);
 
 		onlyCitizens.removeIf(new Predicate<CitizenModel>() {
-
 			@Override
 			public boolean test(CitizenModel citizen) {
 				return citizen instanceof CandidateModel;
@@ -114,7 +114,7 @@ public class CitizensTabView extends View {
 
 		citizensTableView.getColumns().addAll(citizenIDTableColumn, citizenNameTableColumn,
 				citizenYearOfBirthTableColumn, citizenAssociatedBallotTableColumn,
-				UIHandler.buildStatusTableColumn(745));
+				UIHandler.buildStatusTableColumn(730));
 		for (TableColumn<?, ?> tableColumn : citizensTableView.getColumns()) {
 			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
@@ -134,35 +134,44 @@ public class CitizensTabView extends View {
 	public void initCitizens() {
 		allCitizens = FXCollections.observableArrayList();
 		List<BallotModel> allBallots = UIHandler.getMainView().getAllBallots();
-		// Initiates 5 citizen
-		allCitizens.add(new CitizenModel(123456789, "Charles Foster Kane", 1941, 0,
-				SearchHandler.getBallotByID(1, allBallots), false, false));
-		allCitizens.add(new CitizenModel(234567890, "Donald John Trump", 1946, 1,
-				SearchHandler.getBallotByID(4, allBallots), true, true));
-		allCitizens.add(new CitizenModel(345678901, "Tonny Stark", 1970, 0, SearchHandler.getBallotByID(1, allBallots),
-				false, false));
-		allCitizens.add(new SickCitizenModel(456789012, "Steve Rogers", 1918, 1,
-				SearchHandler.getBallotByID(1, allBallots), true, true));
-		allCitizens.add(new SoldierModel(567890123, "Childish Gambino", 2001, 1,
-				SearchHandler.getBallotByID(3, allBallots), false, false, true));
+		BallotModel currentAssociatedBallot;
 
-		// Initiates 8 candidates (2 per party)
-		allCitizens.add(new CandidateModel(678901234, "Benjamin Netanyahu", 1949, 50,
-				SearchHandler.getBallotByID(5, allBallots), true, false));
-		allCitizens.add(new SickCandidateModel(789012345, "Miri Regev", 1965, 38,
-				SearchHandler.getBallotByID(5, allBallots), true, false));
-		allCitizens.add(new SickCandidateModel(890123456, "Benny Gantz", 1959, 40,
-				SearchHandler.getBallotByID(4, allBallots), true, true));
-		allCitizens.add(new SickCandidateModel(901234567, "Yair Lapid", 1963, 1,
-				SearchHandler.getBallotByID(4, allBallots), true, true));
-		allCitizens.add(new SickCandidateModel(901234568, "Avigdor Lieberman", 1958, 1,
-				SearchHandler.getBallotByID(3, allBallots), true, true));
-		allCitizens.add(new CandidateModel(901234566, "Oded Forer", 1977, 1, SearchHandler.getBallotByID(2, allBallots),
-				false, false));
-		allCitizens.add(new CandidateModel(901234569, "Tamar Zandberg", 1976, 1,
-				SearchHandler.getBallotByID(2, allBallots), false, false));
-		allCitizens.add(new CandidateModel(901234565, "Nitzan Horowitz", 1965, 1,
-				SearchHandler.getBallotByID(2, allBallots), false, false));
+		// Regular Citizens
+		currentAssociatedBallot = SearchHandler.getBallotByID(1, allBallots);
+		allCitizens.add(new CitizenModel(123456789, "Charles Foster Kane", 1941, currentAssociatedBallot));
+		allCitizens.add(new CitizenModel(234567890, "Donald John Trump", 1946, currentAssociatedBallot));
+		allCitizens.add(new CitizenModel(345678901, "Tonny Stark", 1970, currentAssociatedBallot));
+
+		// Regular Candidates
+		allCitizens.add(new CandidateModel(901234566, "Oded Forer", 1977, currentAssociatedBallot));
+		allCitizens.add(new CandidateModel(901234569, "Tamar Zandberg", 1976, currentAssociatedBallot));
+		allCitizens.add(new CandidateModel(901234565, "Nitzan Horowitz", 1965, currentAssociatedBallot));
+
+		// Sick Citizens
+
+		// Sick Candidates
+		currentAssociatedBallot = SearchHandler.getBallotByID(4, allBallots);
+		allCitizens
+				.add(new SickCandidateModel(678901234, "Benjamin Netanyahu", 1949, 50, currentAssociatedBallot, false));
+		allCitizens.add(new SickCandidateModel(789012345, "Miri Regev", 1965, 38, currentAssociatedBallot, false));
+		allCitizens.add(new SickCandidateModel(890123456, "Benny Gantz", 1959, 40, currentAssociatedBallot, true));
+		allCitizens.add(new SickCandidateModel(901234567, "Yair Lapid", 1963, 1, currentAssociatedBallot, true));
+		allCitizens.add(new SickCandidateModel(901234568, "Avigdor Lieberman", 1958, 1, currentAssociatedBallot, true));
+
+		// Regular Soldiers
+		currentAssociatedBallot = SearchHandler.getBallotByID(3, allBallots);
+		allCitizens.add(new SoldierModel(456789012, "Steve Rogers", 1999, currentAssociatedBallot, true));
+		allCitizens.add(new SoldierModel(456789013, "John Rambo", 1999, currentAssociatedBallot, true));
+		allCitizens.add(new SoldierModel(456789018, "Arnold Schwartzenegger", 1999, currentAssociatedBallot, true));
+		allCitizens.add(new SoldierModel(456789019, "John Wick", 2001, currentAssociatedBallot, true));
+
+		// Sick Soldiers
+		currentAssociatedBallot = SearchHandler.getBallotByID(2, allBallots);
+		allCitizens.add(
+				new SickSoldierModel(567890123, "Childish Gambino", 2001, 1, currentAssociatedBallot, true, false));
+		allCitizens.add(new SickSoldierModel(456789014, "James Buchanan Barnes", 2000, 14, currentAssociatedBallot, true, false));
+		allCitizens.add(new SickSoldierModel(456789017, "Joseph Stalin", 2000, 14, currentAssociatedBallot, true, true));
+		allCitizens.add(new SickSoldierModel(456789681, "Captain Crunch", 2001, 14, currentAssociatedBallot, true, true));
 
 		citizensTableView.setItems(allCitizens);
 	}
@@ -184,21 +193,20 @@ public class CitizensTabView extends View {
 
 		if (index != -1) {
 			CandidateModel candidate;
-			if (citizen instanceof CitizenModel) { // "morphs" the CitizenModel into a CandidateModel
+			if (citizen.getClass() == CitizenModel.class) { // "morphs" the CitizenModel into a CandidateModel
 				candidate = new CandidateModel(citizen.getNumericID(), citizen.getTextualFullName(),
-						citizen.getNumericYearOfBirth(), citizen.getNumericDaysOfSickness(),
-						citizen.getActualAssociatedBallot(), citizen.isIsolated(), citizen.isWearingSuit());
+						citizen.getNumericYearOfBirth(), citizen.getActualAssociatedBallot());
 				allCitizens.set(index, candidate);
 
 				return candidate;
-			} else if (citizen instanceof SickCitizenModel) {
+			} else if (citizen.getClass() == SickCitizenModel.class) {
 				candidate = new SickCandidateModel(citizen.getNumericID(), citizen.getTextualFullName(),
 						citizen.getNumericYearOfBirth(), citizen.getNumericDaysOfSickness(),
-						citizen.getActualAssociatedBallot(), citizen.isIsolated(), citizen.isWearingSuit());
+						citizen.getActualAssociatedBallot(), citizen.isWearingSuit());
 				allCitizens.set(index, candidate);
 
 				return candidate;
-			} else if (citizen instanceof CandidateModel)
+			} else if (citizen.getClass() == CandidateModel.class)
 				return (CandidateModel) citizen;
 		}
 		return null;
