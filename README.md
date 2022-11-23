@@ -1,2 +1,2 @@
 # CoronaElections
-A project about managing elections during time of Corona
+A project about managing elections during times of COVID19
