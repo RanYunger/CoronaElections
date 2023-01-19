@@ -21,6 +21,8 @@ Welcome:
 
 Elections:
 
+![image](https://user-images.githubusercontent.com/62587988/213499707-8dfe2baa-784a-4756-a219-6480212a86c1.png)
+
 ![image](https://user-images.githubusercontent.com/62587988/213497338-8f6b9a91-baa2-4a5e-8b96-2677a0e11c64.png)
 
 Ballots:
